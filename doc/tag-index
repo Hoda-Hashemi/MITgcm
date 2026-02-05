@@ -1,6 +1,10 @@
     Notes on tags used in MITgcmUV
     ==============================
 
+o pkg/tapenade:
+  - fix for Tang-Lin: add missing handwritten code for some pkg/streamice S/R
+    and fix issues in ACTIVE_READ_XY/XYZ_D ;
+  - turn back on Tapenade TLM test for experiment halfpipe_streamice.
 o tapenade & genmake2:
   - in genmake2, import Tapenade command arguments from ad-optfile (adjoint_tap)
   - allow additional extra arguments with TAP_EXTRA, which can also be set using
