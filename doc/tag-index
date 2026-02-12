@@ -1,6 +1,8 @@
     Notes on tags used in MITgcmUV
     ==============================
 
+o pkg/streamice:
+  - fix typo and S/R argument list within #ifdef ALLOW_PETSC adjoint code.
 o tools:
   - fix PR 949 changes (location of "flow_tap") in Tapenade ad-optfile by
     using Makefile variable "TOOLSDIR".
