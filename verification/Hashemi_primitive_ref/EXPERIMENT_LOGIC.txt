@@ -1,0 +1,267 @@
+Hashemi Primitive Reference Experiment (MITgcm Native Primitive Equations)
+===========================================================================
+
+Exact Equation Set (This Directory)
+-----------------------------------
+This experiment integrates the one-layer primitive barotropic free-surface
+system on a spherical latitude-longitude grid (global domain), with the
+switches currently set in:
+verification/Hashemi_primitive_ref/input/data
+
+Coordinates and state:
+  longitude: lambda in [0, 2*pi)
+  latitude : theta in [-pi/2, pi/2]
+  state    : u(lambda,theta,t), v(lambda,theta,t), eta(lambda,theta,t)
+  note     : MITgcm eta here is free-surface height anomaly [m], i.e. h_s
+             in your notation. Your geopotential anomaly is
+             eta_doc = g*h_s = phi_s in this file.
+
+Parameter mapping (name in equations = parameter name in input/data):
+  Omega = omega
+  g     = gravity
+  R     = rSphere
+  rho0  = rhoConst
+  dt    = deltaT
+  H     = delR*hFacC  (one-layer wet thickness at C-cell)
+  f(theta) = 2*Omega*sin(theta)
+
+Active model-form equations for this configuration:
+
+1) Horizontal momentum (linearized in this setup):
+
+  du/dt - f*v = -(1/(R*cos(theta))) * d(phi_s)/d(lambda)
+  dv/dt + f*u = -(1/R) * d(phi_s)/d(theta)
+
+  with:
+  phi_s = Bo_surf * eta
+
+  For this case (linear free-surface, oceanic, constant density), Bo_surf is
+  the model's surface potential coefficient (approximately g in this setup).
+
+2) Free-surface / continuity (exact-conservative update):
+
+  d(eta)/dt + div_h( H * U_h ) = 0
+
+  where U_h = (u,v), and div_h is the horizontal spherical divergence using
+  model grid metrics.
+  Here H is the local wet column thickness used by the discrete transport
+  operator (from drF and hFac/masks), so it follows bathymetry/masks and is
+  generally spatially varying.
+
+3) Elliptic pressure/free-surface solve each time step (CG2D):
+
+  L(phi_s^{n+1}) = b^n
+  eta^{n+1}      = recip_Bo * phi_s^{n+1}
+
+  L is the 2D implicit operator assembled from grid metrics, wet masks, layer
+  thickness, and free-surface implicit factors. The solve is done by CG2D with:
+  max iterations = cg2dMaxIters
+  target residual = cg2dTargetResidual
+
+  The superscripts n and n+1 are time levels (not powers).
+  This is an elliptic solve; in the flat/constant-coefficient limit it reduces
+  to a Helmholtz form in eta:
+    (I - c^2*dt^2*nabla^2) eta^{n+1} = RHS,
+  with c^2 ~ g*H.
+  So it is not a pure Poisson equation in general.
+
+Switches that define this exact equation set in input/data:
+  momStepping        = .TRUE.
+  useCoriolis        = .TRUE.
+  momAdvection       = .FALSE.
+  viscAh,viscA4      = 0
+  implicitFreeSurface= .TRUE.
+  exactConserv       = .TRUE.
+  tempStepping       = .FALSE.
+  saltStepping       = .FALSE.
+
+What is NOT being solved in this directory:
+  no screened-Poisson equation for psi
+  no prognostic phi decomposition equation
+  no particle Q-advection equation
+
+Primary output variables/files:
+  U.*.data/.meta   : zonal velocity on C-grid western faces (uVel)
+  V.*.data/.meta   : meridional velocity on C-grid southern faces (vVel)
+  Eta.*.data/.meta : free-surface anomaly at tracer centers (etaN)
+
+Also commonly written by default state output (model-dependent):
+  T.*, S.*, W.*
+
+Console/monitor output includes solver diagnostics such as CG2D residuals.
+
+Directory
+---------
+verification/Hashemi_primitive_ref
+
+Goal
+----
+This case is an independent primitive-equation reference for your Hashemi
+screened-Poisson framework.
+
+It intentionally does NOT call the custom `mypackage` solver and does NOT
+solve for `psi` as a prognostic unknown.
+Instead, MITgcm evolves velocity and free surface through its native
+primitive-equation time stepping and pressure/free-surface elliptic solve.
+
+
+What Equations MITgcm Solves Here
+---------------------------------
+1) Horizontal momentum (barotropic, one-layer setup in this experiment):
+   du/dt + Coriolis + pressure-gradient + (optional advection/viscosity/forcing)
+   dv/dt + Coriolis + pressure-gradient + (optional advection/viscosity/forcing)
+
+2) Surface pressure/free-surface relation and elliptic inversion:
+   CG2D solves for surface potential/pressure increment.
+
+3) Continuity / exact volume update:
+   eta is updated through continuity (integrated with face-normal transport).
+
+In this case we configured:
+- one vertical level (Nr=1)
+- spherical lat-lon global grid
+- Coriolis ON
+- momentum advection OFF (linearized dynamics)
+- free surface implicit + exactConserv
+- temp/salt stepping OFF
+
+
+Your Framework vs This Reference
+--------------------------------
+Your paper/final system uses:
+- Helmholtz split: u = curl(psi) + grad(phi)
+- Q advected on particles
+- screened Poisson for psi:
+  nabla^2(psi) - psi/Ld^2 ~= Q*d - f
+- Poisson for phi from divergence/continuity closure
+
+MITgcm reference uses:
+- primitive momentum + continuity directly in (u,v,eta)
+- internal CG2D solve for free-surface pressure (not your screened psi operator)
+
+This makes MITgcm a good independent verifier if you compare common physical
+fields (u,v,eta,zeta,div), then reconstruct psi/phi offline from MITgcm output.
+
+
+Native Solver Flow (Key MITgcm Files)
+-------------------------------------
+Main stepping sequence:
+1) forward_step:
+   model/src/forward_step.F
+   - DYNAMICS
+   - SOLVE_FOR_PRESSURE
+   - MOMENTUM_CORRECTION_STEP
+   - INTEGR_CONTINUITY
+
+2) Pressure / free-surface elliptic solve (CG2D):
+   model/src/solve_for_pressure.F
+   - builds cg2d RHS from transport divergence and eta terms
+   - calls CG2D
+   - maps cg2d_x back to etaN
+
+3) Parameter coupling of switches:
+   model/src/set_parms.F
+   - many terms are gated by momStepping
+   - calc_wVelocity = momStepping OR exactConserv
+
+Important include files (state and parameters):
+- model/inc/PARAMS.h   : runtime switches and physical constants
+- model/inc/DYNVARS.h  : uVel, vVel, theta, etaN, ...
+- model/inc/SURFACE.h  : free-surface-related arrays
+- model/inc/CG2D.h     : 2D elliptic solver arrays/coefs
+- model/inc/GRID.h     : metrics and C-grid geometry fields
+
+
+Experiment-Specific Files
+-------------------------
+1) Grid size (matches Hashemi grid):
+   verification/Hashemi_primitive_ref/code/SIZE.h
+   Nx=1440, Ny=720, Nr=1 (0.25-degree global lat-lon)
+
+2) Runtime parameters:
+   verification/Hashemi_primitive_ref/input/data
+   - momStepping=.TRUE.
+   - useCoriolis=.TRUE.
+   - momAdvection=.FALSE.
+   - implicitFreeSurface=.TRUE.
+   - exactConserv=.TRUE.
+   - spherical grid + Earth radius
+   - bathyFile='bathymetry.bin'
+   - pSurfInitFile='eta_init.bin'
+
+3) Input fields:
+   verification/Hashemi_primitive_ref/input/bathymetry.bin
+   - copied from verification/Hashemi/input/bathymetry.bin
+
+   verification/Hashemi_primitive_ref/input/eta_init.bin
+   - generated Gaussian initial free-surface anomaly
+
+4) Generators:
+   verification/Hashemi_primitive_ref/input/gendata_ref.py
+   verification/Hashemi_primitive_ref/input/gendata.m
+
+5) Comparison helper:
+   verification/Hashemi_primitive_ref/Python/compare_with_hashemi.py
+   - compares MITgcm U/V fields against Hashemi VelOcean CSV outputs
+
+
+Build and Run
+-------------
+From verification/Hashemi_primitive_ref/build:
+  ../../../tools/genmake2 -mods ../code
+  make depend
+  make
+
+From verification/Hashemi_primitive_ref/run:
+  ln -s ../input/* .
+  ln -s ../build/mitgcmuv .
+  ./mitgcmuv > output.txt
+
+
+Verification Workflow Against Hashemi Framework
+-----------------------------------------------
+Step A: Run Hashemi custom framework/case
+- produce Hashemi CSV outputs (psi, velocity) on same grid.
+
+Step B: Run primitive reference case
+- produce MITgcm U, V, Eta outputs.
+
+Step C: Compare face velocities directly
+- use compare_with_hashemi.py (U/V on C-grid faces)
+- inspect RMSE, bias, correlation.
+
+Step D: Compare scalar diagnostics
+- from both frameworks compute:
+  - speed at tracer centers
+  - relative vorticity zeta
+  - divergence D
+  - eta / hs
+
+Step E: Reconstruct psi/phi from MITgcm output (offline)
+- solve spherical Poisson:
+  nabla^2(psi) = zeta
+  nabla^2(phi) = D
+- apply gauge constraint (mean-zero)
+- reconstruct u_psi,v_psi and u_phi,v_phi and compare with your split fields.
+
+Step F: Convergence checks
+- repeat with several deltaT and/or coarser/finer grids
+- compare norms over wet points only.
+
+
+What to Tune First If Mismatch Is Large
+---------------------------------------
+1) Ensure same initial condition and same wet mask.
+2) Match Coriolis convention and metric terms exactly.
+3) Match time at comparison (same physical time, not just same iteration).
+4) Keep both runs linearized first (advection off) before adding nonlinear terms.
+5) Use wet-point masks consistently for face and center comparisons.
+
+
+Notes
+-----
+- This experiment is designed as an independent primitive-equation reference,
+  not a reimplementation of your screened-Poisson operator inside MITgcm.
+- Use your existing `verification/Hashemi` (mypackage) case for operator-level
+  debugging of your custom psi solver; use this directory for framework-level
+  verification against MITgcm native dynamics.

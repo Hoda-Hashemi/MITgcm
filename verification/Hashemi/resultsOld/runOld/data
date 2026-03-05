@@ -1,0 +1,39 @@
+&PARM01 
+#rotationPeriod is set ini_parms: 86164 \approx 7.292123516990375e-5 ; our fortan is c/86400
+# 7.27220521664304e-5
+omega =6.283185307179586, 
+viscAh  = 0.,
+viscA4  = 0.,
+diffKhT = 0.,
+no_slip_sides = .FALSE.,
+no_slip_bottom = .FALSE.,
+/
+
+&PARM02
+cg2dMaxIters = 1000,
+cg2dTargetResidual = 1.E-8,
+cg2dPreCondFreq = 1,
+/
+
+&PARM03
+nIter0   = 0,
+nTimeSteps = 0,                 ! one-shot solve
+deltaT   = 3600.,
+/
+
+&PARM04
+usingSphericalPolarGrid = .TRUE.,
+delX = 1440*0.25,
+delY = 720*0.25,
+xgOrigin = 0.,
+ygOrigin = -90.,
+rSphere = 6371000,
+delR = 5000,
+/
+
+# Input datasets
+&PARM05
+bathyFile='bathymetry.bin',
+# bathyFile='',
+/
+

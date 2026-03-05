@@ -1,0 +1,10 @@
+#ifndef MYPACKAGE_OPTIONS_H
+#define MYPACKAGE_OPTIONS_H
+#include "PACKAGES_CONFIG.h"
+#include "CPP_OPTIONS.h"
+
+
+#define ALLOW_MYPACKAGE
+
+#endif /* MYPACKAGE_OPTIONS_H */
+

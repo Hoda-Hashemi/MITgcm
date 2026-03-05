@@ -1,0 +1,69 @@
+# ===============================================================
+# Hashemi Primitive-Equation Reference Case (MITgcm native solve)
+# One-layer, global lat-lon, linearized barotropic dynamics.
+# ===============================================================
+
+# Continuous equation parameters
+&PARM01
+# Planet / fluid
+ omega = 7.292E-5,
+ gravity = 9.81,
+ rhoConst = 1000.,
+ buoyancyRelation = 'OCEANIC',
+ eosType = 'LINEAR',
+
+# Dynamics switches
+ rigidLid = .FALSE.,
+ implicitFreeSurface = .TRUE.,
+ exactConserv = .TRUE.,
+ momStepping = .TRUE.,
+ momAdvection = .FALSE.,
+ useCoriolis = .TRUE.,
+ tempStepping = .FALSE.,
+ saltStepping = .FALSE.,
+
+# Viscosity / diffusion (set to zero to stay close to inviscid linear regime)
+ viscAh = 0.,
+ viscA4 = 0.,
+ diffKhT = 0.,
+ no_slip_sides = .FALSE.,
+ no_slip_bottom = .FALSE.,
+
+# I/O precision
+ readBinaryPrec = 32,
+ writeBinaryPrec = 64,
+ useSingleCpuIO = .TRUE.,
+/
+
+# Elliptic solver parameters
+&PARM02
+ cg2dMaxIters = 5000,
+ cg2dTargetResidual = 1.E-10,
+ cg2dPreCondFreq = 1,
+/
+
+# Time stepping parameters
+&PARM03
+ nIter0 = 0,
+ nTimeSteps = 120,
+ deltaT = 300.,
+ dumpFreq = 3600.,
+ monitorFreq = 300.,
+/
+
+# Grid parameters
+&PARM04
+ usingSphericalPolarGrid = .TRUE.,
+ delX = 1440*0.25,
+ delY = 720*0.25,
+ xgOrigin = 0.,
+ ygOrigin = -90.,
+ rSphere = 6371000.,
+ delR = 11000.,
+/
+
+# Input datasets
+&PARM05
+ bathyFile = 'bathymetry.bin',
+ pSurfInitFile = 'eta_init.bin',
+/

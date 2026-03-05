@@ -1,0 +1,53 @@
+&PARM01 
+omega = 7.292E-5, 
+# MAYBE WE NEED TO ADD 1E2 FOR STABILITY IDK 
+viscAh  = 0., 
+viscA4  = 0.,
+diffKhT = 0.,
+no_slip_sides = .FALSE.,
+no_slip_bottom = .FALSE.,
+exactConserv=.TRUE.,     
+momStepping=.FALSE.,      
+tempStepping=.FALSE.,    
+saltStepping=.FALSE.,  
+hFacMin=0.00001,         
+hFacMinDr=0.5,        
+/
+
+&PARM02
+cg2dMaxIters = 5000,
+# 5000,
+cg2dTargetResidual = 1.E-8,
+cg2dPreCondFreq = 1,
+printResidualFreq= 1 ,
+/
+
+&PARM03
+nIter0   = 0,
+nTimeSteps = 1,                 
+deltaT   = 3600.,
+dumpFreq = 3600.,
+monitorFreq=1,       
+/
+
+&PARM04
+usingSphericalPolarGrid = .TRUE.,
+delX = 1440*0.25,
+delY = 720*0.25,
+xgOrigin = 0.,
+ygOrigin = -90.,
+rSphere = 6371000.,
+#clipping elevation of water 
+delR =  11000.0,
+# 11000.0 ,
+   
+/
+
+# Input datasets
+&PARM05
+bathyFile='bathymetry.bin',
+# bathyFile='',
+#  zonalWindFile='wind.bin',# Forcing to drive the "steady" circulation
+
+/
+
