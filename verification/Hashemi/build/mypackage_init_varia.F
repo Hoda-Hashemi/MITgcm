@@ -1,1 +1,0 @@
-../code/mypackage_init_varia.F

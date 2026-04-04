@@ -1,1 +1,0 @@
-../../../pkg/mypackage/mypackage_diagnostics_init.F
