@@ -1,0 +1,14 @@
+.DS_Store
+Python/__pycache__/
+Python/venv/
+Python/*.png
+resources/.DS_Store
+resources/__pycache__/
+input/_tmp_mpi.log
+input/mitgcmuv
+run_LastRun/
+results/
+resultsA/
+resultsOld/
+FV_*/run/
+FV_*/results/
