@@ -10,7 +10,6 @@ import numpy as np
 import numpy.ma as ma
 from matplotlib import colors as mcolors
 
-
 sys.dont_write_bytecode = True
 HAVE_MITGCMUTILS = True
 
@@ -21,35 +20,24 @@ INPUT_BATHY_PATH = os.fspath(EXPERIMENT_DIR / "input" / "bathymetry.bin")
 SCRIPT_RESULTS_DIR = os.fspath(Path(SCRIPT_DIR) / "results")
 RUN_PLOT_DIR = SCRIPT_RESULTS_DIR
 
-
 def set_style():
     plt.rcParams.update(
         {
             "figure.dpi": 140,
             "savefig.dpi": 400,
             "savefig.facecolor": "white",
-            "font.size": 11,
-            "axes.titlesize": 13,
-            "axes.labelsize": 11,
-            "xtick.labelsize": 10,
-            "ytick.labelsize": 10,
-            "legend.fontsize": 9,
-            "axes.linewidth": 0.8,
+            "font.size": 17,
         }
     )
 
-
 set_style()
-
 
 def _list_existing_dir(path, label):
     return os.listdir(os.fspath(path))
 
-
 def _slugify_filename(text):
     stem = re.sub(r"[^A-Za-z0-9._-]+", "_", str(text).strip())
     return stem.strip("._") or "figure"
-
 
 def _add_right_colorbar(fig, ax, mappable, label, shrink=None):
     kwargs = {"ax": ax, "location": "right", "pad": 0.02, "fraction": 0.05}
@@ -58,7 +46,6 @@ def _add_right_colorbar(fig, ax, mappable, label, shrink=None):
     cbar = fig.colorbar(mappable, **kwargs)
     cbar.set_label(label)
     return cbar
-
 
 def _save_publication_figure(fig, stem, enabled, out_dir=RUN_PLOT_DIR):
     if not enabled:
@@ -71,20 +58,16 @@ def _save_publication_figure(fig, stem, enabled, out_dir=RUN_PLOT_DIR):
     fig.savefig(pdf_path, dpi=400, bbox_inches="tight")
     print(f"Saved publication plots:\n  {png_path}\n  {pdf_path}")
 
-
 def _iteration_folder_name(iteration):
     if iteration is None:
         return "latest"
     return f"it{int(iteration):010d}"
 
-
 def _results_target_dir(iteration):
     return os.path.join(SCRIPT_RESULTS_DIR, _iteration_folder_name(iteration))
 
-
 def _results_dyn_dir(iteration):
     return os.path.join(SCRIPT_RESULTS_DIR, "dyn", _iteration_folder_name(iteration))
-
 
 class _TeeStream:
     def __init__(self, *streams):
@@ -99,7 +82,6 @@ class _TeeStream:
         for stream in self.streams:
             stream.flush()
 
-
 @contextmanager
 def _capture_prints(iteration, dyn=False, heading=None):
     out_dir = _results_dyn_dir(iteration) if dyn else _results_target_dir(iteration)
@@ -113,7 +95,6 @@ def _capture_prints(iteration, dyn=False, heading=None):
                 print(heading)
             print(f"Logging console output to: {log_path}")
             yield log_path
-
 
 def _parse_mds_meta(meta_path):
     with open(meta_path, "r", encoding="utf-8") as meta_file:
@@ -140,7 +121,6 @@ def _parse_mds_meta(meta_path):
         "it": int(it_match.group(1)) if it_match else 0,
     }
 
-
 def _discover_field_files(run_dir, var_name):
     files = _list_existing_dir(run_dir, "MITgcm run directory")
     regex_global = re.compile(rf"^{re.escape(var_name)}\.(\d{{10}})\.meta$")
@@ -163,7 +143,6 @@ def _discover_field_files(run_dir, var_name):
         raise FileNotFoundError(f"No output files found for variable '{var_name}' in {run_dir}")
     return all_matches
 
-
 def _discover_timed_variables(run_dir):
     files = _list_existing_dir(run_dir, "MITgcm run directory")
     regex_global = re.compile(r"^([A-Za-z][A-Za-z0-9_]*)\.(\d{10})\.meta$")
@@ -181,7 +160,6 @@ def _discover_timed_variables(run_dir):
         out.setdefault(var_name, set()).add(iteration)
 
     return {name: sorted(values) for name, values in sorted(out.items(), key=lambda item: item[0])}
-
 
 def _discover_static_variables(run_dir):
     files = _list_existing_dir(run_dir, "MITgcm run directory")
@@ -202,14 +180,12 @@ def _discover_static_variables(run_dir):
 
     return sorted(static_names - timed_names)
 
-
 def _meta_path_for_var_it(run_dir, var_name, iteration):
     matches = _discover_field_files(run_dir, var_name)
     files = sorted([match["file"] for match in matches if match["it"] == int(iteration)])
     if not files:
         raise FileNotFoundError(f"No meta file for {var_name} at iteration {iteration}")
     return os.path.join(run_dir, files[0])
-
 
 def _parse_meta_fld_list(meta_path):
     with open(meta_path, "r", encoding="utf-8") as meta_file:
@@ -219,7 +195,6 @@ def _parse_meta_fld_list(meta_path):
         return []
     raw = re.findall(r"'([^']+)'", block.group(1))
     return [name.strip() for name in raw]
-
 
 def read_mitgcm_field(run_dir, var_name, it=None, record=0):
     all_matches = _discover_field_files(run_dir, var_name)
@@ -287,22 +262,17 @@ def read_mitgcm_field(run_dir, var_name, it=None, record=0):
 
     return full_field, target_it
 
-
 def _surface_layer(field):
     return field[0] if field.ndim == 3 else field
-
 
 def _lon_center_deg(i_lon, n_lon):
     return (i_lon + 0.5) * (360.0 / n_lon)
 
-
 def _lon_centers_deg(n_lon):
     return (np.arange(n_lon) + 0.5) * (360.0 / n_lon)
 
-
 def _lat_centers_deg(n_lat):
     return -90.0 + (np.arange(n_lat) + 0.5) * (180.0 / n_lat)
-
 
 def report_ocean_extrema(field_ma, field_name, lat_deg, n_lon, depth_m):
     fld = ma.array(field_ma, copy=False)
@@ -326,13 +296,11 @@ def report_ocean_extrema(field_ma, field_name, lat_deg, n_lon, depth_m):
             f"level=k=1 surface, bathymetry H={depth_here:.3f} m"
         )
 
-
 def _masked_min_max(field_ma):
     fld = ma.array(field_ma, copy=False)
     if fld.count() == 0:
         return np.nan, np.nan
     return float(ma.min(fld)), float(ma.max(fld))
-
 
 def _print_ocean_min_max(field_2d, ocean_mask, field_name, lat_deg=None, depth_m=None):
     fld = ma.masked_where(~ocean_mask, ma.array(field_2d, copy=False))
@@ -341,18 +309,15 @@ def _print_ocean_min_max(field_2d, ocean_mask, field_name, lat_deg=None, depth_m
     if lat_deg is not None and depth_m is not None:
         report_ocean_extrema(fld, field_name, lat_deg, field_2d.shape[1], depth_m)
 
-
 def _safe_sym_limit(arr):
     arr_np = ma.filled(ma.array(arr, copy=False), np.nan)
     limit = np.nanmax(np.abs(arr_np))
     return limit if np.isfinite(limit) and limit > 0 else 1e-12
 
-
 def _safe_max(arr):
     arr_np = ma.filled(ma.array(arr, copy=False), np.nan)
     limit = np.nanmax(arr_np)
     return limit if np.isfinite(limit) and limit > 0 else 1e-12
-
 
 def _load_depth_and_ocean_mask(n_lat, n_lon):
     bathy = np.fromfile(INPUT_BATHY_PATH, dtype=">f4").reshape((n_lat, n_lon))
@@ -360,7 +325,6 @@ def _load_depth_and_ocean_mask(n_lat, n_lon):
     depth_m = np.maximum(0.0, -bathy)
     print(f"Using bathymetry mask from {INPUT_BATHY_PATH} (ocean where depth < 0).")
     return depth_m, ocean_mask
-
 
 def _load_optional_hfac_masks(it, n_lat, n_lon):
     hfac_c, _ = read_mitgcm_field(RUN_DIR, "hFacC", it=it)
@@ -371,7 +335,6 @@ def _load_optional_hfac_masks(it, n_lat, n_lon):
     v_mask = _surface_layer(hfac_s) > 0.0
     print("Using hFacC/hFacW/hFacS masks from MITgcm output.")
     return tracer_mask, u_mask, v_mask
-
 
 def _report_depth_consistency(model_depth_2d, input_depth_m, input_ocean_mask, hfac_c_2d=None, verbose=True):
     model_depth = np.asarray(model_depth_2d, dtype=float)
@@ -423,7 +386,6 @@ def _report_depth_consistency(model_depth_2d, input_depth_m, input_ocean_mask, h
         "match_fraction": match_fraction,
     }
 
-
 def read_mitgcm_static_field(run_dir, var_name, record=0):
     meta_path = os.path.join(run_dir, f"{var_name}.meta")
     data_path = os.path.join(run_dir, f"{var_name}.data")
@@ -450,13 +412,11 @@ def read_mitgcm_static_field(run_dir, var_name, record=0):
         (meta["nrecords"], meta["dims"][2]["global"], meta["dims"][1]["global"], meta["dims"][0]["global"])
     )[record]
 
-
 def read_mitgcm_field_or_static(run_dir, var_name, it=None, record=0):
     timed_meta = list(Path(run_dir).glob(f"{var_name}.*.meta"))
     if timed_meta:
         return read_mitgcm_field(run_dir, var_name, it=it, record=record)
     return read_mitgcm_static_field(run_dir, var_name, record=record), 0
-
 
 def _finite_plot_limits(fld_np, symmetric=False):
     if symmetric:
@@ -473,7 +433,6 @@ def _finite_plot_limits(fld_np, symmetric=False):
         delta = max(abs(vmin) * 0.05, 1.0)
         return vmin - delta, vmax + delta
     return vmin, vmax
-
 
 def _plot_scale_kwargs(fld_np, cmap="seismic", symmetric=False, positive_only=False):
     fld_np = np.asarray(fld_np, dtype=float)
@@ -493,7 +452,6 @@ def _plot_scale_kwargs(fld_np, cmap="seismic", symmetric=False, positive_only=Fa
 
     vmin, vmax = _finite_plot_limits(fld_np, symmetric=symmetric)
     return {"vmin": vmin, "vmax": vmax}
-
 
 def _unit_for_field(field_name):
     units = {
@@ -517,7 +475,6 @@ def _unit_for_field(field_name):
     }
     return units.get(field_name, "")
 
-
 def _auto_colormap_and_symmetry(field_2d, wet_mask):
     wet_vals = np.asarray(field_2d)[wet_mask]
     wet_vals = wet_vals[np.isfinite(wet_vals)]
@@ -526,7 +483,6 @@ def _auto_colormap_and_symmetry(field_2d, wet_mask):
     if np.nanmin(wet_vals) < 0.0 and np.nanmax(wet_vals) > 0.0:
         return "seismic", True
     return "seismic", False
-
 
 def _plot_global_latlon(
     field_2d,
@@ -565,7 +521,6 @@ def _plot_global_latlon(
     _save_publication_figure(fig, save_stem or title, save_enabled, out_dir=save_dir or RUN_PLOT_DIR)
     plt.show()
 
-
 def _select_reference_iteration(it_list, requested_it, label, quiet=False):
     if requested_it is None:
         return it_list[-1]
@@ -577,7 +532,6 @@ def _select_reference_iteration(it_list, requested_it, label, quiet=False):
         print(f"[{label}] requested it={requested_it} not available; using latest it={fallback_it}.")
     return fallback_it
 
-
 def _iter_record_specs(run_dir, var_name, it_plot):
     meta_path = _meta_path_for_var_it(run_dir, var_name, it_plot)
     meta = _parse_mds_meta(meta_path)
@@ -588,7 +542,6 @@ def _iter_record_specs(run_dir, var_name, it_plot):
     if len(field_names) == meta["nrecords"]:
         return [(index, field_names[index]) for index in range(meta["nrecords"])]
     return [(index, f"{var_name}:record{index}") for index in range(meta["nrecords"])]
-
 
 def _suggest_additional_reference_plots(run_dir):
     static_vars = set(_discover_static_variables(run_dir))
@@ -607,7 +560,6 @@ def _suggest_additional_reference_plots(run_dir):
         print("Other things worth plotting from this run:")
         for item in suggestions:
             print(f"  - {item}")
-
 
 def _land_leak_check(field_2d, land_mask, field_name, allow_land_values=False):
     arr = np.asarray(field_2d)
@@ -637,7 +589,6 @@ def _land_leak_check(field_2d, land_mask, field_name, allow_land_values=False):
         return
 
     print(f"[{field_name}] land check: PASS (tol={tol:.3e}).")
-
 
 def _print_eta_init_ocean_land_check():
     nx, ny = 1440, 720

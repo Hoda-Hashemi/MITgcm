@@ -1,3 +1,4 @@
+-----OUTDATED----
 % Generate initial free-surface anomaly for vortexSphere_mitgcm_referenceCase
 % Output: eta_init.bin (big-endian real*4)
 
@@ -38,3 +39,4 @@ eta(~ocean) = 0.0;
 fid = fopen('eta_init.bin','w','b');
 fwrite(fid, eta, 'real*4');
 fclose(fid);
+
