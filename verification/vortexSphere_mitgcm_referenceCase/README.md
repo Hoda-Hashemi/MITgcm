@@ -27,7 +27,7 @@ $$
 $$
 
 $$
-\frac{\partial \eta}{\partial t} + \nabla_h \cdot (d \mathbf{u}_h) = 0,
+\frac{\partial \eta}{\partial t} + \nabla_h \cdot (h\mathbf{u}_h) = 0,
 \qquad
 \mathbf{u}_h = (u,v),
 $$
@@ -179,17 +179,13 @@ v^{n+1} = v^* - \Delta t_{\mathrm{mom}} \partial_y \phi_s^{n+1},
 $$
 
 $$
-\frac{\eta^{n+1} - \eta^n}{\Delta t_{\mathrm{fs}}}
-+ \nabla_h \cdot \bigl(d \mathbf{u}^{n+1}\bigr) = 0.
+\frac{\eta^{n+1} - \eta^n}{\Delta t_{\mathrm{fs}}} + \nabla_h \cdot \bigl(d \mathbf{u}^{n+1}\bigr) = 0.
 $$
 
 Substituting the corrected velocity into continuity yields the elliptic free-surface equation solved by MITgcm:
 
 $$
-\nabla_h \cdot \bigl(d \nabla_h \phi_s^{n+1}\bigr)
-- \frac{1}{g \Delta t_{\mathrm{mom}} \Delta t_{\mathrm{fs}}}\phi_s^{n+1}
-= \frac{1}{\Delta t_{\mathrm{mom}}}\nabla_h \cdot \bigl(d \mathbf{u}^*\bigr)
-- \frac{1}{g \Delta t_{\mathrm{mom}} \Delta t_{\mathrm{fs}}}\phi_s^n.
+\nabla_h \cdot \bigl(d \nabla_h \phi_s^{n+1}\bigr) - \frac{1}{g \Delta t_{\mathrm{mom}} \Delta t_{\mathrm{fs}}}\phi_s^{n+1} = \frac{1}{\Delta t_{\mathrm{mom}}}\nabla_h \cdot \bigl(d \mathbf{u}^*\bigr) - \frac{1}{g \Delta t_{\mathrm{mom}} \Delta t_{\mathrm{fs}}}\phi_s^n.
 $$
 
 MITgcm discretizes this as
@@ -312,3 +308,4 @@ Post-processing figures are written under [`Scripts/results/`](./Scripts/results
 ## Repository Hygiene
 
 `build/` and `run/` are generated working directories and are intended to remain git-ignored. Plot outputs and Python cache directories are also excluded through experiment-local `.gitignore` files so that the experiment can be documented and rerun without committing generated artifacts.
+

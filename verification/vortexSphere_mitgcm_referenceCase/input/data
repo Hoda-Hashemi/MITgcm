@@ -47,15 +47,15 @@
 # Time stepping parameters
 &PARM03
  nIter0=0,
- nTimeSteps=24,
+ nTimeSteps=960 ,
  abEps=0.1,
  deltaT=900.,
  cAdjFreq=0.,
  pChkptFreq=0.,
  chkptFreq=0.,
- dumpFreq=10800.,
+ dumpFreq=21600.,
  monitorSelect=1,
- monitorFreq=1.,
+ monitorFreq=21600.,
 /
 
 # Grid parameters
@@ -73,4 +73,7 @@
 &PARM05
  bathyFile = 'bathymetry.bin',
  pSurfInitFile = 'eta_init.bin',
+ uVelInitFile  = 'u_init.bin'
+ vVelInitFile  = 'v_init.bin'
 /
+
