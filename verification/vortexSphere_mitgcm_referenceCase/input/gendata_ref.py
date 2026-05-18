@@ -197,6 +197,26 @@ def make_cosine_bump(ocean_mask: np.ndarray):
 
     return eta, u, v
 
+#! Experiment 3: Gaussian Patch -> free-surface adjustment
+def exp3_Gaussian_Patch(ocean_mask: np.ndarray):
+    AMP_M = 0.1
+    LAT0_DEG = 0.0
+    LON0_DEG = 180.0
+    SIGMA_DEG = 10.0
+    SIGMA_M = R_EARTH * np.deg2rad(SIGMA_DEG)
+
+    lon2d, lat2d = grid_centers()
+
+    distance_m = R_EARTH * spherical_distance_rad(lon2d, lat2d, LON0_DEG, LAT0_DEG)
+    eta = AMP_M * np.exp(-0.5 * (distance_m / SIGMA_M) ** 2)
+
+    eta = np.where(ocean_mask, eta, 0.0)
+
+    u = np.zeros_like(eta)
+    v = np.zeros_like(eta)
+
+    return eta, u, v
+
 #! Experiment 2: Geostrophic Gaussian -> balanced eddy
 def make_geostrophic_gaussian(ocean_mask: np.ndarray):
     AMP_M = 10.0
@@ -247,7 +267,10 @@ def main():
     # eta, u, v = make_cosine_bump(ocean_mask)
 
     #! Experiment 2: geostrophic Gaussian, balanced eddy
-    eta, u, v = make_geostrophic_gaussian(ocean_mask)
+    # eta, u, v = make_geostrophic_gaussian(ocean_mask)
+
+    #! Experiment 3: Gaussian Patch, amplitude=0.1 m, sigma=10 deg, distance in meters
+    eta, u, v = exp3_Gaussian_Patch(ocean_mask)
 
     write_field(base_dir, "eta_init.bin", eta)
     write_field(base_dir, "u_init.bin", u)
@@ -259,4 +282,3 @@ if __name__ == "__main__":
     main()
 
 # %%
-
