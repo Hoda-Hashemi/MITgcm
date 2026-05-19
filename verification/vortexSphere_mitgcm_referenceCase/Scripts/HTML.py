@@ -2,59 +2,124 @@
 # Cell 1: Packages and parameters.
 from pathlib import Path
 import glob
+import importlib.util
 import os
+import shutil
 
 import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 
-pio.renderers.default = "browser"
+
+def env_flag(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() not in {"0", "false", "no", "off"}
+
+
+def resolve_script_dir():
+    if "__file__" in globals():
+        return Path(__file__).resolve().parent
+
+    cwd = Path.cwd().resolve()
+    candidates = [
+        cwd,
+        cwd / "Scripts",
+        cwd / "verification" / "vortexSphere_mitgcm_referenceCase" / "Scripts",
+    ]
+
+    for candidate in candidates:
+        if (candidate / "HTML.py").exists() and (candidate.parent / "run").exists():
+            return candidate
+
+    return cwd
+
 
 # Main knobs.
-SCRIPT_DIR = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+SCRIPT_DIR = resolve_script_dir()
 RUN_DIR = (SCRIPT_DIR / "../run").resolve()
 DYN_SUBDIR = "dyn"
 FIELD_NAME = "Eta"
 FIELD_KIND = "prognostic"  # "prognostic" or "diagnostic"
-ASK_FIELD_KIND = True
+ASK_FIELD_KIND = False
 
 # Grid and binary format.
 NX = 1440
 NY = 720
 DX_DEG = 0.25
 DY_DEG = 0.25
-DT_SECONDS = 900
+DT_SECONDS = 60
 DATA_DTYPE = ">f8"
-SKIP = 4
-LATITUDE_ORDER = "north_to_south"  # "north_to_south" or "south_to_north"
+LATITUDE_ORDER = "south_to_north"  # MITgcm grid in this case starts at ygOrigin=-90.
 
 # Plot controls.
-CMAP = "RdBu_r"  # good alternatives: "RdBu_r", "coolwarm"
+CMAP = "RdBu_r"
 COLORBAR_LABEL = ""  # blank means auto-fill from FIELD_NAME
-FIELD_UNITS = {"Eta": "m"}
-FIELD_DESCRIPTIONS = {"Eta": "Free surface"}
+FIELD_UNITS = {"Eta": "m", "ETAN": "m"}
+FIELD_DESCRIPTIONS = {"Eta": "Free surface", "ETAN": "Free surface"}
+DEFAULT_COLOR_LIMIT = "0.12" if FIELD_NAME in {"Eta", "ETAN"} else ""
+COLOR_LIMIT_TEXT = os.environ.get("MITGCM_COLOR_LIMIT", DEFAULT_COLOR_LIMIT).strip()
+COLOR_LIMIT = float(COLOR_LIMIT_TEXT) if COLOR_LIMIT_TEXT else None
 WRITE_HTML = True
-OPEN_BROWSER = True
+OPEN_BROWSER = env_flag("MITGCM_OPEN_BROWSER", False)
+SHOW_FIGURE = env_flag("MITGCM_SHOW_FIGURE", True)
 HTML_FILE = "mitgcm_surface.html"
-FIG_WIDTH = 1500
-FIG_HEIGHT = 850
+FIG_WIDTH = 1200
+FIG_HEIGHT = 720
 
-# Layout lanes: left is the 3D surface, right is colorbar + information box.
-SURFACE_DOMAIN_X = [0.0, 0.72]
-COLORBAR_X = 0.78
+# Browser responsiveness controls. All iterations are kept; the spatial grid is
+# thinned only for the interactive HTML. Lower this for more detail if needed.
+HTML_SKIP = int(os.environ.get("MITGCM_HTML_SKIP", "6"))
+VIDEO_SKIP = int(os.environ.get("MITGCM_VIDEO_SKIP", "4"))
+
+# Layout lanes: left is the map, right is colorbar + information box.
+MAP_DOMAIN_X = [0.0, 0.76]
+COLORBAR_X = 0.80
 INFO_BOX_X = 0.86
 
-# Animation/video controls.
-MAKE_VIDEO = False
+# Animation/video controls. MP4 needs ffmpeg; without it this writes a GIF.
+MAKE_VIDEO = env_flag("MITGCM_MAKE_VIDEO", True)
 VIDEO_FILE = "mitgcm_surface.mp4"
+VIDEO_FALLBACK_FILE = "mitgcm_surface.gif"
 VIDEO_FRAME_DURATION_MS = 180
+VIDEO_WIDTH = 1200
+VIDEO_HEIGHT = 620
+
+# Fancy 3-D PyVista controls.
+EARTH_RADIUS_M = 6_371_000.0
+PYVISTA_SKIP = int(os.environ.get("MITGCM_PYVISTA_SKIP", "4"))
+PYVISTA_FRAME_STEP = int(os.environ.get("MITGCM_PYVISTA_FRAME_STEP", "3"))
+PYVISTA_VERTICAL_SCALE = float(os.environ.get("MITGCM_PYVISTA_VERTICAL_SCALE", "250000.0"))
+PYVISTA_LAND_OFFSET_M = float(os.environ.get("MITGCM_PYVISTA_LAND_OFFSET_M", "12000.0"))
+PYVISTA_SHOW = env_flag("MITGCM_PYVISTA_SHOW", False)
+PYVISTA_OFF_SCREEN = env_flag("MITGCM_PYVISTA_OFF_SCREEN", True)
+PYVISTA_MAKE_GIF = env_flag("MITGCM_PYVISTA_MAKE_GIF", True)
+PYVISTA_GIF_FILE = "mitgcm_surface_pyvista.gif"
+PYVISTA_SCREENSHOT_FILE = "mitgcm_surface_pyvista.png"
+PYVISTA_WINDOW_WIDTH = int(os.environ.get("MITGCM_PYVISTA_WIDTH", "1600"))
+PYVISTA_WINDOW_HEIGHT = int(os.environ.get("MITGCM_PYVISTA_HEIGHT", "1000"))
+
+# Let VS Code's interactive window render inline when it is available.
+if os.environ.get("PLOTLY_RENDERER"):
+    pio.renderers.default = os.environ["PLOTLY_RENDERER"]
+elif os.environ.get("VSCODE_PID"):
+    pio.renderers.default = "vscode"
 
 
 #%%
 # Cell 2: Helpers.
+def output_path(file_name):
+    path = Path(file_name)
+    if path.is_absolute():
+        return path
+    return SCRIPT_DIR / path
+
+
 def output_dir_for_field(run_dir, field_kind, dyn_subdir):
     if field_kind.lower() == "diagnostic":
-        return run_dir / dyn_subdir
+        candidate = run_dir / dyn_subdir
+        return candidate if candidate.exists() else run_dir
     if field_kind.lower() == "prognostic":
         return run_dir
     raise ValueError('FIELD_KIND must be "prognostic" or "diagnostic".')
@@ -123,10 +188,45 @@ def read_surface(data_dir, field_name, iteration):
             f"for shape ({NY}, {NX})."
         )
 
-    return field.reshape(NY, NX)
+    return field.reshape(NY, NX).astype(np.float32, copy=False)
 
 
-def grid():
+def read_land_mask():
+    depth_path = RUN_DIR / "Depth.data"
+    if not depth_path.exists():
+        print(f"No Depth.data found at {depth_path}; land will not be masked.")
+        return None
+
+    depth = np.fromfile(depth_path, dtype=DATA_DTYPE)
+    expected_size = NY * NX
+    if depth.size != expected_size:
+        print(
+            f"{depth_path} has {depth.size} values, expected {expected_size}; "
+            "land will not be masked."
+        )
+        return None
+
+    return depth.reshape(NY, NX) <= 0.0
+
+
+def mask_land(field, land_mask):
+    if land_mask is None:
+        return field
+
+    field = field.copy()
+    field[land_mask] = np.nan
+    return field
+
+
+def read_plot_field(data_dir, field_name, iteration, land_mask, skip):
+    return mask_land(read_surface(data_dir, field_name, iteration), land_mask)[::skip, ::skip]
+
+
+def read_raw_field(data_dir, field_name, iteration, skip):
+    return read_surface(data_dir, field_name, iteration)[::skip, ::skip]
+
+
+def grid_1d():
     lon = (np.arange(NX) + 0.5) * DX_DEG
 
     if LATITUDE_ORDER == "north_to_south":
@@ -136,7 +236,7 @@ def grid():
     else:
         raise ValueError('LATITUDE_ORDER must be "north_to_south" or "south_to_north".')
 
-    return np.meshgrid(lon, lat)
+    return lon, lat
 
 
 def stats_for_field(field):
@@ -146,6 +246,22 @@ def stats_for_field(field):
         "mean": float(np.nanmean(field)),
         "std": float(np.nanstd(field)),
     }
+
+
+def safe_symmetric_limit(fields):
+    zmax = max(float(np.nanmax(np.abs(field))) for field in fields)
+    if not np.isfinite(zmax) or zmax <= 0.0:
+        return 1e-12
+    return zmax
+
+
+def display_symmetric_limit(fields):
+    if COLOR_LIMIT is not None:
+        limit = abs(float(COLOR_LIMIT))
+        if np.isfinite(limit) and limit > 0.0:
+            return limit
+
+    return safe_symmetric_limit(fields)
 
 
 def nice_number(value):
@@ -197,8 +313,9 @@ def stats_box_text(
         f"first/last: {iterations[0]} / {iterations[-1]}<br>"
         f"current iteration: {iteration}<br>"
         f"current time: {runtime_hours:.2f} hours<br>"
-        f"grid: {NY} x {NX}, skip={SKIP}<br>"
-        f"color scale: +/- {value_text(zmax, unit)}<br><br>"
+        f"grid: {NY} x {NX}, HTML skip={HTML_SKIP}<br>"
+        f"color scale: +/- {value_text(zmax, unit)}"
+        f"{' (fixed display)' if COLOR_LIMIT is not None else ''}<br><br>"
         f"<b>Selected iteration</b><br>"
         f"min: {value_text(current_stats['min'], unit)}<br>"
         f"max: {value_text(current_stats['max'], unit)}<br>"
@@ -215,7 +332,7 @@ def info_annotation(text):
     return dict(
         text=text,
         x=INFO_BOX_X,
-        y=0.88,
+        y=0.95,
         xref="paper",
         yref="paper",
         xanchor="left",
@@ -225,20 +342,19 @@ def info_annotation(text):
         bordercolor="rgba(30, 30, 30, 0.35)",
         borderwidth=1,
         borderpad=10,
-        bgcolor="rgba(255, 255, 255, 0.92)",
-        font=dict(size=13),
+        bgcolor="rgba(255, 255, 255, 0.94)",
+        font=dict(size=12),
     )
 
 
-def surface_trace(field, show_colorbar=False):
-    return go.Surface(
+def eta_heatmap(field, show_colorbar=True):
+    return go.Heatmap(
         x=Lon_p,
         y=Lat_p,
         z=field,
-        surfacecolor=field,
+        zmin=-zmax,
+        zmax=zmax,
         colorscale=colorscale,
-        cmin=-zmax,
-        cmax=zmax,
         showscale=show_colorbar,
         colorbar=dict(
             title=colorbar_label,
@@ -248,9 +364,6 @@ def surface_trace(field, show_colorbar=False):
             len=0.74,
             thickness=18,
         ),
-        contours=dict(
-            z=dict(show=True, usecolormap=True, highlightcolor="white", project_z=True)
-        ),
         hovertemplate=(
             "lon: %{x:.2f} deg<br>"
             "lat: %{y:.2f} deg<br>"
@@ -258,6 +371,321 @@ def surface_trace(field, show_colorbar=False):
             "%{z:.6g}<extra></extra>"
         ),
     )
+
+
+def land_heatmap(land_mask):
+    if land_mask is None:
+        return None
+
+    land_z = np.where(land_mask[::HTML_SKIP, ::HTML_SKIP], 1.0, np.nan).astype(np.float32)
+    return go.Heatmap(
+        x=Lon_p,
+        y=Lat_p,
+        z=land_z,
+        zmin=0.0,
+        zmax=1.0,
+        colorscale=[[0.0, "rgb(198,198,198)"], [1.0, "rgb(198,198,198)"]],
+        showscale=False,
+        hoverinfo="skip",
+        name="land",
+    )
+
+
+def frame_annotation(iteration, field):
+    return info_annotation(
+        stats_box_text(
+            FIELD_NAME,
+            FIELD_KIND,
+            data_dir,
+            iterations,
+            iteration,
+            field,
+            all_stats,
+            zmax,
+        )
+    )
+
+
+def show_interactive_figure(fig, html_path):
+    if WRITE_HTML:
+        fig.write_html(
+            html_path,
+            include_plotlyjs=True,
+            auto_open=OPEN_BROWSER,
+            auto_play=False,
+            config={"responsive": True},
+        )
+        print(f"Interactive HTML written to: {html_path}")
+
+    if not SHOW_FIGURE:
+        return
+
+    try:
+        fig.show()
+    except Exception as exc:
+        print(f"Plotly display was skipped because fig.show() failed: {exc}")
+        print(f"Open the written HTML file instead: {html_path}")
+
+
+def ffmpeg_available():
+    return shutil.which("ffmpeg") is not None or importlib.util.find_spec("imageio_ffmpeg") is not None
+
+
+def choose_video_output():
+    requested = output_path(VIDEO_FILE)
+    if requested.suffix.lower() == ".mp4" and not ffmpeg_available():
+        fallback = output_path(VIDEO_FALLBACK_FILE)
+        print(f"ffmpeg is not available, so writing GIF instead of MP4: {fallback}")
+        return fallback
+
+    return requested
+
+
+def write_video(data_dir, field_name, iterations, land_mask, zmax):
+    import imageio.v2 as imageio
+
+    mpl_config_dir = Path(os.environ.get("MPLCONFIGDIR", "/tmp/matplotlib"))
+    mpl_config_dir.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", str(mpl_config_dir))
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib import colors as mcolors
+
+    video_path = choose_video_output()
+    fps = max(1, int(round(1000 / VIDEO_FRAME_DURATION_MS)))
+    first_field = read_plot_field(data_dir, field_name, iterations[0], land_mask, VIDEO_SKIP)
+
+    cmap_obj = plt.get_cmap(CMAP).copy()
+    cmap_obj.set_bad("0.78")
+    norm = mcolors.TwoSlopeNorm(vmin=-zmax, vcenter=0.0, vmax=zmax)
+
+    fig, ax = plt.subplots(
+        figsize=(VIDEO_WIDTH / 100.0, VIDEO_HEIGHT / 100.0),
+        dpi=100,
+        constrained_layout=True,
+    )
+    image = ax.imshow(
+        first_field,
+        origin="lower" if LATITUDE_ORDER == "south_to_north" else "upper",
+        extent=[0.0, 360.0, -90.0, 90.0],
+        cmap=cmap_obj,
+        norm=norm,
+        interpolation="nearest",
+        aspect="auto",
+    )
+    cbar = fig.colorbar(image, ax=ax, location="right", pad=0.02, fraction=0.04)
+    cbar.set_label(colorbar_label)
+    ax.set_xlabel("Longitude [deg]")
+    ax.set_ylabel("Latitude [deg]")
+    ax.set_xticks(np.arange(0.0, 361.0, 60.0))
+    ax.set_yticks(np.arange(-90.0, 91.0, 30.0))
+
+    writer_kwargs = {"mode": "I", "fps": fps}
+    with imageio.get_writer(video_path, **writer_kwargs) as writer:
+        for frame_number, iteration in enumerate(iterations, start=1):
+            field = read_plot_field(data_dir, field_name, iteration, land_mask, VIDEO_SKIP)
+            runtime_hours = iteration * DT_SECONDS / 3600.0
+
+            image.set_data(field)
+            ax.set_title(
+                f"{title} | iteration {iteration} | time {runtime_hours:.2f} hours"
+            )
+            fig.canvas.draw()
+            rgba = np.asarray(fig.canvas.buffer_rgba())
+            writer.append_data(rgba[:, :, :3].copy())
+
+            if frame_number == 1 or frame_number % 25 == 0 or frame_number == len(iterations):
+                print(f"  rendered video frame {frame_number}/{len(iterations)}")
+
+    plt.close(fig)
+    print(f"Animation written to: {video_path}")
+
+
+def pyvista_available():
+    return (
+        importlib.util.find_spec("pyvista") is not None
+        and importlib.util.find_spec("vtk") is not None
+    )
+
+
+def lon_lat_mesh(skip):
+    lon, lat = grid_1d()
+    lon_skip = lon[::skip]
+    lat_skip = lat[::skip]
+    return np.meshgrid(lon_skip, lat_skip)
+
+
+def sphere_xyz(lon_deg, lat_deg, radius):
+    lon_rad = np.deg2rad(lon_deg)
+    lat_rad = np.deg2rad(lat_deg)
+    cos_lat = np.cos(lat_rad)
+    x = radius * cos_lat * np.cos(lon_rad)
+    y = radius * cos_lat * np.sin(lon_rad)
+    z = radius * np.sin(lat_rad)
+    return x, y, z
+
+
+def build_pyvista_surface(lon_deg, lat_deg, radius, point_data):
+    import pyvista as pv
+
+    x, y, z = sphere_xyz(lon_deg, lat_deg, radius)
+    mesh = pv.StructuredGrid(x, y, z)
+    for key, values in point_data.items():
+        mesh.point_data[key] = values.ravel(order="F")
+    return mesh.extract_surface().triangulate()
+
+
+def pyvista_camera_position(distance):
+    return [
+        (distance, -0.72 * distance, 0.34 * distance),
+        (0.0, 0.0, 0.0),
+        (0.0, 0.0, 1.0),
+    ]
+
+
+def write_pyvista_outputs(data_dir, field_name, iterations, land_mask, zmax):
+    import pyvista as pv
+
+    if PYVISTA_OFF_SCREEN and hasattr(pv, "start_xvfb"):
+        try:
+            pv.start_xvfb()
+        except Exception:
+            pass
+
+    pv.global_theme.smooth_shading = True
+    pv.global_theme.window_size = [PYVISTA_WINDOW_WIDTH, PYVISTA_WINDOW_HEIGHT]
+
+    lon_2d, lat_2d = lon_lat_mesh(PYVISTA_SKIP)
+    land_mask_skip = None if land_mask is None else land_mask[::PYVISTA_SKIP, ::PYVISTA_SKIP]
+    if land_mask_skip is None:
+        land_mask_skip = np.zeros_like(lon_2d, dtype=bool)
+
+    first_field = read_raw_field(data_dir, field_name, iterations[0], PYVISTA_SKIP)
+    ocean_radius = EARTH_RADIUS_M + PYVISTA_VERTICAL_SCALE * first_field
+    ocean_surface = build_pyvista_surface(
+        lon_2d,
+        lat_2d,
+        ocean_radius,
+        {"eta": first_field, "wet": (~land_mask_skip).astype(np.uint8)},
+    ).threshold(0.5, scalars="wet")
+
+    land_radius = np.full_like(lon_2d, EARTH_RADIUS_M + PYVISTA_LAND_OFFSET_M, dtype=np.float32)
+    land_surface = build_pyvista_surface(
+        lon_2d,
+        lat_2d,
+        land_radius,
+        {"land": land_mask_skip.astype(np.uint8)},
+    ).threshold(0.5, scalars="land")
+
+    plotter = pv.Plotter(
+        off_screen=PYVISTA_OFF_SCREEN,
+        window_size=(PYVISTA_WINDOW_WIDTH, PYVISTA_WINDOW_HEIGHT),
+    )
+    plotter.set_background("#07131d", top="#32526f")
+    plotter.enable_anti_aliasing("ssaa")
+    plotter.add_text(
+        f"{title_name(field_name)} | PyVista 3D",
+        position="upper_left",
+        color="white",
+        font_size=16,
+    )
+    plotter.add_mesh(
+        land_surface,
+        color="#c9b79c",
+        smooth_shading=True,
+        ambient=0.45,
+        diffuse=0.65,
+        specular=0.10,
+        show_scalar_bar=False,
+    )
+    ocean_actor = plotter.add_mesh(
+        ocean_surface,
+        scalars="eta",
+        cmap=CMAP,
+        clim=[-zmax, zmax],
+        smooth_shading=True,
+        ambient=0.20,
+        diffuse=0.85,
+        specular=0.25,
+        nan_opacity=0.0,
+        scalar_bar_args={
+            "title": colorbar_label,
+            "vertical": True,
+            "fmt": "%.3f",
+            "title_font_size": 18,
+            "label_font_size": 14,
+            "position_x": 0.88,
+            "position_y": 0.18,
+            "height": 0.62,
+        },
+    )
+    plotter.add_mesh(
+        pv.Sphere(radius=EARTH_RADIUS_M * 0.985, theta_resolution=120, phi_resolution=120),
+        color="#0a2030",
+        smooth_shading=True,
+        opacity=0.28,
+        ambient=0.35,
+        diffuse=0.25,
+        specular=0.0,
+        show_scalar_bar=False,
+    )
+    plotter.add_light(pv.Light(position=(2.0e7, -1.6e7, 1.2e7), intensity=1.1, color="white"))
+    plotter.add_light(pv.Light(position=(-1.2e7, 1.6e7, -8.0e6), intensity=0.5, color="#9ec7ff"))
+    plotter.camera_position = pyvista_camera_position(EARTH_RADIUS_M * 3.0)
+
+    screenshot_path = output_path(PYVISTA_SCREENSHOT_FILE)
+    gif_path = output_path(PYVISTA_GIF_FILE)
+
+    runtime_hours = iterations[0] * DT_SECONDS / 3600.0
+    plotter.add_title(
+        f"{title} | iteration {iterations[0]} | time {runtime_hours:.2f} h",
+        font_size=20,
+        color="white",
+    )
+    plotter.screenshot(screenshot_path)
+    print(f"PyVista screenshot written to: {screenshot_path}")
+
+    frame_iterations = iterations[::PYVISTA_FRAME_STEP]
+    if frame_iterations[-1] != iterations[-1]:
+        frame_iterations.append(iterations[-1])
+
+    if PYVISTA_MAKE_GIF:
+        plotter.open_gif(gif_path, fps=max(1, int(round(1000 / VIDEO_FRAME_DURATION_MS))))
+        total_frames = len(frame_iterations)
+        for frame_index, iteration in enumerate(frame_iterations, start=1):
+            frame_field = read_raw_field(data_dir, field_name, iteration, PYVISTA_SKIP)
+            frame_radius = EARTH_RADIUS_M + PYVISTA_VERTICAL_SCALE * frame_field
+            x, y, z = sphere_xyz(lon_2d, lat_2d, frame_radius)
+            ocean_surface.points = np.column_stack(
+                [x.ravel(order="F"), y.ravel(order="F"), z.ravel(order="F")]
+            )
+            ocean_surface.point_data["eta"] = frame_field.ravel(order="F")
+            ocean_actor.mapper.scalar_range = (-zmax, zmax)
+
+            azimuth = 35.0 + 180.0 * (frame_index - 1) / max(1, total_frames - 1)
+            elevation = 22.0 + 8.0 * np.sin(2.0 * np.pi * (frame_index - 1) / max(1, total_frames))
+            plotter.camera.azimuth = azimuth
+            plotter.camera.elevation = elevation
+            runtime_hours = iteration * DT_SECONDS / 3600.0
+            plotter.add_title(
+                f"{title} | iteration {iteration} | time {runtime_hours:.2f} h",
+                font_size=20,
+                color="white",
+            )
+            plotter.render()
+            plotter.write_frame()
+
+            if frame_index == 1 or frame_index % 10 == 0 or frame_index == total_frames:
+                print(f"  rendered PyVista frame {frame_index}/{total_frames}")
+
+        print(f"PyVista GIF written to: {gif_path}")
+
+    if PYVISTA_SHOW and not PYVISTA_OFF_SCREEN:
+        plotter.show(auto_close=False)
+    else:
+        plotter.close()
 
 
 #%%
@@ -275,16 +703,17 @@ print(iterations)
 if not iterations:
     raise FileNotFoundError(f"No files found matching {data_dir / (FIELD_NAME + '.*.data')}")
 
-Lon, Lat = grid()
-Lon_p = Lon[::SKIP, ::SKIP]
-Lat_p = Lat[::SKIP, ::SKIP]
+land_mask = read_land_mask()
+Lon, Lat = grid_1d()
+Lon_p = Lon[::HTML_SKIP]
+Lat_p = Lat[::HTML_SKIP]
 
 fields = [
-    read_surface(data_dir, FIELD_NAME, iteration)[::SKIP, ::SKIP]
+    read_plot_field(data_dir, FIELD_NAME, iteration, land_mask, HTML_SKIP)
     for iteration in iterations
 ]
 
-zmax = max(np.nanmax(np.abs(field)) for field in fields)
+zmax = display_symmetric_limit(fields)
 all_stats = stats_for_field(np.asarray(fields))
 colorbar_label = COLORBAR_LABEL or label_with_unit(FIELD_NAME)
 title = f"MITgcm {title_name(FIELD_NAME)} Evolution ({FIELD_KIND}, {len(iterations)} iterations)"
@@ -292,31 +721,21 @@ colorscale = plotly_colorscale(CMAP)
 
 
 #%%
-# Cell 4: Surface plotter with browser HTML output.
-# This is a real 3D surface: x=longitude, y=latitude, z=field value.
-fig = go.Figure(
-    data=[surface_trace(fields[0], show_colorbar=True)]
-)
+# Cell 4: Interactive HTML output.
+# This view keeps all iterations and uses a lighter heatmap so the browser can
+# render the full free-surface evolution instead of opening a blank 3D page.
+data_traces = [eta_heatmap(fields[0], show_colorbar=True)]
+land_trace = land_heatmap(land_mask)
+if land_trace is not None:
+    data_traces.append(land_trace)
+
+fig = go.Figure(data=data_traces)
 
 fig.frames = [
     go.Frame(
-        data=[surface_trace(field, show_colorbar=True)],
-        layout=dict(
-            annotations=[
-                info_annotation(
-                    stats_box_text(
-                        FIELD_NAME,
-                        FIELD_KIND,
-                        data_dir,
-                        iterations,
-                        iteration,
-                        field,
-                        all_stats,
-                        zmax,
-                    )
-                )
-            ]
-        ),
+        data=[go.Heatmap(z=field)],
+        traces=[0],
+        layout=dict(annotations=[frame_annotation(iteration, field)]),
         name=str(iteration),
     )
     for field, iteration in zip(fields, iterations)
@@ -379,7 +798,7 @@ fig.update_layout(
     width=FIG_WIDTH,
     height=FIG_HEIGHT,
     template="plotly_white",
-    margin=dict(l=20, r=40, t=80, b=45),
+    margin=dict(l=40, r=35, t=75, b=50),
     sliders=[
         dict(
             active=0,
@@ -391,57 +810,41 @@ fig.update_layout(
         )
     ],
     updatemenus=play_buttons,
-    scene=dict(
-        domain=dict(x=SURFACE_DOMAIN_X, y=[0.08, 1.0]),
-        xaxis_title="Longitude [deg]",
-        yaxis_title="Latitude [deg]",
-        zaxis_title=colorbar_label,
-        zaxis=dict(range=[-zmax, zmax]),
-        camera=dict(eye=dict(x=1.45, y=-1.55, z=0.85)),
-        aspectmode="auto",
+    xaxis=dict(
+        domain=MAP_DOMAIN_X,
+        title="Longitude [deg]",
+        range=[0.0, 360.0],
+        constrain="domain",
+    ),
+    yaxis=dict(
+        domain=[0.08, 1.0],
+        title="Latitude [deg]",
+        range=[-90.0, 90.0],
+        scaleanchor="x",
+        scaleratio=1.0,
     ),
     annotations=[
-        info_annotation(
-            stats_box_text(
-                FIELD_NAME,
-                FIELD_KIND,
-                data_dir,
-                iterations,
-                iterations[0],
-                fields[0],
-                all_stats,
-                zmax,
-            )
-        )
+        frame_annotation(iterations[0], fields[0])
     ],
 )
 
-if WRITE_HTML:
-    fig.write_html(HTML_FILE, auto_open=OPEN_BROWSER)
-
-fig.show()
+html_path = output_path(HTML_FILE)
+show_interactive_figure(fig, html_path)
 
 
 #%%
-# Cell 5: Optional video export.
-# Requires kaleido and imageio:
-#   pip install -U kaleido imageio
+# Cell 5: Optional animation export.
+# This path renders directly with Matplotlib/imageio and does not use Kaleido.
 if MAKE_VIDEO:
-    import imageio.v2 as imageio
+    write_video(data_dir, FIELD_NAME, iterations, land_mask, zmax)
 
-    png_frames = []
+#%%
+# Cell 6: Fancy PyVista 3-D globe.
+# This keeps the 2-D products above, then builds a styled 3-D rendering with
+# exaggerated free-surface relief, a separate land shell, and an optional GIF.
+if pyvista_available():
+    write_pyvista_outputs(data_dir, FIELD_NAME, iterations, land_mask, zmax)
+else:
+    print("PyVista/VTK is not available in this environment; skipping Cell 6.")
 
-    for iteration, field in zip(iterations, fields):
-        fig.data[0].z = field
-        fig.data[0].surfacecolor = field
-        fig.update_layout(title=dict(text=f"{title} | iteration {iteration}"))
-
-        png_name = f"_frame_{FIELD_NAME}_{iteration:010d}.png"
-        fig.write_image(png_name, width=FIG_WIDTH, height=FIG_HEIGHT, scale=1)
-        png_frames.append(png_name)
-
-    with imageio.get_writer(VIDEO_FILE, fps=max(1, int(1000 / VIDEO_FRAME_DURATION_MS))) as writer:
-        for png_name in png_frames:
-            writer.append_data(imageio.imread(png_name))
-
-    print(f"Video written to: {VIDEO_FILE}")
+# %%

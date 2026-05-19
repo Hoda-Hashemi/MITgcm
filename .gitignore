@@ -116,3 +116,8 @@ core
 /verification/*/tr_run.*
 
 /tools/TAP_support/ADFirstAidKit/*.gch
+.venv/
+verification/vortexSphere_mitgcm_referenceCase/input/*.bin
+verification/vortexSphere_mitgcm_referenceCase/run_Run1/
+verification/vortexSphere_mitgcm_referenceCase/run_Run1/
+verification/vortexSphere_mitgcm_referenceCase/Scripts/results_Run1/
