@@ -119,6 +119,20 @@ G = 9.81
 
 BATHY_FILENAME = "bathymetry.bin"
 
+
+
+
+
+
+
+#!added for constant depth:
+CONSTANT_DEPTH = -4000.0
+BATHY_FILENAME = "bathymetry_flat4000.bin"
+def write_flat_bathymetry(base_dir: Path):
+    bathy = np.full((NY, NX), CONSTANT_DEPTH, dtype=">f4")
+    bathy.tofile(base_dir / BATHY_FILENAME)
+    print(f"Wrote {BATHY_FILENAME} with constant depth {CONSTANT_DEPTH} m.")
+
 ## Shared tools for both experiments:
 def load_ocean_mask(base_dir: Path) -> np.ndarray:
     bathy = np.fromfile(base_dir / BATHY_FILENAME, dtype=">f4").reshape(NY, NX)
@@ -261,6 +275,8 @@ def make_geostrophic_gaussian(ocean_mask: np.ndarray):
 # Main: choose experiment
 def main():
     base_dir = Path(__file__).resolve().parent
+
+    write_flat_bathymetry(base_dir)
     ocean_mask = load_ocean_mask(base_dir)
 
     #! Experiment 1: cosine bump, unbalanced, gravity waves

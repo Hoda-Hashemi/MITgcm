@@ -66,12 +66,12 @@
  xgOrigin = 0.,
  ygOrigin = -90.,
  rSphere = 6371000.,
- delR = 11000.,
+ delR = 4000.,
 /
 
 # Input datasets
 &PARM05
- bathyFile = 'bathymetry.bin',
+ bathyFile = 'bathymetry_flat4000.bin',
  pSurfInitFile = 'eta_init.bin',
  uVelInitFile  = 'u_init.bin'
  vVelInitFile  = 'v_init.bin'
