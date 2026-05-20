@@ -1,31 +1,21 @@
 #%%
-# Cell 1: Imports and paths.
 from pathlib import Path
 import sys
 import importlib
 import pandas as pd
 
-ANIM_DIR = Path("/Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split").resolve()
+SCRIPT_DIR = Path.cwd().resolve()
 
-print("ANIM_DIR =", ANIM_DIR)
-print("exists =", ANIM_DIR.exists())
-print("component exists =", (ANIM_DIR / "animationComponents.py").exists())
+ANIM_DIR = SCRIPT_DIR / "animation_split"
+RUN_DIR  = (SCRIPT_DIR / "../../run").resolve()
+OUT_DIR  = (SCRIPT_DIR / "../docs").resolve()
 
 sys.path.insert(0, str(ANIM_DIR))
 
-import importlib
 import animationComponents as ac
 importlib.reload(ac)
 
-print("loaded from:", ac.__file__)
-
-SCRIPT_DIR = ANIM_DIR
-RUN_DIR = (SCRIPT_DIR / "../../run").resolve()
-OUT_DIR = (SCRIPT_DIR / "../../docs").resolve()
-
-print("SCRIPT_DIR =", SCRIPT_DIR)
-print("RUN_DIR    =", RUN_DIR)
-print("RUN exists =", RUN_DIR.exists())
+print(ac.__file__)
 #%%
 # Cell 2: Settings.
 FIELD_NAME = "Eta" 
