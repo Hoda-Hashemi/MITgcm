@@ -596,7 +596,7 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
         vmin=0 if "|" in name else -limits[name]; vmax=limits[name]
         im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
         ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
-        fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08)
+        fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=45)
     for j in range(len(names),6): ax[j].axis("off")
     writer=FFMpegWriter(fps=fps,codec="libvpx-vp9",bitrate=20000)
     with writer.saving(fig,str(outpath),dpi=300):
