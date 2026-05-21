@@ -23,7 +23,7 @@ import animationComponents as ac
 importlib.reload(ac)
 
 SCRIPT_DIR = ANIM_DIR.resolve()
-RUN_DIR = ac.resolve_run_dir(SCRIPT_DIR)
+RUN_DIR = (SCRIPT_DIR.parent.parent / "run_1").resolve()
 OUT_DIR = (SCRIPT_DIR.parent / "docs").resolve()
 
 print("animationComponents =", ac.__file__)
@@ -289,3 +289,4 @@ if MAKE_PANEL_WEBM:
         print("Skipped DIAGNOSTIC VARIABLES: no common diagnostic iterations found.")
 
 # %%
+
