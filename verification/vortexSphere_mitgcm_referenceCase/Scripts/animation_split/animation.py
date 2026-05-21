@@ -23,7 +23,7 @@ import animationComponents as ac
 importlib.reload(ac)
 
 SCRIPT_DIR = ANIM_DIR.resolve()
-RUN_DIR = (SCRIPT_DIR.parent.parent / "run").resolve()
+RUN_DIR = (SCRIPT_DIR.parent.parent / "run_2").resolve()
 OUT_DIR = (SCRIPT_DIR.parent / "docs").resolve()
 
 print("animationComponents =", ac.__file__)
@@ -40,7 +40,8 @@ RECORD_INDEX = None
 
 CMAP = "RdBu_r"
 COLORBAR_LABEL = ""
-EXPERIMENT_TITLE = "Gaussian Free-Surface Patch with Constant Bathymetry d = -4000 m"
+EXPERIMENT_TITLE = "Gaussian Free-Surface Patch with Real Bathymetry"
+# "Gaussian Free-Surface Patch with Constant Bathymetry d = -4000 m"
 #! Simulation time settings.
 NTIMESTEPS=14400
 DELTA_T_SEC=60
@@ -138,7 +139,7 @@ display(summary_df)
 # FIELD_NAME = "dyn_Aux"; RECORD_NAME = "PhiVEL"
 # FIELD_NAME = "dynDiag"; RECORD_NAME = "UVELMASS"
 
-#%%
+ #%%
 #! Cell 4: Choose one variable/record
 
 FIELD_NAME = "Eta"
@@ -263,7 +264,8 @@ if MAKE_PANEL_WEBM:
         w_prog = ac.read_variable_series(RUN_DIR, "W", eta_iters, land_mask)
         mag_prog = [np.sqrt(u*u + v*v) for u, v in zip(u_prog, v_prog)]
         prognostic_fields = {"Eta": eta_prog, "U": u_prog, "V": v_prog, "W": w_prog, "|U,V|": mag_prog}
-        ac.make_webm("PROGNOSTIC VARIABLES",prognostic_fields,eta_iters,8,ANIMATION_DIR/"prognostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)    
+        ac.make_webm_adaptive("PROGNOSTIC VARIABLES",prognostic_fields,eta_iters,8,ANIMATION_DIR/"prognostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)  
+        #  ac.make_webm("PROGNOSTIC VARIABLES",prognostic_fields,eta_iters,8,ANIMATION_DIR/"prognostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)    
     else:
         print("Skipped PROGNOSTIC VARIABLES: common Eta/U/V/W iterations not found.")
 
@@ -288,10 +290,9 @@ if MAKE_PANEL_WEBM:
                 print(f"{rec_name} source = {bundle}")
             except Exception as exc:
                 print(f"Skipped {rec_name}:", exc)
+        ac.make_webm_adaptive("DIAGNOSTIC VARIABLES",diagnostic_fields,dyn_iters,4,ANIMATION_DIR/"diagnostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)
 
-        ac.make_webm("DIAGNOSTIC VARIABLES",diagnostic_fields,dyn_iters,4,ANIMATION_DIR/"diagnostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)
+        # ac.make_webm("DIAGNOSTIC VARIABLES",diagnostic_fields,dyn_iters,4,ANIMATION_DIR/"diagnostic.webm",CMAP,EXPERIMENT_TITLE,NTIMESTEPS,DELTA_T_SEC)
     else:
         print("Skipped DIAGNOSTIC VARIABLES: no common diagnostic iterations found.")
-
 # %%
-
