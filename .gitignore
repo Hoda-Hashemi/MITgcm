@@ -22,6 +22,11 @@ core
 # OSX system files
 .DS_store
 
+Scripts/__pycache__/
+Scripts/results/
+Scripts/results_/
+input/__pycache__/
+
 /doc/_build/
 
 /eesupp/src/exch_xy_r[ls48].F
@@ -114,6 +119,10 @@ core
 /verification/tmp_*
 
 /verification/*/tr_run.*
+/verification/*/run_*/
+/verification/*/run/
+
+/verification/*/Scripts/results*/
 
 /tools/TAP_support/ADFirstAidKit/*.gch
 
