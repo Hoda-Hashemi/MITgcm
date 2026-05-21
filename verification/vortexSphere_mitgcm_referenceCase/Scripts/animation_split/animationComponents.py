@@ -577,40 +577,33 @@ def lim_abs(fields):
     return limit if np.isfinite(limit) and limit > 0 else 1e-12
 
 #! Write six-panel WebM without changing layout/font/title settings.
-def make_webm(kind, fields, iters, fps, outpath, cmap, experiment_title):
+def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,delta_t_sec):
     import matplotlib.pyplot as plt
     from matplotlib.animation import FFMpegWriter
     if not fields:
-        print(f"Skipped {kind}: no fields available.")
-        return
-    names = list(fields.keys())[:6]
-    limits = {k: lim_abs(v) for k, v in fields.items()}
-    outpath = Path(outpath)
-    outpath.parent.mkdir(parents=True, exist_ok=True)
-    fig, axes = plt.subplots(2, 3, figsize=(24, 16), dpi=300)
-    fig.subplots_adjust(left=0.05, right=0.97, top=0.70, bottom=0.06, wspace=0.22, hspace=0.40)
-    fig.text(0.5, 0.975, f"{kind}\n{experiment_title}", ha="center", va="top", fontsize=34, linespacing=1.45, fontweight="bold")
-    fig.text(0.5, 0.865, "Fields: " + ", ".join(names), ha="center", va="top", fontsize=18)
-    fig.text(0.5, 0.830, f"Iterations: [{', '.join(str(it) for it in iters)}]", ha="center", va="top", fontsize=13)
-    fig.add_artist(plt.Line2D([0.08, 0.92], [0.800, 0.800], transform=fig.transFigure, color="black", linewidth=2.0))
-    ax = axes.ravel()
-    ims, titles = [], []
-    for j, name in enumerate(names):
-        vmin = 0 if "|" in name else -limits[name]
-        vmax = limits[name]
-        im = ax[j].imshow(fields[name][0], cmap=cmap, vmin=vmin, vmax=vmax, origin="lower", aspect="auto")
-        ims.append(im)
-        titles.append(ax[j].set_title("", fontsize=15, pad=16))
-        fig.colorbar(im, ax=ax[j], orientation="horizontal", fraction=0.045, pad=0.08)
-    for j in range(len(names), 6):
-        ax[j].axis("off")
-    writer = FFMpegWriter(fps=fps, codec="libvpx-vp9", bitrate=20000)
-    with writer.saving(fig, str(outpath), dpi=300):
-        for i, it in enumerate(iters):
-            for name, im, title in zip(names, ims, titles):
-                field = fields[name][i]
-                im.set_data(field)
+        print(f"Skipped {kind}: no fields available."); return
+    names=list(fields.keys())[:6]
+    limits={k:lim_abs(v) for k,v in fields.items()}
+    total_days=ntimesteps*delta_t_sec/86400.0
+    outpath=Path(outpath); outpath.parent.mkdir(parents=True,exist_ok=True)
+    fig,axes=plt.subplots(2,3,figsize=(24,16),dpi=300)
+    fig.subplots_adjust(left=0.05,right=0.97,top=0.70,bottom=0.06,wspace=0.22,hspace=0.40)
+    fig.text(0.5,0.975,f"{kind}\n{experiment_title}\nnTimesteps = {ntimesteps}, delta t = {delta_t_sec:g} sec, Total simulation = {total_days:g} days",ha="center",va="top",fontsize=34,linespacing=1.45,fontweight="bold")
+    # fig.text(0.5,0.865,"Fields: "+", ".join(names),ha="center",va="top",fontsize=18)
+    fig.add_artist(plt.Line2D([0.08,0.92],[0.800,0.800],transform=fig.transFigure,color="black",linewidth=2.0))
+    ax=axes.ravel(); ims=[]; titles=[]
+    for j,name in enumerate(names):
+        vmin=0 if "|" in name else -limits[name]; vmax=limits[name]
+        im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
+        ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
+        fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08)
+    for j in range(len(names),6): ax[j].axis("off")
+    writer=FFMpegWriter(fps=fps,codec="libvpx-vp9",bitrate=20000)
+    with writer.saving(fig,str(outpath),dpi=300):
+        for i,it in enumerate(iters):
+            for name,im,title in zip(names,ims,titles):
+                field=fields[name][i]; im.set_data(field)
                 title.set_text(f"{name} | iteration = {it}\nmin = {np.nanmin(field):.3e}    max = {np.nanmax(field):.3e}")
             writer.grab_frame()
-    plt.close(fig)
-    print("Saved:", outpath)
+    plt.close(fig); print("Saved:",outpath)
+
