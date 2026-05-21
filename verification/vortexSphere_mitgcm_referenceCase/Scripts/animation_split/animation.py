@@ -1,29 +1,46 @@
 #%%
+#! Cell 1: Imports and paths
+
 from pathlib import Path
 import sys
 import importlib
+import re
 import pandas as pd
+import numpy as np
+try:
+    from IPython.display import display
+except Exception:
+    def display(x):
+        print(x)
 
-SCRIPT_DIR = Path.cwd().resolve()
-
-ANIM_DIR = SCRIPT_DIR / "animation_split"
-RUN_DIR  = (SCRIPT_DIR / "../../run").resolve()
-OUT_DIR  = (SCRIPT_DIR / "../docs").resolve()
+CWD = Path.cwd().resolve()
+SCRIPT_DIR = Path(__file__).resolve().parent if "__file__" in globals() else CWD
+ANIM_DIR = SCRIPT_DIR if (SCRIPT_DIR / "animationComponents.py").exists() else CWD / "animation_split"
 
 sys.path.insert(0, str(ANIM_DIR))
 
 import animationComponents as ac
 importlib.reload(ac)
 
-print(ac.__file__)
+SCRIPT_DIR = ANIM_DIR.resolve()
+RUN_DIR = ac.resolve_run_dir(SCRIPT_DIR)
+OUT_DIR = (SCRIPT_DIR.parent / "docs").resolve()
+
+print("animationComponents =", ac.__file__)
+print("SCRIPT_DIR =", SCRIPT_DIR)
+print("RUN_DIR =", RUN_DIR)
+print("OUT_DIR =", OUT_DIR)
+
 #%%
-# Cell 2: Settings.
-FIELD_NAME = "Eta" 
+#! Cell 2: Settings
+
+FIELD_NAME = "Eta"
 RECORD_NAME = None
 RECORD_INDEX = None
 
 CMAP = "RdBu_r"
 COLORBAR_LABEL = ""
+EXPERIMENT_TITLE = "Gaussian Patch_ Constant Bathymetry Depth = 4000 m"
 
 FIELD_UNITS = {
     "Eta": "m",
@@ -34,6 +51,9 @@ FIELD_UNITS = {
     "UVELMASS": "m/s",
     "VVELMASS": "m/s",
     "WVELMASS": "m/s",
+    "U": "m/s",
+    "V": "m/s",
+    "W": "m/s",
 }
 
 FIELD_DESCRIPTIONS = {
@@ -48,16 +68,16 @@ LATITUDE_ORDER = "south_to_north"
 DX_DEG = 0.25
 DY_DEG = 0.25
 
-#no skips set it to 1
-HTML_SKIP = 1 #2
-VIDEO_SKIP = 1 # 2
-
+HTML_SKIP = 1
+VIDEO_SKIP = 1
 COLOR_LIMIT = None
 
 WRITE_HTML = True
 SHOW_FIGURE = True
 OPEN_BROWSER = False
 MAKE_VIDEO = True
+MAKE_PLOTLY_GIF = False
+MAKE_PANEL_WEBM = True
 
 HTML_FILE = "mitgcm_animation.html"
 VIDEO_FILE = "mitgcm_animation.gif"
@@ -68,8 +88,16 @@ FIG_HEIGHT = 850
 VIDEO_WIDTH = 1800
 VIDEO_HEIGHT = 950
 VIDEO_FRAME_DURATION_MS = 180
-#%%#%%
-# Cell 3: Inventory table.
+
+safe_title = re.sub(r"[^A-Za-z0-9._-]+", "_", EXPERIMENT_TITLE).strip("_")
+ANIMATION_DIR = SCRIPT_DIR / safe_title
+ANIMATION_DIR.mkdir(parents=True, exist_ok=True)
+
+print("ANIMATION_DIR =", ANIMATION_DIR)
+
+#%%
+#! Cell 3: Inventory table
+
 inventory = ac.collect_inventory(RUN_DIR)
 
 static_df = pd.DataFrame({
@@ -80,12 +108,7 @@ static_df = pd.DataFrame({
 })
 
 timed_df = pd.DataFrame([
-    {
-        "type": "time-dependent",
-        "variable": name,
-        "iterations": values,
-        "records": "",
-    }
+    {"type": "time-dependent", "variable": name, "iterations": values, "records": ""}
     for name, values in inventory["timed_variables"].items()
 ])
 
@@ -104,28 +127,30 @@ summary_df = pd.concat([static_df, timed_df, dyn_df], ignore_index=True)
 print("RUN_DIR =", RUN_DIR)
 display(summary_df)
 
-# Example choices for next cell:
+# Examples:
 # FIELD_NAME = "Eta"
 # FIELD_NAME = "dyn_Aux"; RECORD_NAME = "PsiVEL"
 # FIELD_NAME = "dyn_Aux"; RECORD_NAME = "PhiVEL"
 # FIELD_NAME = "dynDiag"; RECORD_NAME = "UVELMASS"
 
 #%%
-# Cell 3: Choose one variable/record from the printed list.
+#! Cell 4: Choose one variable/record
+
 FIELD_NAME = "Eta"
 RECORD_NAME = None
 RECORD_INDEX = None
 
-# For dynamic bundles, use this style:
+# For dynamic bundles:
 # FIELD_NAME = "dyn_Aux"; RECORD_NAME = "PsiVEL"
 # FIELD_NAME = "dyn_Aux"; RECORD_NAME = "PhiVEL"
 # FIELD_NAME = "dynDiag"; RECORD_NAME = "UVELMASS"
 
 #%%
-# Cell 4: Load selected field series.
+#! Cell 5: Load selected field series
+
 timed = ac.discover_timed_variables(RUN_DIR)
 if FIELD_NAME not in timed:
-    raise FileNotFoundError(f"{FIELD_NAME} not found. Run Cell 2 and choose one printed variable.")
+    raise FileNotFoundError(f"{FIELD_NAME} not found. Run Cell 3 and choose one printed variable.")
 
 iterations = timed[FIELD_NAME]
 first_field, _ = ac.read_selected_field(RUN_DIR, FIELD_NAME, iterations[0], RECORD_NAME, RECORD_INDEX)
@@ -158,7 +183,8 @@ print(f"Grid: {NY} x {NX}; HTML_SKIP={HTML_SKIP}; VIDEO_SKIP={VIDEO_SKIP}")
 print(f"Color scale: +/- {zmax:.6g} {unit}")
 
 #%%
-# Cell 5: High-quality slider HTML.
+#! Cell 6: High-quality slider HTML
+
 fig = ac.build_slider_figure(
     fields=fields,
     iterations=iterations,
@@ -177,11 +203,12 @@ fig = ac.build_slider_figure(
     frame_duration_ms=VIDEO_FRAME_DURATION_MS,
 )
 
-html_path = ac.output_path(SCRIPT_DIR, HTML_FILE)
+html_path = ac.output_path(OUT_DIR, HTML_FILE)
 ac.show_or_write_figure(fig, html_path, WRITE_HTML, OPEN_BROWSER, SHOW_FIGURE)
 
 #%%
-# Cell 6: High-quality video or GIF.
+#! Cell 7: High-quality video or GIF
+
 if MAKE_VIDEO:
     ac.write_video(
         run_dir=RUN_DIR,
@@ -192,8 +219,8 @@ if MAKE_VIDEO:
         cmap=CMAP,
         colorbar_label=colorbar_label,
         title=field_label,
-        mp4_path=ac.output_path(SCRIPT_DIR, VIDEO_FILE),
-        gif_path=ac.output_path(SCRIPT_DIR, VIDEO_FALLBACK_FILE),
+        mp4_path=ac.output_path(ANIMATION_DIR, VIDEO_FILE),
+        gif_path=ac.output_path(ANIMATION_DIR, VIDEO_FALLBACK_FILE),
         record_name=RECORD_NAME,
         record_index=RECORD_INDEX,
         video_skip=VIDEO_SKIP,
@@ -203,125 +230,62 @@ if MAKE_VIDEO:
         latitude_order=LATITUDE_ORDER,
     )
 
-# %%
 #%%
-# Cell 6: Plotly GIF.
+#! Cell 8: Plotly GIF
 
-gif_path = ac.output_path(SCRIPT_DIR, "mitgcm_animation_plotly.gif")
+if MAKE_PLOTLY_GIF:
+    gif_path = ac.output_path(ANIMATION_DIR, "mitgcm_animation_plotly.gif")
+    ac.write_plotly_gif(
+        fig=fig,
+        iterations=iterations,
+        gif_path=gif_path,
+        width=FIG_WIDTH,
+        height=FIG_HEIGHT,
+        frame_duration_ms=VIDEO_FRAME_DURATION_MS,
+    )
 
-ac.write_plotly_gif(
-    fig=fig,
-    iterations=iterations,
-    gif_path=gif_path,
-    width=FIG_WIDTH,
-    height=FIG_HEIGHT,
-    frame_duration_ms=VIDEO_FRAME_DURATION_MS,
-)
-
-# %%
 #%%
-import os,re,glob
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FFMpegWriter
+#! Cell 9: Multi-panel prognostic and diagnostic WebM
 
-SCRIPT_DIR=os.getcwd()
-RUN_DIR=os.path.abspath(os.path.join(SCRIPT_DIR,"..","run"))
+if MAKE_PANEL_WEBM:
+    timed = ac.discover_timed_variables(RUN_DIR)
 
-Nx=1440
-Ny=720
-dtype=">f8"
-CMAP="seismic"
-EXPERIMENT_TITLE="Gaussian Patch_ Constant Bathymetry Depth = 4000 m"
+    eta_iters = ac.common_iterations(timed, ["Eta", "U", "V", "W"])
+    if eta_iters:
+        eta_prog = ac.read_variable_series(RUN_DIR, "Eta", eta_iters, land_mask)
+        u_prog = ac.read_variable_series(RUN_DIR, "U", eta_iters, land_mask)
+        v_prog = ac.read_variable_series(RUN_DIR, "V", eta_iters, land_mask)
+        w_prog = ac.read_variable_series(RUN_DIR, "W", eta_iters, land_mask)
+        mag_prog = [np.sqrt(u*u + v*v) for u, v in zip(u_prog, v_prog)]
+        prognostic_fields = {"Eta": eta_prog, "U": u_prog, "V": v_prog, "W": w_prog, "|U,V|": mag_prog}
+        ac.make_webm("PROGNOSTIC VARIABLES", prognostic_fields, eta_iters, 8, ANIMATION_DIR / "prognostic.webm", "seismic", EXPERIMENT_TITLE)
+    else:
+        print("Skipped PROGNOSTIC VARIABLES: common Eta/U/V/W iterations not found.")
 
-if os.path.basename(SCRIPT_DIR) in ["animation_split","animationsplit"]:
-    ANIMATION_ROOT=SCRIPT_DIR
-else:
-    ANIMATION_ROOT=os.path.join(SCRIPT_DIR,"animation_split")
+    diag_records = ["UVELMASS", "VVELMASS", "PsiVEL", "PhiVEL"]
+    dyn_iters, sources = ac.common_iterations_for_records(RUN_DIR, diag_records, extra_vars=("Eta",))
+    print("Diagnostic record sources =", sources)
 
-safe_title=re.sub(r"[^A-Za-z0-9._-]+","_",EXPERIMENT_TITLE).strip("_")
-ANIMATION_DIR=os.path.join(ANIMATION_ROOT,safe_title)
-os.makedirs(ANIMATION_DIR,exist_ok=True)
+    if dyn_iters:
+        eta_diag = ac.read_variable_series(RUN_DIR, "Eta", dyn_iters, land_mask)
+        diagnostic_fields = {"Eta": eta_diag}
 
-def find_iters(name):
-    files=glob.glob(os.path.join(RUN_DIR,f"{name}.*.data"))
-    return sorted([int(os.path.basename(f).split(".")[1]) for f in files])
+        try:
+            u_diag, _ = ac.read_record_series_any_bundle(RUN_DIR, "UVELMASS", dyn_iters, land_mask)
+            v_diag, _ = ac.read_record_series_any_bundle(RUN_DIR, "VVELMASS", dyn_iters, land_mask)
+            diagnostic_fields["|UVELMASS,VVELMASS|"] = [np.sqrt(u*u + v*v) for u, v in zip(u_diag, v_diag)]
+        except Exception as exc:
+            print("Skipped |UVELMASS,VVELMASS|:", exc)
 
-def common_iters(*names):
-    sets=[set(find_iters(name)) for name in names]
-    if any(len(s)==0 for s in sets):
-        for name,s in zip(names,sets):
-            print(name,sorted(s))
-        raise ValueError("One variable has no files. Check RUN_DIR or file names.")
-    return sorted(set.intersection(*sets))
+        for rec_name in ["PsiVEL", "PhiVEL"]:
+            try:
+                diagnostic_fields[rec_name], bundle = ac.read_record_series_any_bundle(RUN_DIR, rec_name, dyn_iters, land_mask)
+                print(f"{rec_name} source = {bundle}")
+            except Exception as exc:
+                print(f"Skipped {rec_name}:", exc)
 
-def read_field(name,it):
-    path=os.path.join(RUN_DIR,f"{name}.{it:010d}.data")
-    return np.fromfile(path,dtype=dtype).reshape(Ny,Nx)
+        ac.make_webm("DIAGNOSTIC VARIABLES", diagnostic_fields, dyn_iters, 4, ANIMATION_DIR / "diagnostic.webm", "seismic", EXPERIMENT_TITLE)
+    else:
+        print("Skipped DIAGNOSTIC VARIABLES: no common diagnostic iterations found.")
 
-def read_dynDiag(it,nrecords=3):
-    path=os.path.join(RUN_DIR,f"dynDiag.{it:010d}.data")
-    return np.fromfile(path,dtype=dtype).reshape(nrecords,Ny,Nx)
-
-eta_iters=common_iters("Eta","U","V","W")
-dyn_iters=common_iters("dynDiag","Eta")
-
-eta_prog=[read_field("Eta",it) for it in eta_iters]
-u_prog=[read_field("U",it) for it in eta_iters]
-v_prog=[read_field("V",it) for it in eta_iters]
-w_prog=[read_field("W",it) for it in eta_iters]
-mag_prog=[np.sqrt(u*u+v*v) for u,v in zip(u_prog,v_prog)]
-
-eta_diag=[read_field("Eta",it) for it in dyn_iters]
-dyn_raw=[read_dynDiag(it,3) for it in dyn_iters]
-mag_diag=[f[0] for f in dyn_raw]
-psi_diag=[f[1] for f in dyn_raw]
-phi_diag=[f[2] for f in dyn_raw]
-
-def lim_abs(fields):
-    if len(fields)==0:
-        raise ValueError("Empty field list.")
-    return max(np.nanmax(np.abs(f)) for f in fields)
-
-def make_webm(kind,fields,iters,fps,outname):
-    names=list(fields.keys())
-    limits={k:lim_abs(v) for k,v in fields.items()}
-    VIDEO_PATH=os.path.join(ANIMATION_DIR,outname)
-    fig,axes=plt.subplots(2,3,figsize=(24,16),dpi=300)
-    fig.subplots_adjust(left=0.05,right=0.97,top=0.70,bottom=0.06,wspace=0.22,hspace=0.40)
-    fig.text(0.5,0.975,f"{kind}\n{EXPERIMENT_TITLE}",ha="center",va="top",fontsize=34,linespacing=1.45,fontweight="bold")
-    fig.text(0.5,0.865,"Fields: "+", ".join(names),ha="center",va="top",fontsize=18)
-    fig.text(0.5,0.830,f"Iterations: [{', '.join(str(it) for it in iters)}]",ha="center",va="top",fontsize=13)
-    fig.add_artist(plt.Line2D([0.08,0.92],[0.800,0.800],transform=fig.transFigure,color="black",linewidth=2.0))
-    ax=axes.ravel()
-    ims=[]
-    titles=[]
-    for j,name in enumerate(names):
-        vmin=0 if "|" in name else -limits[name]
-        vmax=limits[name]
-        im=ax[j].imshow(fields[name][0],cmap=CMAP,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
-        ims.append(im)
-        titles.append(ax[j].set_title("",fontsize=15,pad=16))
-        fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08)
-    for j in range(len(names),6):
-        ax[j].axis("off")
-    writer=FFMpegWriter(fps=fps,codec="libvpx-vp9",bitrate=20000)
-    with writer.saving(fig,VIDEO_PATH,dpi=300):
-        for i,it in enumerate(iters):
-            for name,im,t in zip(names,ims,titles):
-                f=fields[name][i]
-                im.set_data(f)
-                t.set_text(f"{name} | iteration = {it}\nmin = {np.nanmin(f):.3e}    max = {np.nanmax(f):.3e}")
-            writer.grab_frame()
-    plt.close()
-    print("Saved:",VIDEO_PATH)
-
-print("RUN_DIR =",RUN_DIR)
-print("ANIMATION_DIR =",ANIMATION_DIR)
-print("Prognostic iterations =",eta_iters)
-print("Diagnostic iterations =",dyn_iters)
-
-make_webm("PROGNOSTIC VARIABLES",{"Eta":eta_prog,"U":u_prog,"V":v_prog,"W":w_prog,"|U,V|":mag_prog},eta_iters,8,"prognostic.webm")
-make_webm("DIAGNOSTIC VARIABLES",{"Eta":eta_diag,"|UVELMASS,VVELMASS|":mag_diag,"PsiVEL":psi_diag,"PhiVEL":phi_diag},dyn_iters,4,"diagnostic.webm")
 # %%
-
