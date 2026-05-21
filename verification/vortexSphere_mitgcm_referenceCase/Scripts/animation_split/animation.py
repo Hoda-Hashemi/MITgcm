@@ -40,7 +40,7 @@ RECORD_INDEX = None
 
 CMAP = "RdBu_r"
 COLORBAR_LABEL = ""
-EXPERIMENT_TITLE = "Gaussian Patch_ Constant Bathymetry Depth = 4000 m"
+EXPERIMENT_TITLE = "Gaussian Free-Surface Patch with Constant Bathymetry d = -4000 m"
 #! Simulation time settings.
 NTIMESTEPS=14400
 DELTA_T_SEC=60

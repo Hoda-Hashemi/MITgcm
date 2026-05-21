@@ -580,6 +580,10 @@ def lim_abs(fields):
 def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,delta_t_sec):
     import matplotlib.pyplot as plt
     from matplotlib.animation import FFMpegWriter
+
+    import textwrap
+    title_wrapped="\n".join(textwrap.wrap(experiment_title,width=65))
+
     if not fields:
         print(f"Skipped {kind}: no fields available."); return
     names=list(fields.keys())[:6]
@@ -588,15 +592,21 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
     outpath=Path(outpath); outpath.parent.mkdir(parents=True,exist_ok=True)
     fig,axes=plt.subplots(2,3,figsize=(24,16),dpi=300)
     fig.subplots_adjust(left=0.05,right=0.97,top=0.70,bottom=0.06,wspace=0.22,hspace=0.40)
-    fig.text(0.5,0.975,f"{kind}\n{experiment_title}\nnTimesteps = {ntimesteps}, delta t = {delta_t_sec:g} sec, Total simulation = {total_days:g} days",ha="center",va="top",fontsize=34,linespacing=1.45,fontweight="bold")
+    fig.text(0.5,0.975,f"{kind}\n{title_wrapped}\nnTimesteps = {ntimesteps}, delta t = {delta_t_sec:g} sec, Total simulation = {total_days:g} days",ha="center",va="top",fontsize=28,linespacing=1.35,fontweight="bold")
     # fig.text(0.5,0.865,"Fields: "+", ".join(names),ha="center",va="top",fontsize=18)
     fig.add_artist(plt.Line2D([0.08,0.92],[0.800,0.800],transform=fig.transFigure,color="black",linewidth=2.0))
     ax=axes.ravel(); ims=[]; titles=[]
+
+    units={"Eta":"m","U":"m/s","V":"m/s","W":"m/s","|U,V|":"m/s","|UVELMASS,VVELMASS|":"m/s","PsiVEL":"m^3/s","PhiVEL":"m^2/s"}
+
     for j,name in enumerate(names):
         vmin=0 if "|" in name else -limits[name]; vmax=limits[name]
         im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
         ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
-        fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=45)
+        # fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=45)
+        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=60)
+        cbar.set_label(units.get(name,""),fontsize=12)
+
     for j in range(len(names),6): ax[j].axis("off")
     writer=FFMpegWriter(fps=fps,codec="libvpx-vp9",bitrate=20000)
     with writer.saving(fig,str(outpath),dpi=300):
