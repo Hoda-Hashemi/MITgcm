@@ -590,8 +590,8 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
     limits={k:lim_abs(v) for k,v in fields.items()}
     total_days=ntimesteps*delta_t_sec/86400.0
     outpath=Path(outpath); outpath.parent.mkdir(parents=True,exist_ok=True)
-    fig,axes=plt.subplots(2,3,figsize=(24,16),dpi=300)
-    fig.subplots_adjust(left=0.05,right=0.97,top=0.70,bottom=0.06,wspace=0.22,hspace=0.40)
+    fig,axes=plt.subplots(2,3,figsize=(28,20),dpi=300)
+    fig.subplots_adjust(left=0.05,right=0.97,top=0.74,bottom=0.12,wspace=0.22,hspace=0.45)
     fig.text(0.5,0.975,f"{kind}\n{title_wrapped}\nnTimesteps = {ntimesteps}, delta t = {delta_t_sec:g} sec, Total simulation = {total_days:g} days",ha="center",va="top",fontsize=28,linespacing=1.35,fontweight="bold")
     # fig.text(0.5,0.865,"Fields: "+", ".join(names),ha="center",va="top",fontsize=18)
     fig.add_artist(plt.Line2D([0.08,0.92],[0.800,0.800],transform=fig.transFigure,color="black",linewidth=2.0))
@@ -601,10 +601,15 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
 
     for j,name in enumerate(names):
         vmin=0 if "|" in name else -limits[name]; vmax=limits[name]
-        im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
+        # im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
+        im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto",extent=[0,360,-90,90])
+        ax[j].set_xlabel("Longitude [deg]"); ax[j].set_ylabel("Latitude [deg]")
         ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
         # fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=45)
-        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=60)
+        # The above code is creating a colorbar (`cbar`) for an image (`im`) on a specific axis
+        # (`ax[j]`) in a matplotlib figure. The colorbar is oriented horizontally, with a specific
+        # size and position defined by the `fraction`, `pad`, and `aspect` parameters.
+        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.16,aspect=60)
         cbar.set_label(units.get(name,""),fontsize=12)
 
     for j in range(len(names),6): ax[j].axis("off")
