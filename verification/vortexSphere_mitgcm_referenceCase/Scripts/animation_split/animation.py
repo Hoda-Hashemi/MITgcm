@@ -23,7 +23,7 @@ import animationComponents as ac
 importlib.reload(ac)
 
 SCRIPT_DIR = ANIM_DIR.resolve()
-RUN_DIR = (SCRIPT_DIR.parent.parent / "run_2").resolve()
+RUN_DIR = (SCRIPT_DIR.parent.parent / "run_1").resolve()
 OUT_DIR = (SCRIPT_DIR.parent / "docs").resolve()
 
 print("animationComponents =", ac.__file__)
@@ -40,11 +40,14 @@ RECORD_INDEX = None
 
 CMAP = "RdBu_r"
 COLORBAR_LABEL = ""
-EXPERIMENT_TITLE = "Gaussian Free-Surface Patch with Real Bathymetry"
+EXPERIMENT_TITLE = "Geostrophic Adjustment with Real Bathymetry"
+# "Gaussian Free-Surface Patch with Real Bathymetry"
 # "Gaussian Free-Surface Patch with Constant Bathymetry d = -4000 m"
 #! Simulation time settings.
-NTIMESTEPS=14400
-DELTA_T_SEC=60
+NTIMESTEPS= 960
+# 14400
+DELTA_T_SEC= 900
+# 60
 
 #%%
 
@@ -94,6 +97,7 @@ FIG_HEIGHT = 850
 VIDEO_WIDTH = 1800
 VIDEO_HEIGHT = 950
 VIDEO_FRAME_DURATION_MS = 180
+#%%
 
 safe_title = re.sub(r"[^A-Za-z0-9._-]+", "_", EXPERIMENT_TITLE).strip("_")
 ANIMATION_DIR = SCRIPT_DIR / safe_title
