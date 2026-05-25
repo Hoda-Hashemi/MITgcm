@@ -6,8 +6,29 @@ import re
 import shutil
 
 import numpy as np
-import plotly.graph_objects as go
-import plotly.io as pio
+
+go = None
+pio = None
+
+LAND_FILL_COLOR="0.94"
+LAND_EDGE_COLOR="0.25"
+LAND_EDGE_LW=0.35
+MAP_EXTENT=[0.0,360.0,-90.0,90.0]
+HEATMAP_INTERP="bilinear"
+CBAR_FRACTION=0.035
+CBAR_PAD=0.16
+CBAR_ASPECT=55
+
+#! Import Plotly only when Plotly-based outputs are requested.
+def require_plotly():
+    global go, pio
+    if go is None or pio is None:
+        import plotly.graph_objects as go_mod
+        import plotly.io as pio_mod
+
+        go = go_mod
+        pio = pio_mod
+    return go, pio
 
 #! Read boolean environment flags.
 def env_flag(name, default):
@@ -45,10 +66,11 @@ def output_path(script_dir, file_name):
 
 #! Set a safe Plotly renderer.
 def set_plotly_renderer():
+    _, pio_mod = require_plotly()
     if os.environ.get("PLOTLY_RENDERER"):
-        pio.renderers.default = os.environ["PLOTLY_RENDERER"]
+        pio_mod.renderers.default = os.environ["PLOTLY_RENDERER"]
     elif os.environ.get("VSCODE_PID"):
-        pio.renderers.default = "vscode"
+        pio_mod.renderers.default = "vscode"
 
 #! Parse MITgcm .meta metadata.
 def parse_mds_meta(meta_path):
@@ -348,12 +370,34 @@ def load_land_mask(run_dir, ny=None, nx=None):
         return depth.reshape(ny, nx) <= 0.0
 
 #! Apply land mask.
-def mask_land(field, land_mask):
-    if land_mask is None:
-        return field
-    out = field.copy()
-    out[land_mask] = np.nan
+def mask_land(field,land_mask):
+    if land_mask is None: return field
+    out=field.copy(); out[land_mask]=np.nan
     return out
+
+#! Use a fixed, non-data color for masked land in matplotlib figures.
+def masked_colormap(cmap):
+    from copy import copy
+    import matplotlib.pyplot as plt
+    cmap_obj=copy(plt.get_cmap(cmap)); cmap_obj.set_bad(LAND_FILL_COLOR)
+    return cmap_obj
+
+#! Draw a coastline/mask edge without adding land to the data color scale.
+def draw_mask_outline(ax,mask,extent=MAP_EXTENT,origin="lower",linewidth=LAND_EDGE_LW,label=False,fontsize=10):
+    if mask is None: return
+    mask=np.asarray(mask,dtype=bool)
+    if mask.ndim!=2 or not np.any(mask): return
+    if np.any(~mask):
+        ax.contour(mask.astype(float),levels=[0.5],colors=[LAND_EDGE_COLOR],linewidths=linewidth,origin=origin,extent=extent)
+    if label:
+        from matplotlib.patches import Patch
+        handle=Patch(facecolor=LAND_FILL_COLOR,edgecolor=LAND_EDGE_COLOR,label="Land / masked")
+        ax.legend(handles=[handle],loc="upper right",frameon=True,framealpha=0.90,fontsize=fontsize)
+
+#! Infer the displayed mask from NaNs already present in a plotted field.
+def finite_mask_from_field(field):
+    mask=~np.isfinite(np.asarray(field))
+    return mask if np.any(mask) else None
 
 #! Build longitude and latitude arrays.
 def grid_1d(nx, ny, dx_deg=None, dy_deg=None, latitude_order="south_to_north", lon_shift=False):
@@ -390,6 +434,70 @@ def nice_number(value):
 def value_text(value, unit=""):
     text = nice_number(value)
     return f"{text} {unit}" if unit else text
+
+#! Convert iteration number to elapsed seconds.
+def elapsed_seconds(iteration, delta_t_sec):
+    return int(round(float(iteration) * float(delta_t_sec)))
+
+#! Format elapsed time compactly for titles and annotations.
+def format_elapsed_time(seconds):
+    total_minutes = int(round(float(seconds) / 60.0))
+    days, minutes_left = divmod(total_minutes, 24 * 60)
+    hours, minutes = divmod(minutes_left, 60)
+    parts = []
+    if days > 0:
+        parts.append(f"{days} d")
+    if hours > 0 or days > 0:
+        parts.append(f"{hours} h")
+    parts.append(f"{minutes} min")
+    return " ".join(parts)
+
+#! Format elapsed time with explicit day/hour/minute/second fields.
+def format_elapsed_time_precise(seconds):
+    total_seconds = int(round(float(seconds)))
+    days, remainder = divmod(total_seconds, 86400)
+    hours, remainder = divmod(remainder, 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{days} d {hours:02d} h {minutes:02d} min {secs:02d} s"
+
+#! Format a requested snapshot label from elapsed seconds.
+def format_snapshot_request(target_seconds):
+    target_days = float(target_seconds) / 86400.0
+    if abs(target_days - round(target_days)) < 1.0e-9:
+        return f"Day {int(round(target_days))}"
+    return format_elapsed_time(target_seconds)
+
+#! Pick the nearest saved iteration for each requested snapshot day.
+def pick_snapshot_iterations(iterations, delta_t_sec, snapshot_days):
+    if not iterations:
+        return []
+    snapshot_info = []
+    available_seconds = [elapsed_seconds(iteration, delta_t_sec) for iteration in iterations]
+    for day in snapshot_days:
+        target_seconds = int(round(float(day) * 86400.0))
+        best_index = min(
+            range(len(iterations)),
+            key=lambda idx: (abs(available_seconds[idx] - target_seconds), available_seconds[idx]),
+        )
+        actual_seconds = available_seconds[best_index]
+        snapshot_info.append(
+            {
+                "requested_day": float(day),
+                "requested_seconds": target_seconds,
+                "requested_label": format_snapshot_request(target_seconds),
+                "iteration": int(iterations[best_index]),
+                "actual_seconds": actual_seconds,
+                "actual_label": format_elapsed_time(actual_seconds),
+                "actual_label_precise": format_elapsed_time_precise(actual_seconds),
+                "exact": actual_seconds == target_seconds,
+            }
+        )
+    return snapshot_info
+
+#! Build a compact filename tag for snapshot outputs.
+def snapshot_slug(snapshot):
+    label = snapshot["requested_label"].lower().replace(" ", "_")
+    return re.sub(r"[^a-z0-9_]+", "", label)
 
 #! Compute symmetric color limit.
 def symmetric_limit(fields, color_limit=None):
@@ -443,17 +551,27 @@ def plotly_colorscale(cmap):
 
 #! Build one Plotly heatmap.
 def make_heatmap(x, y, field, zmax, colorscale, colorbar_label, colorbar_x, show_colorbar=True):
-    return go.Heatmap(x=x, y=y, z=field, zmin=-zmax, zmax=zmax, colorscale=colorscale, zsmooth="best", showscale=show_colorbar, colorbar=dict(title=colorbar_label, x=colorbar_x, xanchor="left", y=0.56, len=0.74, thickness=18), hovertemplate="lon: %{x:.2f} deg<br>lat: %{y:.2f} deg<br>" + f"{colorbar_label}: " + "%{z:.6g}<extra></extra>")
+    go_mod, _ = require_plotly()
+    return go_mod.Heatmap(x=x, y=y, z=field, zmin=-zmax, zmax=zmax, colorscale=colorscale, zsmooth="best", showscale=show_colorbar, colorbar=dict(title=colorbar_label, x=colorbar_x, xanchor="left", y=0.56, len=0.74, thickness=18), hovertemplate="lon: %{x:.2f} deg<br>lat: %{y:.2f} deg<br>" + f"{colorbar_label}: " + "%{z:.6g}<extra></extra>")
 
 #! Build land-mask Plotly heatmap.
-def land_heatmap(x, y, land_mask, html_skip):
-    if land_mask is None:
-        return None
-    land_z = np.where(land_mask[::html_skip, ::html_skip], 1.0, np.nan).astype(np.float32)
-    return go.Heatmap(x=x, y=y, z=land_z, zmin=0.0, zmax=1.0, colorscale=[[0.0, "rgb(235,235,235)"], [1.0, "rgb(235,235,235)"]], opacity=0.65, showscale=False, hoverinfo="skip", name="land")
+def land_heatmap(x,y,land_mask,html_skip):
+    if land_mask is None: return None
+    land_z=np.where(land_mask[::html_skip,::html_skip],1.0,np.nan).astype(np.float32)
+    go_mod,_=require_plotly()
+    return go_mod.Heatmap(x=x,y=y,z=land_z,zmin=0.0,zmax=1.0,colorscale=[[0.0,"rgb(240,240,240)"],[1.0,"rgb(240,240,240)"]],opacity=1.0,showscale=False,hoverinfo="skip",name="Land / masked",showlegend=False)
+
+#! Build a Plotly contour line around the land mask.
+def land_contour(x,y,land_mask,html_skip):
+    if land_mask is None: return None
+    land_z=land_mask[::html_skip,::html_skip].astype(np.float32)
+    if not np.any(land_z) or np.all(land_z): return None
+    go_mod,_=require_plotly()
+    return go_mod.Contour(x=x,y=y,z=land_z,contours=dict(start=0.5,end=0.5,size=1.0,coloring="lines"),line=dict(color="rgb(70,70,70)",width=0.7),showscale=False,hoverinfo="skip",name="Land outline",showlegend=False)
 
 #! Build interactive Plotly slider figure.
 def build_slider_figure(fields, iterations, lon, lat, land_mask, run_dir, field_label, unit, zmax, cmap, colorbar_label, html_skip, width=1600, height=850, map_domain_x=(0.0, 0.76), colorbar_x=0.80, info_box_x=0.86, frame_duration_ms=180):
+    go_mod, _ = require_plotly()
     colorscale = plotly_colorscale(cmap)
     all_stats = finite_stats(np.asarray(fields))
 
@@ -465,9 +583,12 @@ def build_slider_figure(fields, iterations, lon, lat, land_mask, run_dir, field_
     land = land_heatmap(lon, lat, land_mask, html_skip)
     if land is not None:
         data.append(land)
+    outline = land_contour(lon, lat, land_mask, html_skip)
+    if outline is not None:
+        data.append(outline)
 
-    fig = go.Figure(data=data)
-    fig.frames = [go.Frame(data=[go.Heatmap(z=field, zsmooth="best")], traces=[0], layout=dict(annotations=[annotation_for(i)]), name=str(iteration)) for i, (field, iteration) in enumerate(zip(fields, iterations))]
+    fig = go_mod.Figure(data=data)
+    fig.frames = [go_mod.Frame(data=[go_mod.Heatmap(z=field, zsmooth="best")], traces=[0], layout=dict(annotations=[annotation_for(i)]), name=str(iteration)) for i, (field, iteration) in enumerate(zip(fields, iterations))]
     steps = [dict(method="animate", args=[[str(iteration)], dict(mode="immediate", frame=dict(duration=350, redraw=True), transition=dict(duration=0))], label=str(iteration)) for iteration in iterations]
     buttons = [dict(type="buttons", direction="left", x=0.08, y=0, showactive=False, buttons=[dict(label="Play", method="animate", args=[None, dict(frame=dict(duration=frame_duration_ms, redraw=True), transition=dict(duration=0), fromcurrent=True)]), dict(label="Pause", method="animate", args=[[None], dict(frame=dict(duration=0, redraw=False), mode="immediate", transition=dict(duration=0))])])]
     fig.update_layout(title=dict(text=f"MITgcm {field_label} evolution", x=0.36, xanchor="center"), width=width, height=height, template="plotly_white", margin=dict(l=55, r=35, t=75, b=60), sliders=[dict(active=0, steps=steps, x=0.12, y=0, len=0.60, currentvalue=dict(prefix="Iteration: "))], updatemenus=buttons, xaxis=dict(domain=list(map_domain_x), title="Longitude [deg]", range=[float(np.nanmin(lon)), float(np.nanmax(lon))]), yaxis=dict(domain=[0.08, 1.0], title="Latitude [deg]", range=[float(np.nanmin(lat)), float(np.nanmax(lat))], scaleanchor="x", scaleratio=1.0), annotations=[annotation_for(0)], font=dict(size=14))
@@ -515,11 +636,12 @@ def write_video(run_dir, field_name, iterations, land_mask, zmax, cmap, colorbar
     fps = max(1, int(round(1000 / frame_duration_ms)))
     first, _ = read_selected_field(run_dir, field_name, iterations[0], record_name, record_index)
     first = mask_land(first, land_mask)[::video_skip, ::video_skip]
-    cmap_obj = plt.get_cmap(cmap).copy()
-    cmap_obj.set_bad("0.78")
+    cmap_obj = masked_colormap(cmap)
     norm = mcolors.TwoSlopeNorm(vmin=-zmax, vcenter=0.0, vmax=zmax)
     fig, ax = plt.subplots(figsize=(width / 200.0, height / 200.0), dpi=200, constrained_layout=True)
-    image = ax.imshow(first, origin="lower" if latitude_order == "south_to_north" else "upper", extent=[0.0, 360.0, -90.0, 90.0], cmap=cmap_obj, norm=norm, interpolation="hanning", aspect="auto")
+    image_origin = "lower" if latitude_order == "south_to_north" else "upper"
+    image = ax.imshow(first, origin=image_origin, extent=MAP_EXTENT, cmap=cmap_obj, norm=norm, interpolation=HEATMAP_INTERP, aspect="auto")
+    draw_mask_outline(ax,None if land_mask is None else land_mask[::video_skip,::video_skip],origin=image_origin,label=False,fontsize=9)
     cbar = fig.colorbar(image, ax=ax, location="right", pad=0.02, fraction=0.04)
     cbar.set_label(colorbar_label)
     ax.set_xlabel("Longitude [deg]")
@@ -578,6 +700,10 @@ def lim_abs(fields):
 
 #! Write six-panel WebM without changing layout/font/title settings.
 def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,delta_t_sec):
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+    Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
+    import matplotlib
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.animation import FFMpegWriter
 
@@ -598,18 +724,20 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
     ax=axes.ravel(); ims=[]; titles=[]
 
     units={"Eta":"m","U":"m/s","V":"m/s","W":"m/s","|U,V|":"m/s","|UVELMASS,VVELMASS|":"m/s","PsiVEL":"m^3/s","PhiVEL":"m^2/s"}
+    cmap_obj = masked_colormap(cmap)
 
     for j,name in enumerate(names):
         vmin=0 if "|" in name else -limits[name]; vmax=limits[name]
         # im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto")
-        im=ax[j].imshow(fields[name][0],cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto",extent=[0,360,-90,90])
+        im=ax[j].imshow(fields[name][0],cmap=cmap_obj,vmin=vmin,vmax=vmax,origin="lower",aspect="auto",extent=MAP_EXTENT,interpolation=HEATMAP_INTERP)
+        draw_mask_outline(ax[j],finite_mask_from_field(fields[name][0]),label=False,fontsize=10)
         ax[j].set_xlabel("Longitude [deg]"); ax[j].set_ylabel("Latitude [deg]")
         ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
         # fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.08,aspect=45)
         # The above code is creating a colorbar (`cbar`) for an image (`im`) on a specific axis
         # (`ax[j]`) in a matplotlib figure. The colorbar is oriented horizontally, with a specific
         # size and position defined by the `fraction`, `pad`, and `aspect` parameters.
-        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.16,aspect=60)
+        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=CBAR_FRACTION,pad=CBAR_PAD,aspect=CBAR_ASPECT)
         cbar.set_label(units.get(name,""),fontsize=12)
 
     for j in range(len(names),6): ax[j].axis("off")
@@ -624,6 +752,10 @@ def make_webm(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,del
 
 #! Write six-panel WebM without changing layout/font/title settings.
 def make_webm_adaptive(kind,fields,iters,fps,outpath,cmap,experiment_title,ntimesteps,delta_t_sec):
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+    Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
+    import matplotlib
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.animation import FFMpegWriter
     import textwrap
@@ -639,6 +771,7 @@ def make_webm_adaptive(kind,fields,iters,fps,outpath,cmap,experiment_title,ntime
     fig.add_artist(plt.Line2D([0.08,0.92],[0.800,0.800],transform=fig.transFigure,color="black",linewidth=2.0))
     ax=axes.ravel(); ims=[]; titles=[]; cbars=[]
     units={"Eta":"m","U":"m/s","V":"m/s","W":"m/s","|U,V|":"m/s","|UVELMASS,VVELMASS|":"m/s","PsiVEL":"m^3/s","PhiVEL":"m^2/s"}
+    cmap_obj = masked_colormap(cmap)
 
     def lim_frame(field):
         lim=np.nanpercentile(np.abs(field),99.5)
@@ -649,10 +782,11 @@ def make_webm_adaptive(kind,fields,iters,fps,outpath,cmap,experiment_title,ntime
         field=fields[name][0]
         lim=lim_frame(field)
         vmin=0 if "|" in name else -lim; vmax=lim
-        im=ax[j].imshow(field,cmap=cmap,vmin=vmin,vmax=vmax,origin="lower",aspect="auto",extent=[0,360,-90,90])
+        im=ax[j].imshow(field,cmap=cmap_obj,vmin=vmin,vmax=vmax,origin="lower",aspect="auto",extent=MAP_EXTENT,interpolation=HEATMAP_INTERP)
+        draw_mask_outline(ax[j],finite_mask_from_field(field),label=False,fontsize=10)
         ax[j].set_xlabel("Longitude [deg]"); ax[j].set_ylabel("Latitude [deg]")
         ims.append(im); titles.append(ax[j].set_title("",fontsize=15,pad=16))
-        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=0.045,pad=0.16,aspect=60)
+        cbar=fig.colorbar(im,ax=ax[j],orientation="horizontal",fraction=CBAR_FRACTION,pad=CBAR_PAD,aspect=CBAR_ASPECT)
         cbar.set_label(units.get(name,""),fontsize=12)
         cbars.append(cbar)
 
@@ -673,3 +807,247 @@ def make_webm_adaptive(kind,fields,iters,fps,outpath,cmap,experiment_title,ntime
                 title.set_text(f"{name} | iteration = {it}\nmin = {np.nanmin(field):.3e}    max = {np.nanmax(field):.3e}")
             writer.grab_frame()
     plt.close(fig); print("Saved:",outpath)
+
+#! Write static multi-panel snapshot PNGs using the same layout as the WebM figures.
+def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experiment_title, ntimesteps, delta_t_sec, dpi=300):
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+    Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import textwrap
+
+    if not fields:
+        print(f"Skipped {kind}: no fields available.")
+        return []
+    if not snapshots:
+        print(f"Skipped {kind}: no snapshot times requested.")
+        return []
+
+    names = list(fields.keys())[:6]
+    units = {
+        "Eta": "m",
+        "U": "m/s",
+        "V": "m/s",
+        "W": "m/s",
+        "|U,V|": "m/s",
+        "|UVELMASS,VVELMASS|": "m/s",
+        "PsiVEL": "m^3/s",
+        "PhiVEL": "m^2/s",
+    }
+    total_days = ntimesteps * delta_t_sec / 86400.0
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    title_wrapped = "\n".join(textwrap.wrap(experiment_title, width=65))
+    iter_to_index = {int(iteration): idx for idx, iteration in enumerate(iters)}
+    written_paths = []
+    cmap_obj = masked_colormap(cmap)
+
+    def lim_frame(field):
+        lim = np.nanpercentile(np.abs(field), 99.5)
+        if not np.isfinite(lim) or lim <= 0:
+            lim = np.nanmax(np.abs(field))
+        return lim if np.isfinite(lim) and lim > 0 else 1e-12
+
+    for snapshot in snapshots:
+        iteration = int(snapshot["iteration"])
+        if iteration not in iter_to_index:
+            print(f"Skipped {kind} snapshot at iteration {iteration}: iteration not found in loaded fields.")
+            continue
+
+        frame_index = iter_to_index[iteration]
+        exact_note = "" if snapshot["exact"] else " (nearest saved frame)"
+        snapshot_header = (
+            f"Snapshot requested = {snapshot['requested_label']} | "
+            f"saved iteration = {iteration} | elapsed = {snapshot['actual_label']}{exact_note}"
+        )
+
+        fig, axes = plt.subplots(2, 3, figsize=(28, 20), dpi=dpi)
+        fig.subplots_adjust(left=0.05, right=0.97, top=0.74, bottom=0.12, wspace=0.22, hspace=0.45)
+        fig.text(
+            0.5,
+            0.975,
+            (
+                f"{kind}\n{title_wrapped}\n"
+                f"nTimesteps = {ntimesteps}, delta t = {delta_t_sec:g} sec, Total simulation = {total_days:g} days\n"
+                f"{snapshot_header}"
+            ),
+            ha="center",
+            va="top",
+            fontsize=28,
+            linespacing=1.35,
+            fontweight="bold",
+        )
+        fig.add_artist(
+            plt.Line2D([0.08, 0.92], [0.785, 0.785], transform=fig.transFigure, color="black", linewidth=2.0)
+        )
+
+        ax = axes.ravel()
+        for j, name in enumerate(names):
+            field = fields[name][frame_index]
+            lim = lim_frame(field)
+            vmin = 0 if "|" in name else -lim
+            vmax = lim
+            im = ax[j].imshow(
+                field,
+                cmap=cmap_obj,
+                vmin=vmin,
+                vmax=vmax,
+                origin="lower",
+                aspect="auto",
+                extent=MAP_EXTENT,
+                interpolation=HEATMAP_INTERP,
+            )
+            draw_mask_outline(ax[j],finite_mask_from_field(field),label=False,fontsize=10)
+            ax[j].set_xlabel("Longitude [deg]")
+            ax[j].set_ylabel("Latitude [deg]")
+            ax[j].set_title(
+                (
+                    f"{name} | iteration = {iteration}\n"
+                    f"t = {snapshot['actual_label']} | min = {np.nanmin(field):.3e}    max = {np.nanmax(field):.3e}"
+                ),
+                fontsize=15,
+                pad=16,
+            )
+            cbar = fig.colorbar(im, ax=ax[j], orientation="horizontal", fraction=CBAR_FRACTION, pad=CBAR_PAD, aspect=CBAR_ASPECT)
+            cbar.set_label(units.get(name, ""), fontsize=12)
+
+        for j in range(len(names), 6):
+            ax[j].axis("off")
+
+        stem = kind.lower().replace(" ", "_")
+        file_name = f"{stem}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.png"
+        outpath = outdir / file_name
+        fig.savefig(outpath, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+        written_paths.append(outpath)
+        print("Saved:", outpath)
+
+    return written_paths
+
+#! Write clean single-heatmap snapshots for selected variables.
+def write_single_heatmap_snapshots(fields, iters, snapshots, outdir, cmap, dpi=320, scale_mode_by_field=None):
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+    Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    if not fields:
+        print("Skipped single heatmap snapshots: no fields available.")
+        return []
+    if not snapshots:
+        print("Skipped single heatmap snapshots: no snapshot times requested.")
+        return []
+
+    units = {
+        "Eta": "m",
+        "U": "m/s",
+        "V": "m/s",
+        "|U,V|": "m/s",
+        "UVELMASS": "m/s",
+        "VVELMASS": "m/s",
+        "|UVELMASS,VVELMASS|": "m/s",
+        "PsiVEL": "m^3/s",
+        "PhiVEL": "m^2/s",
+    }
+    pretty_names = {
+        "Eta": "Free Surface",
+        "U": "Zonal Velocity",
+        "V": "Meridional Velocity",
+        "|U,V|": "Velocity Magnitude",
+        "UVELMASS": "Zonal Transport Velocity",
+        "VVELMASS": "Meridional Transport Velocity",
+        "|UVELMASS,VVELMASS|": "Transport Magnitude",
+        "PsiVEL": "Streamfunction",
+        "PhiVEL": "Velocity Potential",
+    }
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    iter_to_index = {int(iteration): idx for idx, iteration in enumerate(iters)}
+    written_paths = []
+    font_size = 20
+    cmap_obj = masked_colormap(cmap)
+
+    def robust_limit(field_series):
+        values = []
+        for field in field_series:
+            finite = np.abs(field[np.isfinite(field)])
+            if finite.size:
+                values.append(finite)
+        if not values:
+            return 1e-12
+        combined = np.concatenate(values)
+        limit = np.nanpercentile(combined, 99.5)
+        if not np.isfinite(limit) or limit <= 0:
+            limit = np.nanmax(combined)
+        return limit if np.isfinite(limit) and limit > 0 else 1e-12
+
+    def frame_limit(field):
+        finite = np.abs(field[np.isfinite(field)])
+        if finite.size == 0:
+            return 1e-12
+        limit = np.nanpercentile(finite, 99.5)
+        if not np.isfinite(limit) or limit <= 0:
+            limit = np.nanmax(finite)
+        return limit if np.isfinite(limit) and limit > 0 else 1e-12
+
+    if scale_mode_by_field is None:
+        scale_mode_by_field = {}
+
+    limits = {name: robust_limit(series) for name, series in fields.items()}
+
+    for snapshot in snapshots:
+        iteration = int(snapshot["iteration"])
+        if iteration not in iter_to_index:
+            print(f"Skipped single heatmap snapshots at iteration {iteration}: iteration not found in loaded fields.")
+            continue
+
+        frame_index = iter_to_index[iteration]
+        actual_precise = snapshot.get("actual_label_precise", format_elapsed_time_precise(snapshot["actual_seconds"]))
+
+        for name, series in fields.items():
+            field = series[frame_index]
+            scale_mode = str(scale_mode_by_field.get(name, "constant")).strip().lower()
+            if scale_mode not in {"constant", "adaptive"}:
+                scale_mode = "constant"
+            limit = frame_limit(field) if scale_mode == "adaptive" else limits[name]
+            vmin = 0.0 if "|" in name else -limit
+            vmax = limit
+
+            fig = plt.figure(figsize=(14, 8.6), dpi=dpi)
+            ax = fig.add_subplot(111)
+            fig.subplots_adjust(left=0.08, right=0.93, top=0.88, bottom=0.18)
+
+            image = ax.imshow(
+                field,
+                cmap=cmap_obj,
+                vmin=vmin,
+                vmax=vmax,
+                origin="lower",
+                aspect="auto",
+                extent=MAP_EXTENT,
+                interpolation=HEATMAP_INTERP,
+            )
+            draw_mask_outline(ax,finite_mask_from_field(field),label=False,fontsize=14)
+            ax.set_xlabel(r"$\lambda$ [$^\circ$]", fontsize=font_size)
+            ax.set_ylabel(r"$\theta$ [$^\circ$]", fontsize=font_size)
+            ax.tick_params(labelsize=font_size)
+            fig.suptitle(f"{pretty_names.get(name, name)} ({name}) [{units.get(name, '')}]", fontsize=font_size, y=0.97)
+            ax.set_title(
+                f"iteration = {iteration}   |   time = {actual_precise}   |   min = {np.nanmin(field):.3e}   |   max = {np.nanmax(field):.3e}",
+                fontsize=font_size,
+                pad=16,
+            )
+            cbar = fig.colorbar(image, ax=ax, orientation="horizontal", fraction=CBAR_FRACTION, pad=CBAR_PAD, aspect=CBAR_ASPECT)
+            cbar.set_label(units.get(name, ""), fontsize=font_size)
+            cbar.ax.tick_params(labelsize=font_size)
+
+            file_name = f"{name.replace('|', '').replace(',', '_').replace(' ', '_').lower()}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.png"
+            outpath = outdir / file_name
+            fig.savefig(outpath, dpi=dpi, bbox_inches="tight")
+            plt.close(fig)
+            written_paths.append(outpath)
+            print("Saved:", outpath)
+
+    return written_paths

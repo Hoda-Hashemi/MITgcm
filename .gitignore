@@ -140,3 +140,5 @@ verification/vortexSphere_mitgcm_referenceCase/Scripts/results_Rossby_6_hrs/
 verification/vortexSphere_mitgcm_referenceCase/Scripts/results_SpecialCase_1000m_eta0/
 verification/vortexSphere_mitgcm_referenceCase/Scripts/results_referenceCase/
 
+verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Gaussian_*/
+verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Geostrophic*/
