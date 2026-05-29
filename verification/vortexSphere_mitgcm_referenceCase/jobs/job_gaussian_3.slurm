@@ -3,11 +3,11 @@
 #SBATCH --job-name=mitgcm_ref_compile_run
 #SBATCH --account=hmh85
 
-#SBATCH --partition=normal
+#SBATCH --partition=medium
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=32G
+#SBATCH --mem=16G
 #SBATCH --time=0-06:00:00
 
 #SBATCH --output=slurm-%j.out
@@ -15,6 +15,13 @@
 
 #SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT
 #SBATCH --mail-user=hmh85@aub.edu.lb
+
+module purge
+module load gcc/10.1.0
+module load mpi/openmpi/4.1.4-slurm-18.08.6
+
+which mpicc
+which mpirun
 
 echo "======================================"
 echo "MITgcm compile + run"
@@ -59,12 +66,14 @@ fi
 # Run
 # -----------------------------
 echo "Copying mitgcmuv to run directory..."
-cp mitgcmuv $RUN_DIR/
 
+rm -f $RUN_DIR/*
+cp mitgcmuv $RUN_DIR/
+cp $CASE_DIR/input/* $RUN_DIR/
 cd $RUN_DIR || exit 1
 
 echo "Running MITgcm..."
-mpirun -np 8 ./mitgcmuv
+mpirun --mca btl_tcp_if_include lo0 --oversubscribe -np 8 ./mitgcmuv
 
 STATUS=$?
 
