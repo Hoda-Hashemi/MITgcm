@@ -1,13 +1,14 @@
 #!/bin/bash
 
-#SBATCH --job-name=mitgcm_ref_compile_run
+#SBATCH --job-name=mitgcm_32mpi
 #SBATCH --account=hmh85
 
-#SBATCH --partition=medium
+#SBATCH --partition=large
+#SBATCH --nodelist=onode14
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
+#SBATCH --ntasks=32
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 #SBATCH --time=1-00:00:00
 
 #SBATCH --output=slurm-%j.out
@@ -20,70 +21,70 @@ module purge
 module load gcc/10.1.0
 module load mpi/openmpi/4.1.4-slurm-18.08.6
 
-which mpicc
-which mpirun
-
 echo "======================================"
 echo "MITgcm compile + run"
 echo "Job ID: $SLURM_JOB_ID"
-echo "Start:  $(date)"
 echo "Nodes:  $SLURM_JOB_NODELIST"
+echo "Start:  $(date)"
 echo "======================================"
 
 START_TIME=$(date +%s)
 
-CASE_DIR=/home/hmh85/scratch/MITgcm/verification/vortexSphere_mitgcm_referenceCase
+CASE_DIR=/scratch/p8190783-hmh85/MITgcm/verification/vortexSphere_mitgcm_referenceCase
 BUILD_DIR=$CASE_DIR/build
-RUN_DIR=$CASE_DIR/run
+RUN_DIR=$CASE_DIR/run_32mpi_1node
 
 # -----------------------------
 # Compile
 # -----------------------------
 cd $BUILD_DIR || exit 1
 
-echo "Cleaning build directory..."
 rm -f Makefile
-make CLEAN 2>/dev/null || true
+make CLEAN >/dev/null 2>&1 || true
 
-echo "Generating Makefile..."
 ../../../tools/genmake2 \
-  -mpi \
-  -mods=../code \
-  -of=../../../tools/build_options/linux_amd64_gfortran
+    -mpi \
+    -mods=../code \
+    -of=../../../tools/build_options/linux_amd64_gfortran
 
-echo "Making dependencies..."
 make depend
-
-echo "Compiling..."
 make -j 8
 
-if [ ! -f mitgcmuv ]; then
-    echo "ERROR: mitgcmuv was not created."
+if [ ! -x mitgcmuv ]; then
+    echo "ERROR: mitgcmuv not created"
     exit 1
 fi
 
 # -----------------------------
-# Run
+# Prepare run directory
 # -----------------------------
-echo "Copying mitgcmuv to run directory..."
+mkdir -p $RUN_DIR
 
-rm -f $RUN_DIR/*
+find $RUN_DIR -maxdepth 1 -type f \
+    \( -name "*.data" -o -name "*.meta" -o -name "STDOUT*" -o -name "STDERR*" \) \
+    -delete
+
 cp mitgcmuv $RUN_DIR/
 cp $CASE_DIR/input/* $RUN_DIR/
+
 cd $RUN_DIR || exit 1
 
-echo "Running MITgcm..."
-mpirun --mca btl_tcp_if_include lo0 --oversubscribe -np 8 ./mitgcmuv
+echo "======================================"
+echo "Running MITgcm"
+echo "MPI tasks = $SLURM_NTASKS"
+echo "======================================"
+
+mpirun -np $SLURM_NTASKS ./mitgcmuv
 
 STATUS=$?
 
 END_TIME=$(date +%s)
-ELAPSED=$((END_TIME - START_TIME))
+ELAPSED=$((END_TIME-START_TIME))
 
 echo "======================================"
-echo "End:     $(date)"
-echo "Status:  $STATUS"
-echo "Elapsed: $((ELAPSED/3600)) h $(((ELAPSED%3600)/60)) min $((ELAPSED%60)) sec"
+echo "End: $(date)"
+echo "Status: $STATUS"
+echo "Elapsed: $((ELAPSED/3600))h $(((ELAPSED%3600)/60))m $((ELAPSED%60))s"
 echo "======================================"
 
 exit $STATUS
