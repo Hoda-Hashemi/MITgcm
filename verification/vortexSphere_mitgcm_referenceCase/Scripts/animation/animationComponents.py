@@ -808,8 +808,8 @@ def make_webm_adaptive(kind,fields,iters,fps,outpath,cmap,experiment_title,ntime
             writer.grab_frame()
     plt.close(fig); print("Saved:",outpath)
 
-#! Write static multi-panel snapshot PNGs using the same layout as the WebM figures.
-def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experiment_title, ntimesteps, delta_t_sec, dpi=300):
+#! Write static multi-panel snapshot images using the same layout as the WebM figures.
+def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experiment_title, ntimesteps, delta_t_sec, dpi=300, file_ext="png"):
     os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
     Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
     import matplotlib
@@ -848,6 +848,8 @@ def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experime
         if not np.isfinite(lim) or lim <= 0:
             lim = np.nanmax(np.abs(field))
         return lim if np.isfinite(lim) and lim > 0 else 1e-12
+
+    output_ext = str(file_ext).lstrip(".") or "png"
 
     for snapshot in snapshots:
         iteration = int(snapshot["iteration"])
@@ -916,7 +918,7 @@ def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experime
             ax[j].axis("off")
 
         stem = kind.lower().replace(" ", "_")
-        file_name = f"{stem}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.png"
+        file_name = f"{stem}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.{output_ext}"
         outpath = outdir / file_name
         fig.savefig(outpath, dpi=dpi, bbox_inches="tight")
         plt.close(fig)
@@ -926,7 +928,7 @@ def write_snapshot_panels(kind, fields, iters, snapshots, outdir, cmap, experime
     return written_paths
 
 #! Write clean single-heatmap snapshots for selected variables.
-def write_single_heatmap_snapshots(fields, iters, snapshots, outdir, cmap, dpi=320, scale_mode_by_field=None):
+def write_single_heatmap_snapshots(fields, iters, snapshots, outdir, cmap, dpi=320, scale_mode_by_field=None, file_ext="png"):
     os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
     Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
     import matplotlib
@@ -997,6 +999,8 @@ def write_single_heatmap_snapshots(fields, iters, snapshots, outdir, cmap, dpi=3
 
     limits = {name: robust_limit(series) for name, series in fields.items()}
 
+    output_ext = str(file_ext).lstrip(".") or "png"
+
     for snapshot in snapshots:
         iteration = int(snapshot["iteration"])
         if iteration not in iter_to_index:
@@ -1043,7 +1047,7 @@ def write_single_heatmap_snapshots(fields, iters, snapshots, outdir, cmap, dpi=3
             cbar.set_label(units.get(name, ""), fontsize=font_size)
             cbar.ax.tick_params(labelsize=font_size)
 
-            file_name = f"{name.replace('|', '').replace(',', '_').replace(' ', '_').lower()}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.png"
+            file_name = f"{name.replace('|', '').replace(',', '_').replace(' ', '_').lower()}_{snapshot_slug(snapshot)}_iter_{iteration:010d}.{output_ext}"
             outpath = outdir / file_name
             fig.savefig(outpath, dpi=dpi, bbox_inches="tight")
             plt.close(fig)
