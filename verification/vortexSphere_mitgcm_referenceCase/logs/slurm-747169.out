@@ -1,8 +1,8 @@
 ======================================
 MITgcm compile + run
-Job ID: 747165
+Job ID: 747169
 Nodes:  onode13
-Start:  Sun May 31 16:39:59 EEST 2026
+Start:  Sun May 31 17:03:53 EEST 2026
 ======================================
 
 GENMAKE :
@@ -1321,5 +1321,10 @@ mpif77  -o mitgcmuv -fallow-argument-mismatch -fconvert=big-endian -fimplicit-no
 make[1]: Leaving directory `/scratch/p8190783-hmh85/MITgcm/verification/vortexSphere_mitgcm_referenceCase/build'
 ======================================
 Running MITgcm
-MPI tasks = 24
+MPI tasks = 8
+======================================
+======================================
+End: Sun May 31 20:21:10 EEST 2026
+Status: 0
+Elapsed: 3h 17m 17s
 ======================================

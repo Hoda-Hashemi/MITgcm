@@ -184,3 +184,15 @@ global_sum_vector.f:3524:29:
  3524 |          CALL MPI_Allreduce( sumMyPr, shareGSVectInt, nLoc,
       |                             1
 Warning: Type mismatch between actual argument at (1) and actual argument at (2) (INTEGER(4)/REAL(8)).
+STOP NORMAL END
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+STOP NORMAL END
+STOP NORMAL END
+STOP NORMAL END
+STOP NORMAL END
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+STOP NORMAL END
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+STOP NORMAL END
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+STOP NORMAL END
