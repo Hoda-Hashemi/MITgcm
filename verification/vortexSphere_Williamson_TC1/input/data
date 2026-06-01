@@ -62,7 +62,7 @@
  delY = 720*0.25,
  xgOrigin = 0.,
  ygOrigin = -90.,
- rSphere = 6.37122E6,
+ rSphere = 6.371E6,
  delR = 4000.,
 /
 
@@ -72,3 +72,4 @@
  uVelInitFile = 'u_init.bin',
  vVelInitFile = 'v_init.bin',
 /
+

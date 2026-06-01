@@ -19,17 +19,20 @@
 set -e
 
 module purge
-module load python
+module load python/3.12
 
-REFERENCE_CASE="/path/to/referenceCase"
-PLOT_SCRIPT="$REFERENCE_CASE/Scripts/HPC/save_snapshots.py"
+REFERENCE_CASE="/home/hmh85/scratch/MITgcm/verification/vortexSphere_mitgcm_referenceCase"
+PLOT_SCRIPT="$REFERENCE_CASE/Scripts/HPC/snapshots.py"
+
+source /home/hmh85/scratch/MITgcm/.venv/bin/activate
 
 cd "$REFERENCE_CASE"
 
-for RUN_DIR in run_*mpi*; do
-    if [ -d "$RUN_DIR" ]; then
-        echo "Plotting $RUN_DIR"
-        python "$PLOT_SCRIPT" "$REFERENCE_CASE/$RUN_DIR"
-    fi
-done
+# for RUN_DIR in run_*mpi*; do
+#     if [ -d "$RUN_DIR" ]; then
+#         python "$PLOT_SCRIPT" "$REFERENCE_CASE/$RUN_DIR"
+#     fi
+# done
 
+RUN_DIR="run_48mpi_1node"
+python "$PLOT_SCRIPT" "$REFERENCE_CASE/$RUN_DIR"
