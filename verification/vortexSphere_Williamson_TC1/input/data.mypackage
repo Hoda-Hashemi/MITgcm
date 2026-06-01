@@ -1,0 +1,7 @@
+# Package-local parameters for the TC1 velocity overwrite.
+# myPa_param1 is the rotation-axis angle alpha in radians.
+# Standard Williamson values are 0.0, 0.05, pi/2 - 0.05, and pi/2.
+
+&MYPACKAGE_PARM01
+ myPa_param1 = 1.5707963267948966D0,
+/

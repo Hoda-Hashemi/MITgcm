@@ -1,0 +1,16 @@
+# Daily diagnostics for TC1.
+
+ &DIAGNOSTICS_LIST
+  dumpAtLast = .TRUE.,
+  fields(1:3,1) = 'ETAN    ','UVEL    ','VVEL    ',
+  fileName(1) = 'tc1Diag',
+  frequency(1) = -86400.,
+  timePhase(1) = 0.,
+ &
+
+ &DIAG_STATIS_PARMS
+  stat_fields(1:3,1) = 'ETAN    ','UVEL    ','VVEL    ',
+  stat_fName(1) = 'tc1StDiag',
+  stat_freq(1) = -86400.,
+  stat_phase(1) = 0.,
+ &
