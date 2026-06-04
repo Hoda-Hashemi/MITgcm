@@ -1,0 +1,1 @@
+/home/hmh85/scratch/MITgcm/eesupp/src/ini_communication_patterns.F

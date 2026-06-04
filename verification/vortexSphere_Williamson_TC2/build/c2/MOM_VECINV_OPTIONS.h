@@ -1,0 +1,1 @@
+/home/hmh85/scratch/MITgcm/pkg/mom_vecinv/MOM_VECINV_OPTIONS.h

@@ -11,13 +11,13 @@ C    !===  GRID SPACING & DOMAIN SIZE =====================================
       INTEGER Ny
       INTEGER Nr
 
-      PARAMETER ( sNx =  120 )        ! grid points in x-dir per tile
+      PARAMETER ( sNx =  360 )        ! grid points in x-dir per tile
       PARAMETER ( sNy =  180 )        ! grid points in y-dir per tile
       PARAMETER ( OLx =    2 )        ! overlap in x-dir
       PARAMETER ( OLy =    2 )        ! overlap in y-dir
       PARAMETER ( nSx =    1 )
       PARAMETER ( nSy =    1 )
-      PARAMETER ( nPx =    12 )
+      PARAMETER ( nPx =    4 )
       PARAMETER ( nPy =    4 )
       PARAMETER ( Nx  = sNx*nSx*nPx )
       PARAMETER ( Ny  = sNy*nSy*nPy )

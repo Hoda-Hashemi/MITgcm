@@ -1,0 +1,1 @@
+/home/hmh85/scratch/MITgcm/pkg/diagnostics/diagnostics_set_pointers.F

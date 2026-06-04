@@ -1,6 +1,4 @@
 # Williamson et al. TC1: cosine bell advection over the pole.
-# The flow field is prescribed each timestep through pkg/mypackage.
-
 &PARM01
 # Planet / fluid
  omega = 7.292E-5,
@@ -13,12 +11,9 @@
  rigidLid = .FALSE.,
  implicitFreeSurface = .TRUE.,
  exactConserv = .TRUE.,
- momStepping = .FALSE.,
+ momStepping = .TRUE.,
  momAdvection = .FALSE.,
- momForcing = .FALSE.,
- momViscosity = .FALSE.,
- momPressureForcing = .FALSE.,
- useCoriolis = .FALSE.,
+ useCoriolis = .TRUE.,
  tempStepping = .FALSE.,
  saltStepping = .FALSE.,
 
@@ -62,7 +57,7 @@
  delY = 720*0.25,
  xgOrigin = 0.,
  ygOrigin = -90.,
- rSphere = 6.371E6,
+ rSphere = 6371000,
  delR = 4000.,
 /
 
@@ -72,4 +67,3 @@
  uVelInitFile = 'u_init.bin',
  vVelInitFile = 'v_init.bin',
 /
-
