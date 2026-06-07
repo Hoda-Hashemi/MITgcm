@@ -1,0 +1,34 @@
+--------------------------------------------------------------------------
+WARNING: An invalid value was given for btl_tcp_if_include.  This
+value will be ignored.
+
+  Local host: onode13
+  Value:      lo0
+  Message:    Unknown interface name
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+At least one pair of MPI processes are unable to reach each other for
+MPI communications.  This means that no Open MPI device has indicated
+that it can be used to communicate between these processes.  This is
+an error; Open MPI requires that all MPI processes be able to reach
+each other.  This error can sometimes be the result of forgetting to
+specify the "self" BTL.
+
+  Process 1 ([[7109,1],1]) is on host: onode13
+  Process 2 ([[7109,1],5]) is on host: onode14
+  BTLs attempted: self vader
+
+Your MPI job is now going to abort; sorry.
+--------------------------------------------------------------------------
+[onode13:35194] *** An error occurred in MPI_Barrier
+[onode13:35194] *** reported by process [465895425,1]
+[onode13:35194] *** on communicator MPI_COMM_WORLD
+[onode13:35194] *** MPI_ERR_INTERN: internal error
+[onode13:35194] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[onode13:35194] ***    and potentially your MPI job)
+[onode13:35183] PMIX ERROR: UNREACHABLE in file server/pmix_server.c at line 2198
+[onode13:35183] PMIX ERROR: UNREACHABLE in file server/pmix_server.c at line 2198
+[onode13:35183] 7 more processes have sent help message help-mpi-btl-tcp.txt / invalid if_inexclude
+[onode13:35183] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[onode13:35183] 7 more processes have sent help message help-mca-bml-r2.txt / unreachable proc
+[onode13:35183] 7 more processes have sent help message help-mpi-errors.txt / mpi_errors_are_fatal
