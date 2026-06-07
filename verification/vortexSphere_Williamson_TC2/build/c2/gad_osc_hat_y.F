@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/generic_advdiff/gad_osc_hat_y.F

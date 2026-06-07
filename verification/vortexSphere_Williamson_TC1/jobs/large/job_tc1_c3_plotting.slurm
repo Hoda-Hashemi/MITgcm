@@ -23,7 +23,7 @@ source "$VENV_DIR/bin/activate"
 
 TC1_DIR=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC1
 
-RUN_DIR=$TC1_DIR/run_48mpi_alpha_c3
+RUN_DIR=$TC1_DIR/run_16mpi_onode15_alpha_c3
 RUN_NAME=$(basename "$RUN_DIR")
 PLOT_DIR=$TC1_DIR/Scripts/output/$RUN_NAME
 

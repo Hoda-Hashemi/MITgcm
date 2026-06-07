@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/rw/get_write_global_fld.F

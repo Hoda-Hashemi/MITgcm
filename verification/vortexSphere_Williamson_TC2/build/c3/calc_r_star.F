@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/model/src/calc_r_star.F

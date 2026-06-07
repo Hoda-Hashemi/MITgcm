@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/eesupp/src/eeset_parms.F

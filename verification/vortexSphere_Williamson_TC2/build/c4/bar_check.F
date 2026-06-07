@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/eesupp/src/bar_check.F

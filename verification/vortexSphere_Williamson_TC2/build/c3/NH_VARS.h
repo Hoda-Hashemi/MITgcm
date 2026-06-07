@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/model/inc/NH_VARS.h

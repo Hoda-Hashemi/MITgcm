@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/diagnostics/diagstats_mnc_out.F

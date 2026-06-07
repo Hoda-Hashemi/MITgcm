@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/monitor/mon_init.F

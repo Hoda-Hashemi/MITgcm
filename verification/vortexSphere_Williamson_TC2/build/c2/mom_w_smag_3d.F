@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/mom_common/mom_w_smag_3d.F

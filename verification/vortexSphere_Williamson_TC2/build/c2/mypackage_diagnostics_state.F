@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/mypackage/mypackage_diagnostics_state.F

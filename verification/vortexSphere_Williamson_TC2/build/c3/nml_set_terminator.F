@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/eesupp/src/nml_set_terminator.F

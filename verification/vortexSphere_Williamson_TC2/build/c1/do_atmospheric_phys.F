@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/model/src/do_atmospheric_phys.F

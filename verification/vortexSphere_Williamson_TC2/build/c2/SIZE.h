@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/code/SIZE.h

@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/diagnostics/diagnostics_calc_phivel.F

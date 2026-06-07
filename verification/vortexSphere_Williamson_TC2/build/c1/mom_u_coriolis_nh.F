@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/mom_common/mom_u_coriolis_nh.F

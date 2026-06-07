@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/model/src/ini_spherical_polar_grid.F

@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/mom_common/mom_u_botdrag_coeff.F

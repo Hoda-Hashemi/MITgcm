@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/eesupp/src/eewrite_eeenv.F

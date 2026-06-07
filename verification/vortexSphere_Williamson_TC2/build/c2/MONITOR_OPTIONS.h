@@ -1,1 +1,0 @@
-/home/hmh85/scratch/MITgcm/pkg/monitor/MONITOR_OPTIONS.h
