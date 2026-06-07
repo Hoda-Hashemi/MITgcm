@@ -19,7 +19,7 @@ module purge
 module load python/3.12
 
 TC2_DIR=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2
-RUN_DIR=$TC2_DIR/run_48mpi_alpha_c4
+RUN_DIR=$TC2_DIR/run_16mpi_onode16_alpha_c4
 RUN_NAME=$(basename "$RUN_DIR")
 PLOT_DIR=$TC2_DIR/Scripts/output/$RUN_NAME
 VENV_DIR=/home/hmh85/scratch/MITgcm/.venv

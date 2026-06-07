@@ -31,9 +31,11 @@ ALPHA=0.0
 MITGCM_DIR=/home/hmh85/scratch/MITgcm
 CASE_DIR=$MITGCM_DIR/verification/vortexSphere_Williamson_TC2
 BUILD_DIR=$CASE_DIR/build/$CASE_NAME
-RUN_DIR=$CASE_DIR/run_48mpi_alpha_$CASE_NAME
 MAKE_JOBS=${SLURM_CPUS_ON_NODE:-$(nproc)}
 MPI_TASKS=${SLURM_NTASKS:-16}
+NODE_TAG=${SLURM_JOB_NODELIST:-onode16}
+NODE_TAG=${NODE_TAG//[^A-Za-z0-9_.-]/_}
+RUN_DIR=$CASE_DIR/run_${MPI_TASKS}mpi_${NODE_TAG}_alpha_$CASE_NAME
 RUN_INPUT_FILES=(data data.diagnostics data.pkg eedata gendata.py)
 
 echo "======================================"
@@ -102,6 +104,34 @@ fi
 if [ ! -f Eta.0000000000.data ]; then
     echo "ERROR: MITgcm did not write Eta.0000000000.data"
     STATUS=1
+fi
+
+if [ "$STATUS" -eq 0 ]; then
+    RUN_NAME=$(basename "$RUN_DIR")
+    PLOT_DIR=$CASE_DIR/Scripts/output/$RUN_NAME
+
+    echo "======================================"
+    echo "Plotting snapshots"
+    echo "======================================"
+
+    if [ ! -f "$RUN_DIR/Eta.0000000000.data" ]; then
+        echo "ERROR: missing $RUN_DIR/Eta.0000000000.data" >&2
+        exit 1
+    fi
+
+    mkdir -p "$PLOT_DIR"
+
+    export RUN_DIR PLOT_DIR
+
+    echo "python = $(which python)"
+    python --version
+    echo "RUN_DIR = $RUN_DIR"
+    echo "PLOT_DIR = $PLOT_DIR"
+
+    cd "$CASE_DIR"
+    python "$CASE_DIR/Scripts/HPC/snapshots.py" "$RUN_DIR"
+
+    echo "Plots saved in: $PLOT_DIR"
 fi
 
 END_TIME=$(date +%s)
