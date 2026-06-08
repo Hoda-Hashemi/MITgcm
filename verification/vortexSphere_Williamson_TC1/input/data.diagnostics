@@ -24,7 +24,7 @@
   yPsi0 =  0.,
 #--
   fields(1:5,3) = 'UVELMASS','VVELMASS',
-                  'ETAN    ','ETANSQ  ','DETADT2 ',
+                  'SALT    ','SALTSQ  ','ETAN    ',
   fileName(3) = 'dynDiag',
   frequency(3) = -86400.,
   timePhase(3) = 0.,
@@ -55,10 +55,9 @@
 #--------------------
  &DIAG_STATIS_PARMS
 # diagSt_mnc    = .TRUE.,
- stat_fields(1:5,1)  = 'ETAN    ','ETANSQ  ','DETADT2 ',
+ stat_fields(1:5,1)  = 'SALT    ','SALTSQ  ','ETAN    ',
                        'UVEL    ','VVEL    ',
   stat_fName(1) = 'dynStDiag',
    stat_freq(1) = -86400.,
   stat_phase(1) = 0.,
  &
-

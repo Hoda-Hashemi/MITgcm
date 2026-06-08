@@ -1,0 +1,7 @@
+status: MOVING: inspect errors
+max_field_change_from_initial_m: 3.420255984310e+04
+model_peak_max_distance_from_start_km: 2.027876932660e+03
+exact_peak_max_distance_from_start_km: 2.001508679602e+04
+final_l1: 1.998680174109e+00
+final_l2: 5.663916759047e+00
+final_linf: 3.420979097849e+01

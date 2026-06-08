@@ -1,0 +1,11 @@
+status: INVALID: Eta is stationary
+max_field_change_from_initial_m: 1.200029892843e-05
+model_peak_max_distance_from_start_km: 0.000000000000e+00
+exact_peak_max_distance_from_start_km: 2.001508679602e+04
+final_l1: 2.834850698830e-08
+final_l2: 2.353199929493e-08
+final_linf: 3.046578462615e-08
+
+The saved Eta field did not advect.
+A near-zero day-12 error is not a pass because the exact bell
+returns to its initial position after one full rotation.

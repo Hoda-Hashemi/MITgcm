@@ -13,10 +13,20 @@ import animationComponents as ac  # noqa: E402
 OUTPUT_FORMAT = "pdf"
 SINGLE_HEATMAP_DPI = 360
 CMAP = "RdBu_r"
-def parse_args() -> argparse.Namespace:
+
+DEFAULT_RUN_DIR = SCRIPT_DIR.parents[2] / "run"
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Save MITgcm single heatmap snapshots.")
-    parser.add_argument("run_dir", type=Path, help="MITgcm run directory containing output files.")
-    return parser.parse_args()
+    parser.add_argument(
+        "run_dir",
+        nargs="?",
+        type=Path,
+        default=DEFAULT_RUN_DIR,
+        help="MITgcm run directory containing output files.",
+    )
+    return parser.parse_args(argv)
 def read_delta_t(run_dir: Path) -> float:
     for data_file in (run_dir / "data", run_dir.parent / "input" / "data"):
         if data_file.exists():
@@ -59,9 +69,9 @@ def write_phi(run_dir: Path, output_root: Path, delta_t_sec: float) -> None:
     land_mask = ac.load_land_mask(run_dir, *phi0.shape)
     phi_series, _ = ac.read_record_series_any_bundle(run_dir, "PhiVEL", iterations, land_mask)
     save_field({"PhiVEL": phi_series}, iterations, delta_t_sec, output_root / "Phi")
-def main() -> None:
-    args = parse_args()
-    run_dir = args.run_dir.expanduser().resolve()
+def run_snapshots(run_dir: Path | None = None) -> None:
+    run_dir = DEFAULT_RUN_DIR if run_dir is None else Path(run_dir)
+    run_dir = run_dir.expanduser().resolve()
     delta_t_sec = read_delta_t(run_dir)
     output_root = SCRIPT_DIR / "output" / run_dir.name
     output_root.mkdir(parents=True, exist_ok=True)
@@ -69,5 +79,7 @@ def main() -> None:
     write_velocity_magnitude(run_dir, output_root, delta_t_sec)
     write_psi(run_dir, output_root, delta_t_sec)
     write_phi(run_dir, output_root, delta_t_sec)
+
+
 if __name__ == "__main__":
-    main()
+    run_snapshots(parse_args().run_dir)
