@@ -73,7 +73,7 @@
 &PARM05
  bathyFile = 'bathymetry_flat4000.bin',
  pSurfInitFile = 'eta_init.bin',
- uVelInitFile  = 'u_init.bin'
- vVelInitFile  = 'v_init.bin'
+ uVelInitFile  = 'u_init.bin',
+ vVelInitFile  = 'v_init.bin',
 /
 
