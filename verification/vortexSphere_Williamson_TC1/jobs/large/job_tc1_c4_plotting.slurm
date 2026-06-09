@@ -3,7 +3,7 @@
 #SBATCH --account=hmh85
 
 #SBATCH --partition=large
-#SBATCH --nodelist=onode16
+#SBATCH --nodelist=onode15
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -25,7 +25,7 @@ source "$VENV_DIR/bin/activate"
 
 TC1_DIR=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC1
 
-RUN_DIR=$TC1_DIR/run_16mpi_onode16_alpha_c4
+RUN_DIR=$TC1_DIR/run_alpha_1.57
 RUN_NAME=$(basename "$RUN_DIR")
 PLOT_DIR=$TC1_DIR/Scripts/output/$RUN_NAME
 
@@ -41,6 +41,6 @@ echo "RUN_DIR = $RUN_DIR"
 echo "PLOT_DIR = $PLOT_DIR"
 
 cd "$TC1_DIR" || exit 1
-python3 "$TC1_DIR/Scripts/HPC/snapshots.py" "$RUN_DIR"
+python3 "$TC1_DIR/Scripts/plotters/Snapshots.py" "$RUN_DIR"
 
 echo "Plots saved in: $PLOT_DIR"
