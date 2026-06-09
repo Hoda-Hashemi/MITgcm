@@ -119,7 +119,7 @@ input/__pycache__/
 /verification/tmp_*
 
 /verification/*/tr_run.*
-/verification/*/run_*/
+#/verification/*/run_*/
 /verification/*/run/
 
 /verification/*/Scripts/results*/
@@ -127,14 +127,14 @@ input/__pycache__/
 /tools/TAP_support/ADFirstAidKit/*.gch
 
 .venv/
-
-verification/vortexSphere_mitgcm_referenceCase/run_Run1/
-verification/vortexSphere_mitgcm_referenceCase/run_Run1/
+verification/vortexSphere_mitgcm_referenceCase/run_*
+#verification/vortexSphere_mitgcm_referenceCase/run_Run1/
+#verification/vortexSphere_mitgcm_referenceCase/run_Run1/
 verification/vortexSphere_mitgcm_referenceCase/Scripts/results_Run1/
 
-verification/vortexSphere_mitgcm_referenceCase/run_Rossby_6hours/
-verification/vortexSphere_mitgcm_referenceCase/run_6hrs/
-verification/vortexSphere_mitgcm_referenceCase/run_34_MPI/
+#verification/vortexSphere_mitgcm_referenceCase/run_Rossby_6hours/
+#verification/vortexSphere_mitgcm_referenceCase/run_6hrs/
+#verification/vortexSphere_mitgcm_referenceCase/run_34_MPI/
 # verification/vortexSphere_mitgcm_referenceCase/input/*.bin
 verification/vortexSphere_mitgcm_referenceCase/Scripts/results_Rossby_6_hrs/
 verification/vortexSphere_mitgcm_referenceCase/Scripts/results_SpecialCase_1000m_eta0/
@@ -144,7 +144,7 @@ verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Gaussian_
 verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Geostrophic*/
 
 verification/vortexSphere_Williamson_TC1/build/
-verification/vortexSphere_Williamson_TC1/run*/
+#verification/vortexSphere_Williamson_TC1/run*/
 
 
 verification/vortexSphere_Williamson_TC1/logs/
