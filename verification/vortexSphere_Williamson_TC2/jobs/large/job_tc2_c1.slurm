@@ -12,8 +12,8 @@
 #SBATCH --mem=0
 #SBATCH --time=1-00:00:00
 
-#SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.out
-#SBATCH --error=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.err
+#SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/jobs/slurm-%j.out
+#SBATCH --error=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/jobs/slurm-%j.err
 
 #SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT
 #SBATCH --mail-user=hmh85@aub.edu.lb
@@ -23,13 +23,11 @@ set -euo pipefail
 module purge
 module load gcc/10.1.0
 module load mpi/openmpi/4.1.4-slurm-18.08.6
-module load python/3.12
-
-VENV_DIR=/home/hmh85/scratch/MITgcm/.venv
-source "$VENV_DIR/bin/activate"
 
 CASE_NAME=c1
 ALPHA=0.0
+EXPECTED_INPUT_BYTES=$((1440 * 720 * 4))
+FINAL_ITER=0000017280
 MITGCM_DIR=/home/hmh85/scratch/MITgcm
 CASE_DIR=$MITGCM_DIR/verification/vortexSphere_Williamson_TC2
 BUILD_DIR=$CASE_DIR/build/$CASE_NAME
@@ -63,6 +61,21 @@ if [ "$MPI_TASKS" -ne 48 ]; then
     echo "ERROR: this job builds a 48-rank decomposition"
     exit 1
 fi
+
+for file in "${RUN_INPUT_FILES[@]}"; do
+    if [ ! -r "$CASE_DIR/input/$file" ]; then
+        echo "ERROR: missing input file: $CASE_DIR/input/$file"
+        exit 1
+    fi
+done
+
+for file in bathymetry_flat4000.bin eta_init.bin u_init.bin v_init.bin; do
+    input_bytes=$(wc -c < "$CASE_DIR/input/$file")
+    if [ "$input_bytes" -ne "$EXPECTED_INPUT_BYTES" ]; then
+        echo "ERROR: $file has $input_bytes bytes; expected $EXPECTED_INPUT_BYTES"
+        exit 1
+    fi
+done
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
@@ -116,8 +129,8 @@ if grep -q "ABNORMAL END\\|\\*\\*\\* ERROR \\*\\*\\*" \
     STATUS=1
 fi
 
-if [ ! -f Eta.0000000000.data ]; then
-    echo "ERROR: MITgcm did not write Eta.0000000000.data"
+if [ ! -f "Eta.${FINAL_ITER}.data" ]; then
+    echo "ERROR: MITgcm did not reach final iteration $FINAL_ITER"
     STATUS=1
 fi
 
