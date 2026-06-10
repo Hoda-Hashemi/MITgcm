@@ -1595,3 +1595,293 @@ listId=   1 ; file name: dynStDiag
   get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
  Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
              Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   345600) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   432000) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   518400) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   604800) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   691200) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   777600) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   864000) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+ Computing Diagnostic #    48 "WVELMASS" (list#  1) Parms "WM      LR      ", Count=       1
+ Post-Processing Diag #    49 "PhiVEL  " (list#  1) Parms "SMR P   MR      "
+   from diag: UVELMASS (#    46) Cnt=       1 and diag: VVELMASS (#    47) Cnt=       1
+ diag_cg2d (it=   950400) a2dNorm,x2dNorm= 5.454150E-07 , 2.302324E-04 ; Criter= 1.00E-10
+ diag_cg2d : k=   1 , it=  1804  1805 ; ini,min,last_Res= 1.9321743E+02 1.0101035E-10 9.8971845E-11
+  get Post-Proc. Diag #     50  PsiVEL   from previous computation of Diag #     49
+ Computing Diagnostic #    46 "UVELMASS" (list#  2) Parms "UUr     MR      ", Count=       1
+             Vector  Mate for "UVELMASS" :  Diagnostic #     47 "VVELMASS" exists
+ Computing Diagnostic #    47 "VVELMASS" (list#  2) Parms "VVr     MR      ", Count=       1
+             Vector  Mate for "VVELMASS" :  Diagnostic #     46 "UVELMASS" exists
+ Computing Diagnostic #    27 "SALT    " (list#  2) Parms "SMR     MR      ", Count=       1
+ Computing Diagnostic #    34 "SALTSQ  " (list#  2) Parms "SMRP    MR      ", Count=       1
+ Computing Diagnostic #    23 "ETAN    " (list#  2) Parms "SM      M1      ", Count=       1
+ Compute Stats, Diag. #    27 "SALT    " (list#  1) Parms "SMR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    34 "SALTSQ  " (list#  1) Parms "SMRP    MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    23 "ETAN    " (list#  1) Parms "SM      M1      ", vol(  0 )= 5.101E+14
+ Compute Stats, Diag. #    30 "UVEL    " (list#  1) Parms "UUR     MR      ", vol(  0 )= 2.040E+18
+ Compute Stats, Diag. #    31 "VVEL    " (list#  1) Parms "VVR     MR      ", vol(  0 )= 2.040E+18
+(PID.TID 0002.0001) %CHECKPOINT   1036800 ckptA
+(PID.TID 0002.0001)   Seconds in section "ALL                    [THE_MODEL_MAIN]":
+(PID.TID 0002.0001)           User time:   13205.367748796940
+(PID.TID 0002.0001)         System time:   45.526321411132812
+(PID.TID 0002.0001)     Wall clock time:   13251.818372011185
+(PID.TID 0002.0001)          No. starts:           1
+(PID.TID 0002.0001)           No. stops:           1
+(PID.TID 0002.0001)   Seconds in section "INITIALISE_FIXED       [THE_MODEL_MAIN]":
+(PID.TID 0002.0001)           User time:   3.8913031220436096
+(PID.TID 0002.0001)         System time:   1.6479492187500000E-003
+(PID.TID 0002.0001)     Wall clock time:   4.6437158584594727
+(PID.TID 0002.0001)          No. starts:           1
+(PID.TID 0002.0001)           No. stops:           1
+(PID.TID 0002.0001)   Seconds in section "THE_MAIN_LOOP          [THE_MODEL_MAIN]":
+(PID.TID 0002.0001)           User time:   13201.476422786713
+(PID.TID 0002.0001)         System time:   45.524632453918457
+(PID.TID 0002.0001)     Wall clock time:   13247.174612998962
+(PID.TID 0002.0001)          No. starts:           1
+(PID.TID 0002.0001)           No. stops:           1
+(PID.TID 0002.0001)   Seconds in section "INITIALISE_VARIA    [THE_MAIN_LOOP]":
+(PID.TID 0002.0001)           User time:   1.3553090095520020
+(PID.TID 0002.0001)         System time:   4.4541358947753906E-003
+(PID.TID 0002.0001)     Wall clock time:   1.3263061046600342
+(PID.TID 0002.0001)          No. starts:           1
+(PID.TID 0002.0001)           No. stops:           1
+(PID.TID 0002.0001)   Seconds in section "MAIN LOOP           [THE_MAIN_LOOP]":
+(PID.TID 0002.0001)           User time:   13200.121095657349
+(PID.TID 0002.0001)         System time:   45.520170450210571
+(PID.TID 0002.0001)     Wall clock time:   13245.848273992538
+(PID.TID 0002.0001)          No. starts:           1
+(PID.TID 0002.0001)           No. stops:           1
+(PID.TID 0002.0001)   Seconds in section "MAIN_DO_LOOP        [THE_MAIN_LOOP]":
+(PID.TID 0002.0001)           User time:   13191.320729255676
+(PID.TID 0002.0001)         System time:   45.405509710311890
+(PID.TID 0002.0001)     Wall clock time:   13236.996946334839
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "FORWARD_STEP        [MAIN_DO_LOOP]":
+(PID.TID 0002.0001)           User time:   13173.392857074738
+(PID.TID 0002.0001)         System time:   45.171810388565063
+(PID.TID 0002.0001)     Wall clock time:   13218.895604610443
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "DO_STATEVARS_DIAGS  [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   32.094211101531982
+(PID.TID 0002.0001)         System time:  0.36540627479553223
+(PID.TID 0002.0001)     Wall clock time:   32.637988090515137
+(PID.TID 0002.0001)          No. starts:     2073600
+(PID.TID 0002.0001)           No. stops:     2073600
+(PID.TID 0002.0001)   Seconds in section "LOAD_FIELDS_DRIVER  [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   111.52917718887329
+(PID.TID 0002.0001)         System time:   1.6113870143890381
+(PID.TID 0002.0001)     Wall clock time:   113.39073967933655
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "EXTERNAL_FLDS_LOAD [LOAD_FLDS_DRIVER]":
+(PID.TID 0002.0001)           User time:   9.1625542640686035
+(PID.TID 0002.0001)         System time:  0.15811657905578613
+(PID.TID 0002.0001)     Wall clock time:   9.0787189006805420
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "DO_ATMOSPHERIC_PHYS [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   8.7276453971862793
+(PID.TID 0002.0001)         System time:  0.15821719169616699
+(PID.TID 0002.0001)     Wall clock time:   8.9896750450134277
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "DO_OCEANIC_PHYS     [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   1334.7299776077271
+(PID.TID 0002.0001)         System time:   13.414742231369019
+(PID.TID 0002.0001)     Wall clock time:   1352.9427547454834
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "THERMODYNAMICS      [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   5957.7404904365540
+(PID.TID 0002.0001)         System time:   8.7920918464660645
+(PID.TID 0002.0001)     Wall clock time:   5973.7715933322906
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "INTEGR_CONTINUITY   [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   5090.3675856590271
+(PID.TID 0002.0001)         System time:   16.470652818679810
+(PID.TID 0002.0001)     Wall clock time:   5107.8925361633301
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "TRC_CORRECTION_STEP [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   9.0928773880004883
+(PID.TID 0002.0001)         System time:   5.1022291183471680E-002
+(PID.TID 0002.0001)     Wall clock time:   9.1425328254699707
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "BLOCKING_EXCHANGES  [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   431.08207941055298
+(PID.TID 0002.0001)         System time:   2.0915222167968750
+(PID.TID 0002.0001)     Wall clock time:   433.69525551795959
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "MONITOR             [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   9.4275965690612793
+(PID.TID 0002.0001)         System time:   8.8611602783203125E-002
+(PID.TID 0002.0001)     Wall clock time:   9.6831464767456055
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "DO_THE_MODEL_IO     [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   44.205661773681641
+(PID.TID 0002.0001)         System time:  0.13365888595581055
+(PID.TID 0002.0001)     Wall clock time:   44.311586618423462
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001)   Seconds in section "DO_WRITE_PICKUP     [FORWARD_STEP]":
+(PID.TID 0002.0001)           User time:   10.050605773925781
+(PID.TID 0002.0001)         System time:  0.10360050201416016
+(PID.TID 0002.0001)     Wall clock time:   9.9947113990783691
+(PID.TID 0002.0001)          No. starts:     1036800
+(PID.TID 0002.0001)           No. stops:     1036800
+(PID.TID 0002.0001) // ======================================================
+(PID.TID 0002.0001) // Tile <-> Tile communication statistics
+(PID.TID 0002.0001) // ======================================================
+(PID.TID 0002.0001) // o Tile number: 000025
+(PID.TID 0002.0001) //         No. X exchanges =              0
+(PID.TID 0002.0001) //            Max. X spins =              0
+(PID.TID 0002.0001) //            Min. X spins =     1000000000
+(PID.TID 0002.0001) //          Total. X spins =              0
+(PID.TID 0002.0001) //            Avg. X spins =       0.00E+00
+(PID.TID 0002.0001) //         No. Y exchanges =              0
+(PID.TID 0002.0001) //            Max. Y spins =              0
+(PID.TID 0002.0001) //            Min. Y spins =     1000000000
+(PID.TID 0002.0001) //          Total. Y spins =              0
+(PID.TID 0002.0001) //            Avg. Y spins =       0.00E+00
+(PID.TID 0002.0001) // o Thread number: 000001
+(PID.TID 0002.0001) //            No. barriers =         132892
+(PID.TID 0002.0001) //      Max. barrier spins =              1
+(PID.TID 0002.0001) //      Min. barrier spins =              1
+(PID.TID 0002.0001) //     Total barrier spins =         132892
+(PID.TID 0002.0001) //      Avg. barrier spins =       1.00E+00
+PROGRAM MAIN: Execution ended Normally
