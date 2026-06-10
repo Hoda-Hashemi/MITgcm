@@ -3,11 +3,13 @@
 #SBATCH --account=hmh85
 
 #SBATCH --partition=large
-#SBATCH --nodelist=onode16
+#SBATCH --nodelist=onode14
 #SBATCH --nodes=1
-#SBATCH --ntasks=16
+#SBATCH --ntasks=48
+#SBATCH --ntasks-per-node=48
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=48G
+#SBATCH --exclusive
+#SBATCH --mem=0
 #SBATCH --time=1-00:00:00
 
 #SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.out
@@ -32,11 +34,20 @@ MITGCM_DIR=/home/hmh85/scratch/MITgcm
 CASE_DIR=$MITGCM_DIR/verification/vortexSphere_Williamson_TC2
 BUILD_DIR=$CASE_DIR/build/$CASE_NAME
 MAKE_JOBS=${SLURM_CPUS_ON_NODE:-$(nproc)}
-MPI_TASKS=${SLURM_NTASKS:-16}
-NODE_TAG=${SLURM_JOB_NODELIST:-onode16}
+MPI_TASKS=${SLURM_NTASKS:-48}
+NODE_TAG=${SLURM_JOB_NODELIST:-onode14}
 NODE_TAG=${NODE_TAG//[^A-Za-z0-9_.-]/_}
 RUN_DIR=$CASE_DIR/run_${MPI_TASKS}mpi_${NODE_TAG}_alpha_$CASE_NAME
-RUN_INPUT_FILES=(data data.diagnostics data.pkg eedata gendata.py)
+RUN_INPUT_FILES=(
+    data
+    data.diagnostics
+    data.pkg
+    eedata
+    bathymetry_flat4000.bin
+    eta_init.bin
+    u_init.bin
+    v_init.bin
+)
 
 echo "======================================"
 echo "MITgcm compile + run"
@@ -47,6 +58,11 @@ echo "Start:  $(date)"
 echo "======================================"
 
 START_TIME=$(date +%s)
+
+if [ "$MPI_TASKS" -ne 48 ]; then
+    echo "ERROR: this job builds a 48-rank decomposition"
+    exit 1
+fi
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
@@ -79,7 +95,6 @@ for file in "${RUN_INPUT_FILES[@]}"; do
 done
 
 cd "$RUN_DIR"
-python3 gendata.py --alpha "$ALPHA"
 
 cp "$BUILD_DIR/mitgcmuv" "$RUN_DIR/"
 
@@ -104,34 +119,6 @@ fi
 if [ ! -f Eta.0000000000.data ]; then
     echo "ERROR: MITgcm did not write Eta.0000000000.data"
     STATUS=1
-fi
-
-if [ "$STATUS" -eq 0 ]; then
-    RUN_NAME=$(basename "$RUN_DIR")
-    PLOT_DIR=$CASE_DIR/Scripts/output/$RUN_NAME
-
-    echo "======================================"
-    echo "Plotting snapshots"
-    echo "======================================"
-
-    if [ ! -f "$RUN_DIR/Eta.0000000000.data" ]; then
-        echo "ERROR: missing $RUN_DIR/Eta.0000000000.data" >&2
-        exit 1
-    fi
-
-    mkdir -p "$PLOT_DIR"
-
-    export RUN_DIR PLOT_DIR
-
-    echo "python = $(which python)"
-    python --version
-    echo "RUN_DIR = $RUN_DIR"
-    echo "PLOT_DIR = $PLOT_DIR"
-
-    cd "$CASE_DIR"
-    python "$CASE_DIR/Scripts/HPC/snapshots.py" "$RUN_DIR"
-
-    echo "Plots saved in: $PLOT_DIR"
 fi
 
 END_TIME=$(date +%s)

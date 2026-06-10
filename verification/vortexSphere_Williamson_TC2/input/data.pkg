@@ -1,5 +1,4 @@
-# Package activation for the TC2 case.
-&PACKAGES
- useDiagnostics = .TRUE.,
- useMYPACKAGE = .FALSE.,
-/
+# Packages
+ &PACKAGES
+ useDiagnostics=.TRUE.,
+ &

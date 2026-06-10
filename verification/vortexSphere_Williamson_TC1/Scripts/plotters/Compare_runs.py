@@ -17,7 +17,7 @@ CASE_DIR = SCRIPT_DIR.parents[1]
 
 # ================= EDIT ONLY THE RUN DIRECTORY NAMES =================
 RUN_1_NAME = "run_alpha_0"
-RUN_2_NAME = "run_alpha_0.05"
+RUN_2_NAME = "run_alpha_1.52"
 # =====================================================================
 
 RUN_1 = CASE_DIR / RUN_1_NAME
@@ -340,3 +340,4 @@ if SAVE_FIGURES:
     print(f"Figures saved in: {output_folder}")
 
 # %%
+

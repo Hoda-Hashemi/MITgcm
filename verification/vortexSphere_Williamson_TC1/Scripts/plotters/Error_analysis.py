@@ -37,7 +37,7 @@ from matplotlib.ticker import MaxNLocator
 SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_DIR = SCRIPT_DIR.parents[1] if len(SCRIPT_DIR.parents) > 1 else SCRIPT_DIR
 
-RUN_DIR = CASE_DIR / "run_alpha_0.05"    # edit this directly
+RUN_DIR = CASE_DIR / "run_alpha_1.57"    # edit this directly
 FIELD = "S"                          # TC1 cosine-bell height stored as passive tracer
 
 EARTH_RADIUS = 6_371_000.0

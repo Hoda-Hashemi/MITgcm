@@ -5,9 +5,11 @@
 #SBATCH --partition=large
 #SBATCH --nodelist=onode14
 #SBATCH --nodes=1
-#SBATCH --ntasks=16
+#SBATCH --ntasks=48
+#SBATCH --ntasks-per-node=48
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=32G
+#SBATCH --exclusive
+#SBATCH --mem=0
 #SBATCH --time=1-00:00:00
 
 #SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.out
@@ -32,7 +34,7 @@ MITGCM_DIR=/home/hmh85/scratch/MITgcm
 CASE_DIR=$MITGCM_DIR/verification/vortexSphere_Williamson_TC2
 BUILD_DIR=$CASE_DIR/build/$CASE_NAME
 MAKE_JOBS=${SLURM_CPUS_ON_NODE:-$(nproc)}
-MPI_TASKS=${SLURM_NTASKS:-16}
+MPI_TASKS=${SLURM_NTASKS:-48}
 NODE_TAG=${SLURM_JOB_NODELIST:-onode14}
 NODE_TAG=${NODE_TAG//[^A-Za-z0-9_.-]/_}
 RUN_DIR=$CASE_DIR/run_${MPI_TASKS}mpi_${NODE_TAG}_alpha_$CASE_NAME
@@ -47,6 +49,11 @@ echo "Start:  $(date)"
 echo "======================================"
 
 START_TIME=$(date +%s)
+
+if [ "$MPI_TASKS" -ne 48 ]; then
+    echo "ERROR: this job builds a 48-rank decomposition"
+    exit 1
+fi
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
