@@ -146,7 +146,7 @@ verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Geostroph
 verification/vortexSphere_Williamson_TC1/build/
 verification/vortexSphere_Williamson_TC1/run*/
 
-verification/vortexSphere_Williamson_TC2/run*/
+#verification/vortexSphere_Williamson_TC2/run*/
 verification/vortexSphere_Williamson_TC2/build/
 
 verification/vortexSphere_Williamson_TC1/logs/
