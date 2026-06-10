@@ -1,5 +1,5 @@
 # %%
-"""Compare the passive tracer from two TC1 run folders.
+"""Compare the passive tracer from two TC2 run folders.
 
 Edit RUN_1_NAME and RUN_2_NAME, then press Shift+Enter on this cell.
 The figures are displayed in the IPython kernel and also saved as PDF and PNG.
@@ -14,6 +14,7 @@ from matplotlib.lines import Line2D
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_DIR = SCRIPT_DIR.parents[1]
+OUTPUT_DIR = CASE_DIR / "Scripts" / "output"
 
 # ================= EDIT ONLY THE RUN DIRECTORY NAMES =================
 RUN_1_NAME = "run_alpha_0"
@@ -230,7 +231,7 @@ def plot_comparison(
     )
 
     ax.set_title(
-        f"TC1 passive-tracer overlay - day {day:g}\n"
+        f"TC2 passive-tracer overlay - day {day:g}\n"
         f"tracer-center separation = {separation:.3f} degrees"
     )
     ax.set_xlabel("Longitude offset from comparison center [deg]")
@@ -285,9 +286,7 @@ if not np.allclose(xc_1, xc_2) or not np.allclose(yc_1, yc_2):
     raise ValueError("The two runs do not use the same grid.")
 
 output_folder = (
-    RUN_1.parent
-    / "Scripts"
-    / "output"
+    OUTPUT_DIR
     / f"compare_{RUN_1.name}_vs_{RUN_2.name}"
     / "PassiveTracerOverlay"
 )
@@ -321,7 +320,7 @@ for time_seconds, iteration_1, iteration_2 in outputs:
 
     if SAVE_FIGURES:
         name = (
-            f"tc1_tracer_overlay_day_{day:05.2f}_"
+            f"tc2_tracer_overlay_day_{day:05.2f}_"
             f"iter1_{iteration_1:010d}_iter2_{iteration_2:010d}"
         )
         figure.savefig(output_folder / f"{name}.pdf", bbox_inches="tight")
@@ -340,3 +339,4 @@ if SAVE_FIGURES:
     print(f"Figures saved in: {output_folder}")
 
 # %%
+

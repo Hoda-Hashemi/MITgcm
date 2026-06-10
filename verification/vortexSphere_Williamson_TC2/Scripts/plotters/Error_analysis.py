@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Williamson TC1 error analysis for MITgcm output.
+"""Williamson TC2 error analysis for MITgcm output.
 
 This replaces:
-    tc1_paper_plots.py
-    tc1_paper_plots_fancy.py
-    tc1_error_study.py
+    TC2_paper_plots.py
+    TC2_paper_plots_fancy.py
+    TC2_error_study.py
 
 It writes only:
     1) paper-style cosine-bell overlay
@@ -14,8 +14,8 @@ It writes only:
     5) CSV, TXT, and LaTeX tables
 
 Run:
-    python tc1_error_analysis.py
-    python tc1_error_analysis.py /path/to/run_alpha_0
+    python TC2_error_analysis.py
+    python TC2_error_analysis.py /path/to/run_alpha_0
 """
 #%%
 from __future__ import annotations
@@ -36,9 +36,10 @@ from matplotlib.ticker import MaxNLocator
 # ------------------------- easy settings -------------------------
 SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_DIR = SCRIPT_DIR.parents[1] if len(SCRIPT_DIR.parents) > 1 else SCRIPT_DIR
+OUTPUT_DIR = CASE_DIR / "Scripts" / "output"
 
-RUN_DIR = CASE_DIR / "run_alpha_0.05"    # edit this directly
-FIELD = "S"                          # TC1 cosine-bell height stored as passive tracer
+RUN_DIR = CASE_DIR / "run_alpha_0"    # edit this directly
+FIELD = "S"                          # TC2 cosine-bell height stored as passive tracer
 
 EARTH_RADIUS = 6_371_000.0
 DAY = 86_400.0
@@ -68,14 +69,14 @@ def read_text_value(path: Path, pattern: str) -> float | None:
     return float(match.group(1).replace("D", "e").replace("d", "e"))
 
 def read_delta_t(run_dir: Path) -> float:
-    for path in (run_dir / "data", run_dir.parent / "input" / "data"):
+    for path in (run_dir / "data", CASE_DIR / "input" / "data"):
         value = read_text_value(path, r"deltaT\s*=\s*([+\-0-9.eEdD]+)")
         if value is not None:
             return value
     return 60.0
 
 def read_alpha(run_dir: Path) -> float:
-    for path in (run_dir / "data.mypackage", run_dir.parent / "input" / "data.mypackage"):
+    for path in (run_dir / "data.mypackage", CASE_DIR / "input" / "data.mypackage"):
         value = read_text_value(path, r"myPa_param1\s*=\s*([+\-0-9.eEdD]+)")
         if value is not None:
             return value
@@ -313,7 +314,7 @@ def plot_cosine_bell_overlay(output_dir: Path, lon, lat, model, exact, day: floa
     fig.tight_layout()
 
     for suffix in ("pdf", "png"):
-        fig.savefig(output_dir / f"tc1_cosine_bell_overlay.{suffix}", dpi=DPI, bbox_inches="tight")
+        fig.savefig(output_dir / f"TC2_cosine_bell_overlay.{suffix}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
 
 def plot_signed_error(output_dir: Path, lon, lat, error) -> None:
@@ -357,7 +358,7 @@ def plot_signed_error(output_dir: Path, lon, lat, error) -> None:
     fig.tight_layout()
 
     for suffix in ("pdf", "png"):
-        fig.savefig(output_dir / f"tc1_signed_error_contours.{suffix}", dpi=DPI, bbox_inches="tight")
+        fig.savefig(output_dir / f"TC2_signed_error_contours.{suffix}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
 
 def plot_error_metrics(output_dir: Path, rows: list[dict[str, float]]) -> None:
@@ -370,7 +371,7 @@ def plot_error_metrics(output_dir: Path, rows: list[dict[str, float]]) -> None:
     ax.plot(days, l1, color="black", lw=1.5, linestyle="-", label=r"$L_1$")
     ax.plot(days, l2, color="black", lw=1.5, linestyle="--", label=r"$L_2$")
     ax.plot(days, linf, color="black", lw=1.5, linestyle=":", label=r"$L_\infty$")
-    ax.set_title("TC1 normalized error growth")
+    ax.set_title("TC2 normalized error growth")
     ax.set_xlabel("Time [days]")
     ax.set_ylabel("Normalized error")
     ax.set_xlim(float(days[0]), float(days[-1]))
@@ -378,7 +379,7 @@ def plot_error_metrics(output_dir: Path, rows: list[dict[str, float]]) -> None:
     ax.set_ylim(0.0, 1.08 * max_error if max_error > 0.0 else 1.0)
     ax.set_xticks(np.arange(0, max(13, int(days[-1]) + 1), 2))
     ax.legend(frameon=True, loc="upper left", fancybox=False, edgecolor="black")
-    fig.savefig(output_dir / "tc1_error_metrics.pdf", bbox_inches="tight")
+    fig.savefig(output_dir / "TC2_error_metrics.pdf", bbox_inches="tight")
     plt.close(fig)
 
 def plot_peak_trajectory(output_dir: Path, rows: list[dict[str, float]]) -> None:
@@ -407,13 +408,13 @@ def plot_peak_trajectory(output_dir: Path, rows: list[dict[str, float]]) -> None
     axes[2].set_xlabel("Time [days]")
     axes[2].set_ylabel("Distance [km]")
 
-    fig.savefig(output_dir / "tc1_peak_trajectory.pdf", bbox_inches="tight")
+    fig.savefig(output_dir / "TC2_peak_trajectory.pdf", bbox_inches="tight")
     plt.close(fig)
 
 def write_tables(output_dir: Path, rows: list[dict[str, float]]) -> None:
-    csv_path = output_dir / "tc1_error_table.csv"
-    txt_path = output_dir / "tc1_error_table.txt"
-    tex_path = output_dir / "tc1_error_table.tex"
+    csv_path = output_dir / "TC2_error_table.csv"
+    txt_path = output_dir / "TC2_error_table.txt"
+    tex_path = output_dir / "TC2_error_table.tex"
 
     columns = [
         "iteration", "day", "normalized_l1", "normalized_l2", "normalized_linf",
@@ -428,7 +429,7 @@ def write_tables(output_dir: Path, rows: list[dict[str, float]]) -> None:
             writer.writerow({key: row[key] for key in columns})
 
     with txt_path.open("w", encoding="utf-8") as handle:
-        handle.write("Williamson TC1 error table\n")
+        handle.write("Williamson TC2 error table\n")
         handle.write("error = MITgcm - exact\n\n")
         handle.write(f"{'day':>6s} {'L1':>12s} {'L2':>12s} {'Linf':>12s} {'RMSE[m]':>12s} {'mass':>12s}\n")
         for r in rows:
@@ -455,7 +456,7 @@ def write_tables(output_dir: Path, rows: list[dict[str, float]]) -> None:
             )
         handle.write("\\bottomrule\n")
         handle.write("\\end{tabular}\n")
-        handle.write("\\caption{Williamson TC1 error metrics. Error is MITgcm minus exact cosine-bell height.}\n")
+        handle.write("\\caption{Williamson TC2 error metrics. Error is MITgcm minus exact cosine-bell height.}\n")
         handle.write("\\end{table}\n")
 
 def analyze(run_dir: Path) -> None:
@@ -465,7 +466,7 @@ def analyze(run_dir: Path) -> None:
 
     delta_t = read_delta_t(run_dir)
     alpha = read_alpha(run_dir)
-    output_dir = SCRIPT_DIR.parent / "output" / run_dir.name / "TC1Error"
+    output_dir = OUTPUT_DIR / run_dir.name / "TC2Error"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     iterations = discover_iterations(run_dir, FIELD)
@@ -544,7 +545,7 @@ def analyze(run_dir: Path) -> None:
     plot_peak_trajectory(output_dir, peak_rows)
     write_tables(output_dir, rows)
 
-    print(f"TC1 error analysis for: {run_dir}")
+    print(f"TC2 error analysis for: {run_dir}")
     print(f"alpha = {alpha:.8g} rad, deltaT = {delta_t:.8g} s")
     print(f"iterations = {iterations[0]} ... {iterations[-1]}  ({len(iterations)} outputs)")
     print(

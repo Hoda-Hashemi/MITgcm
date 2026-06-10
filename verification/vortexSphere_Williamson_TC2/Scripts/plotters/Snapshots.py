@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Williamson TC1 snapshots from MITgcm MDS output.
+"""Williamson TC2 snapshots from MITgcm MDS output.
 
 Outputs are written to:
     ../output/<run_name>/Eta
@@ -31,15 +31,17 @@ plt.rcParams.update({
 # ------------------------- easy settings -------------------------
 SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_DIR = SCRIPT_DIR.parents[1] if len(SCRIPT_DIR.parents) > 1 else SCRIPT_DIR
+OUTPUT_DIR = CASE_DIR / "Scripts" / "output"
 
 RUN_DIR = CASE_DIR / "run_alpha_0"   # edit this directly
-ETA_FIELD = "S"                   # use "S" or "ETAN"
+ETA_FIELD = "Eta"                   # use "S" or "ETAN"
 U_CANDIDATES = ("U", "UVEL", "UVELMASS")
 V_CANDIDATES = ("V", "VVEL", "VVELMASS")
 PSI_FIELD = "PsiVEL"
 PHI_FIELD = "PhiVEL"
 
-ETA_LIMITS = (0.0, 1000.0)            # cosine bell: 0 ... 1000
+#!!!TO be modified 
+ETA_LIMITS = (-1905.0, 0.0)          # cosine bell: 0 ... 1000
 CMAP_POSITIVE = "seismic"
 CMAP_SIGNED = "seismic"
 DPI = 220
@@ -304,11 +306,11 @@ def save_scalar_series(
             )
         field_min, field_max = value_range
         title = (
-            f"TC1 {display} | iteration {iteration} | "
+            f"TC2 {display} | iteration {iteration} | "
             f"time {time_text(iteration, delta_t)} | "
             f"min {field_min:.3e} | max {field_max:.3e}"
         )
-        out = output_root / folder / f"tc1_{folder.lower()}_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
+        out = output_root / folder / f"tc2_{folder.lower()}_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
         plot_snapshot(field, xc, yc, title, units, out, vmin, vmax, symmetric)
     print(f"wrote {display}: {output_root / folder}")
 
@@ -331,11 +333,11 @@ def save_velocity_magnitude(run_dir: Path, output_root: Path, delta_t: float) ->
         v = center_to_shape(read_mds_field(run_dir, v_name, iteration), shape)
         speed = np.sqrt(u * u + v * v)
         title = (
-            f"TC1 velocity magnitude | iteration {iteration} | "
+            f"TC2 velocity magnitude | iteration {iteration} | "
             f"time {time_text(iteration, delta_t)} | "
             f"min {np.nanmin(speed):.3e} | max {np.nanmax(speed):.3e}"
         )
-        out = output_root / "VelocityMagnitude" / f"tc1_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
+        out = output_root / "VelocityMagnitude" / f"tc2_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
         plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, vmax=None, symmetric=True)
     print(f"wrote velocity magnitude: {output_root / 'VelocityMagnitude'}")
 
@@ -345,12 +347,12 @@ def run_snapshots(run_dir: Path) -> None:
         raise FileNotFoundError(f"Run directory not found: {run_dir}")
 
     delta_t = read_delta_t(run_dir)
-    output_root = SCRIPT_DIR.parent / "output" / run_dir.name
+    output_root = OUTPUT_DIR / run_dir.name
     output_root.mkdir(parents=True, exist_ok=True)
 
     save_scalar_series(
         run_dir, output_root, ETA_FIELD, "Eta",
-        "eta / passive tracer height", "m", delta_t,
+        "eta ", "m", delta_t,
         vmin=ETA_LIMITS[0], vmax=ETA_LIMITS[1], symmetric=False,
     )
     save_scalar_series(

@@ -3,7 +3,7 @@
 #SBATCH --account=hmh85
 
 #SBATCH --partition=large
-#SBATCH --nodelist=onode14
+#SBATCH --nodelist=onode15
 #SBATCH --nodes=1
 #SBATCH --ntasks=48
 #SBATCH --ntasks-per-node=48
@@ -12,8 +12,8 @@
 #SBATCH --mem=0
 #SBATCH --time=1-00:00:00
 
-#SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.out
-#SBATCH --error=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/logs/slurm-%j.err
+#SBATCH --output=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/jobs/slurm-%j.out
+#SBATCH --error=/home/hmh85/scratch/MITgcm/verification/vortexSphere_Williamson_TC2/jobs/slurm-%j.err
 
 #SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT
 #SBATCH --mail-user=hmh85@aub.edu.lb
@@ -23,22 +23,27 @@ set -euo pipefail
 module purge
 module load gcc/10.1.0
 module load mpi/openmpi/4.1.4-slurm-18.08.6
-module load python/3.12
-
-VENV_DIR=/home/hmh85/scratch/MITgcm/.venv
-source "$VENV_DIR/bin/activate"
 
 CASE_NAME=c4
 ALPHA=1.5707963267948966
+EXPECTED_INPUT_BYTES=$((1440 * 720 * 4))
+FINAL_ITER=0000017280
 MITGCM_DIR=/home/hmh85/scratch/MITgcm
 CASE_DIR=$MITGCM_DIR/verification/vortexSphere_Williamson_TC2
 BUILD_DIR=$CASE_DIR/build/$CASE_NAME
 MAKE_JOBS=${SLURM_CPUS_ON_NODE:-$(nproc)}
 MPI_TASKS=${SLURM_NTASKS:-48}
-NODE_TAG=${SLURM_JOB_NODELIST:-onode14}
+NODE_TAG=${SLURM_JOB_NODELIST:-onode15}
 NODE_TAG=${NODE_TAG//[^A-Za-z0-9_.-]/_}
 RUN_DIR=$CASE_DIR/run_${MPI_TASKS}mpi_${NODE_TAG}_alpha_$CASE_NAME
-RUN_INPUT_FILES=(data data.diagnostics data.pkg eedata gendata.py)
+RUN_INPUT_FILES=(
+    data
+    data.diagnostics
+    data.pkg
+    eedata
+    "gendata_${CASE_NAME}.py"
+    bathymetry_flat4000.bin
+)
 
 echo "======================================"
 echo "MITgcm compile + run"
@@ -54,6 +59,25 @@ if [ "$MPI_TASKS" -ne 48 ]; then
     echo "ERROR: this job builds a 48-rank decomposition"
     exit 1
 fi
+
+for file in "${RUN_INPUT_FILES[@]}"; do
+    if [ ! -r "$CASE_DIR/input/$file" ]; then
+        echo "ERROR: missing input file: $CASE_DIR/input/$file"
+        exit 1
+    fi
+done
+
+for file in bathymetry_flat4000.bin "eta_init_${CASE_NAME}.bin" "u_init_${CASE_NAME}.bin" "v_init_${CASE_NAME}.bin"; do
+    if [ ! -r "$CASE_DIR/input/$file" ]; then
+        echo "ERROR: missing input file: $CASE_DIR/input/$file"
+        exit 1
+    fi
+    input_bytes=$(wc -c < "$CASE_DIR/input/$file")
+    if [ "$input_bytes" -ne "$EXPECTED_INPUT_BYTES" ]; then
+        echo "ERROR: $file has $input_bytes bytes; expected $EXPECTED_INPUT_BYTES"
+        exit 1
+    fi
+done
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
@@ -78,23 +102,25 @@ fi
 mkdir -p "$RUN_DIR"
 
 find "$RUN_DIR" -maxdepth 1 -type f \
-    \( -name "*.data" -o -name "*.meta" -o -name "*.bin" -o -name "STDOUT*" -o -name "STDERR*" \) \
+    \( -name "*.data" -o -name "*.meta" -o -name "*.bin" -o -name "gendata*.py" -o -name "STDOUT*" -o -name "STDERR*" \) \
     -delete
 
 for file in "${RUN_INPUT_FILES[@]}"; do
     cp "$CASE_DIR/input/$file" "$RUN_DIR/"
 done
 
-cd "$RUN_DIR"
-python3 gendata.py --alpha "$ALPHA"
-
-cp "$BUILD_DIR/mitgcmuv" "$RUN_DIR/"
+cp "$CASE_DIR/input/eta_init_${CASE_NAME}.bin" "$RUN_DIR/eta_init.bin"
+cp "$CASE_DIR/input/u_init_${CASE_NAME}.bin" "$RUN_DIR/u_init.bin"
+cp "$CASE_DIR/input/v_init_${CASE_NAME}.bin" "$RUN_DIR/v_init.bin"
 
 echo "======================================"
 echo "Running MITgcm"
 echo "MPI tasks = $MPI_TASKS"
 echo "alpha = $ALPHA"
 echo "======================================"
+
+cd "$RUN_DIR"
+cp "$BUILD_DIR/mitgcmuv" "$RUN_DIR/"
 
 if mpirun -np "$MPI_TASKS" ./mitgcmuv; then
     STATUS=0
@@ -108,37 +134,9 @@ if grep -q "ABNORMAL END\\|\\*\\*\\* ERROR \\*\\*\\*" \
     STATUS=1
 fi
 
-if [ ! -f Eta.0000000000.data ]; then
-    echo "ERROR: MITgcm did not write Eta.0000000000.data"
+if [ ! -f "Eta.${FINAL_ITER}.data" ]; then
+    echo "ERROR: MITgcm did not reach final iteration $FINAL_ITER"
     STATUS=1
-fi
-
-if [ "$STATUS" -eq 0 ]; then
-    RUN_NAME=$(basename "$RUN_DIR")
-    PLOT_DIR=$CASE_DIR/Scripts/output/$RUN_NAME
-
-    echo "======================================"
-    echo "Plotting snapshots"
-    echo "======================================"
-
-    if [ ! -f "$RUN_DIR/Eta.0000000000.data" ]; then
-        echo "ERROR: missing $RUN_DIR/Eta.0000000000.data" >&2
-        exit 1
-    fi
-
-    mkdir -p "$PLOT_DIR"
-
-    export RUN_DIR PLOT_DIR
-
-    echo "python = $(which python)"
-    python --version
-    echo "RUN_DIR = $RUN_DIR"
-    echo "PLOT_DIR = $PLOT_DIR"
-
-    cd "$CASE_DIR"
-    python "$CASE_DIR/Scripts/HPC/snapshots.py" "$RUN_DIR"
-
-    echo "Plots saved in: $PLOT_DIR"
 fi
 
 END_TIME=$(date +%s)

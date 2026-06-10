@@ -41,6 +41,7 @@ RUN_INPUT_FILES=(
     data.diagnostics
     data.pkg
     eedata
+    "gendata_${CASE_NAME}.py"
     bathymetry_flat4000.bin
     eta_init.bin
     u_init.bin
@@ -100,7 +101,7 @@ fi
 mkdir -p "$RUN_DIR"
 
 find "$RUN_DIR" -maxdepth 1 -type f \
-    \( -name "*.data" -o -name "*.meta" -o -name "*.bin" -o -name "STDOUT*" -o -name "STDERR*" \) \
+    \( -name "*.data" -o -name "*.meta" -o -name "*.bin" -o -name "gendata*.py" -o -name "STDOUT*" -o -name "STDERR*" \) \
     -delete
 
 for file in "${RUN_INPUT_FILES[@]}"; do
