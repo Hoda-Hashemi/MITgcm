@@ -1,0 +1,109 @@
+
+================================================================================
+Vortex Sphere regular field Eta for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading Eta at iteration 12...
+[Eta (it=12)] land check: no finite land points.
+[Eta (it=12)] ocean min=0.00000000e+00, max=0.00000000e+00
+[Eta (it=12)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[Eta (it=12)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_Eta_Eta_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_Eta_Eta_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field PH for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading PH at iteration 12...
+[PH (it=12)] land check: no finite land points.
+[PH (it=12)] ocean min=-9.81000000e-01, max=-9.81000000e-01
+[PH (it=12)] min = -9.81000000e-01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[PH (it=12)] max = -9.81000000e-01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_PH_PH_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_PH_PH_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field PHL for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading PHL at iteration 12...
+[PHL (it=12)] land check: no finite land points.
+[PHL (it=12)] ocean min=-1.96200000e+00, max=-1.96200000e+00
+[PHL (it=12)] min = -1.96200000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[PHL (it=12)] max = -1.96200000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_PHL_PHL_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_PHL_PHL_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field S for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading S at iteration 12...
+[S (it=12)] land check: no finite land points.
+[S (it=12)] ocean min=3.00000000e+01, max=3.00000000e+01
+[S (it=12)] min = 3.00000000e+01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[S (it=12)] max = 3.00000000e+01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_S_S_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_S_S_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field T for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading T at iteration 12...
+[T (it=12)] land check: no finite land points.
+[T (it=12)] ocean min=2.00000000e+01, max=2.00000000e+01
+[T (it=12)] min = 2.00000000e+01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[T (it=12)] max = 2.00000000e+01 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_T_T_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_T_T_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field U for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading U at iteration 12...
+[U (it=12)] land check: no finite land points.
+[U (it=12)] ocean min=0.00000000e+00, max=0.00000000e+00
+[U (it=12)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[U (it=12)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_U_U_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_U_U_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field V for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading V at iteration 12...
+[V (it=12)] land check: no finite land points.
+[V (it=12)] ocean min=0.00000000e+00, max=0.00000000e+00
+[V (it=12)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[V (it=12)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_V_V_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_V_V_it0000000012.pdf
+
+================================================================================
+Vortex Sphere regular field W for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading W at iteration 12...
+[W (it=12)] land check: no finite land points.
+[W (it=12)] ocean min=0.00000000e+00, max=0.00000000e+00
+[W (it=12)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[W (it=12)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_W_W_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_W_W_it0000000012.pdf
+
+================================================================================
+Vortex Sphere speed diagnostic for it0000000012
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/plot_output.txt
+Reading U at iteration 12...
+Reading V at iteration 12...
+[speed (it=12)] land check: no finite land points.
+[speed (it=12)] ocean min=0.00000000e+00, max=0.00000000e+00
+[speed (it=12)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[speed (it=12)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_speed_it0000000012.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000012/vortex_sphere_speed_it0000000012.pdf

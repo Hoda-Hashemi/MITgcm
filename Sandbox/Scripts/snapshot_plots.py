@@ -1,0 +1,209 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.colors import TwoSlopeNorm
+import numpy as np
+
+from mitgcm_io import (
+    center_to_shape,
+    day_number,
+    discover_iterations,
+    finite_min_max,
+    first_existing_field,
+    grid_extent,
+    lon_lat,
+    read_delta_t,
+    read_mds_field,
+    time_text,
+    to_2d,
+)
+from shared import infer_alpha_label, resolve_color_limits, save_figure_variants, snapshot_output_dir, write_manifest
+
+plt.rcParams.update({
+    "font.size": 16,
+    "axes.titlesize": 16,
+    "axes.labelsize": 16,
+    "xtick.labelsize": 16,
+    "ytick.labelsize": 16,
+})
+
+
+@dataclass(frozen=True)
+class SnapshotSpec:
+    field: str
+    folder: str
+    display: str
+    units: str
+    vmin: float | None = None
+    vmax: float | None = None
+    center_zero: bool = False
+
+
+def plot_snapshot(
+    field: np.ndarray,
+    xc: np.ndarray,
+    yc: np.ndarray,
+    title: str,
+    units: str,
+    out_path: Path,
+    *,
+    vmin: float | None = None,
+    vmax: float | None = None,
+    center_zero: bool = False,
+    dpi: int = 220,
+) -> None:
+    field = to_2d(field)
+    vmin, vmax = resolve_color_limits(field, vmin, vmax, symmetric=center_zero)
+    norm = TwoSlopeNorm(vmin=vmin, vcenter=0.0, vmax=vmax) if center_zero else None
+
+    fig, ax = plt.subplots(figsize=(9.0, 5.8), constrained_layout=True)
+    image = ax.imshow(
+        field,
+        origin="lower",
+        extent=grid_extent(xc, yc),
+        interpolation="bilinear",
+        aspect="auto",
+        cmap="seismic",
+        norm=norm,
+        vmin=None if norm else vmin,
+        vmax=None if norm else vmax,
+    )
+    ax.set_title(title, pad=18)
+    ax.set_xlabel(r"longitude $\lambda$ [deg]")
+    ax.set_ylabel(r"latitude $\theta$ [deg]")
+    ax.set_xticks(np.arange(0, 361, 60))
+    ax.set_yticks(np.arange(-90, 91, 30))
+    cbar = fig.colorbar(image, ax=ax, orientation="horizontal", pad=0.10)
+    cbar.set_label(units)
+    save_figure_variants(fig, out_path, dpi=dpi)
+    plt.close(fig)
+
+
+def save_scalar_series(
+    case_code: str,
+    run_dir: Path,
+    output_root: Path,
+    spec: SnapshotSpec,
+    delta_t: float,
+    *,
+    dpi: int = 220,
+) -> bool:
+    iterations = discover_iterations(run_dir, spec.field)
+    if not iterations:
+        print(f"skip {spec.display}: no {spec.field} files")
+        return False
+
+    xc, yc = lon_lat(run_dir)
+    case = case_code.lower()
+    for iteration in iterations:
+        field = to_2d(read_mds_field(run_dir, spec.field, iteration))
+        value_range = finite_min_max(field)
+        if value_range is None:
+            print(f"skip {spec.display} iteration {iteration}: no finite values")
+            continue
+        missing = int(field.size - np.count_nonzero(np.isfinite(field)))
+        if missing:
+            print(f"warning {spec.display} iteration {iteration}: {missing} non-finite values")
+        field_min, field_max = value_range
+        title = (
+            f"{case_code} {spec.display} | iteration {iteration} | "
+            f"time {time_text(iteration, delta_t)} | "
+            f"min {field_min:.3e} | max {field_max:.3e}"
+        )
+        out = output_root / spec.folder / f"{case}_{spec.folder}_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
+        plot_snapshot(
+            field,
+            xc,
+            yc,
+            title,
+            spec.units,
+            out,
+            vmin=spec.vmin,
+            vmax=spec.vmax,
+            center_zero=spec.center_zero,
+            dpi=dpi,
+        )
+    print(f"wrote {spec.display}: {output_root / spec.folder}")
+    return True
+
+
+def save_velocity_magnitude(
+    case_code: str,
+    run_dir: Path,
+    output_root: Path,
+    delta_t: float,
+    *,
+    u_candidates: tuple[str, ...] = ("U", "UVEL", "UVELMASS"),
+    v_candidates: tuple[str, ...] = ("V", "VVEL", "VVELMASS"),
+    dpi: int = 220,
+) -> bool:
+    u_name = first_existing_field(run_dir, u_candidates)
+    v_name = first_existing_field(run_dir, v_candidates)
+    if u_name is None or v_name is None:
+        print("skip velocity magnitude: no U/V files")
+        return False
+
+    iterations = sorted(set(discover_iterations(run_dir, u_name)) & set(discover_iterations(run_dir, v_name)))
+    if not iterations:
+        print("skip velocity magnitude: U/V iterations do not match")
+        return False
+
+    xc, yc = lon_lat(run_dir)
+    case = case_code.lower()
+    for iteration in iterations:
+        u = center_to_shape(read_mds_field(run_dir, u_name, iteration), xc.shape)
+        v = center_to_shape(read_mds_field(run_dir, v_name, iteration), xc.shape)
+        speed = np.sqrt(u * u + v * v)
+        title = (
+            f"{case_code} velocity magnitude | iteration {iteration} | "
+            f"time {time_text(iteration, delta_t)} | "
+            f"min {np.nanmin(speed):.3e} | max {np.nanmax(speed):.3e}"
+        )
+        out = output_root / "velocity_magnitude" / f"{case}_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
+        plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
+    print(f"wrote velocity magnitude: {output_root / 'velocity_magnitude'}")
+    return True
+
+
+def run_snapshots(
+    case_code: str,
+    run_dir: Path,
+    specs: tuple[SnapshotSpec, ...],
+    *,
+    save_velocity: bool = True,
+    dpi: int = 220,
+) -> Path:
+    run_dir = run_dir.expanduser().resolve()
+    if not run_dir.exists():
+        raise FileNotFoundError(f"Run directory not found: {run_dir}")
+
+    delta_t = read_delta_t(run_dir)
+    alpha = infer_alpha_label(run_dir, case_code)
+    output_root = snapshot_output_dir(case_code, alpha)
+    output_root.mkdir(parents=True, exist_ok=True)
+
+    saved = [
+        spec.folder
+        for spec in specs
+        if save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi)
+    ]
+    if save_velocity and save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi):
+        saved.append("velocity_magnitude")
+
+    write_manifest(
+        output_root,
+        {
+            "alpha": alpha,
+            "case": case_code,
+            "product": "snapshots",
+            "saved": saved,
+            "source_run": str(run_dir),
+        },
+    )
+    print(f"outputs written to: {output_root}")
+    return output_root

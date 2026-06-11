@@ -1,27 +1,166 @@
-<h1>MITgcm vortexSphere results:</h1>
-
-<h2>Case 1: Gaussian Patch Free Surface Initialization with Constant bathymetry</h2>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/prognostic.webm" type="video/webm">
-</video>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/diagnostic.webm" type="video/webm">
-</video>
-
-<h2>Case2: Gaussian Patch Free Surface Initialization with Real bathymetry</h2>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/prognostic.webm" type="video/webm">
-</video>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/diagnostic.webm" type="video/webm">
-</video>
-
-
-<h2>Case3: Geostrophic Free surface initialization with Real bathymetry</h2>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/prognostic.webm" type="video/webm">
-</video>
-<video controls width="100%">
-  <source src="videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/diagnostic.webm" type="video/webm">
-</video>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SHALLOW WATER MITGCM VERIFICATION CASES</title>
+  <style>
+    :root {
+      --ink: #122033;
+      --paper: #f6f7fb;
+      --card: #ffffff;
+      --accent: #0a6c74;
+      --accent-soft: #dff1f3;
+      --line: #d6dbe6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(10,108,116,0.16), transparent 30%),
+        linear-gradient(180deg, #eef4f7 0%, var(--paper) 100%);
+    }
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: 0.04em;
+    }
+    .intro {
+      margin: 0 0 28px;
+      font-size: 1.05rem;
+      max-width: 70ch;
+    }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 0 0 28px;
+    }
+    .nav-card {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 12px 34px rgba(18, 32, 51, 0.06);
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+    .nav-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .nav-kicker {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .section-card {
+      scroll-margin-top: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 14px 40px rgba(18, 32, 51, 0.08);
+    }
+    .tables {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin: 18px 0 20px;
+    }
+    .table-block h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: center;
+      word-wrap: break-word;
+    }
+    th {
+      background: var(--accent-soft);
+    }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .media-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fbfcfe;
+    }
+    .media-card h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+    .media-section {
+      margin-top: 18px;
+    }
+    .media-section h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+    .subfigure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .subfigure {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fbfcfe;
+    }
+    .subfigure figcaption {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    video, img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      background: #000;
+    }
+    .empty {
+      margin: 0;
+      color: #556273;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
+    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the clickable section cards below to jump to each experiment and inspect its current results.</p>
+    <section class='nav-grid'><a class='nav-card' href='#case1_constant_bathymetry'><span class='nav-kicker'>Experiment</span><strong>Gaussian Patch Free Surface Initialization with Constant Bathymetry</strong></a><a class='nav-card' href='#case2_real_bathymetry'><span class='nav-kicker'>Experiment</span><strong>Gaussian Patch Free Surface Initialization with Real Bathymetry</strong></a><a class='nav-card' href='#case3_geostrophic_adjustment'><span class='nav-kicker'>Experiment</span><strong>Geostrophic Free Surface Initialization with Real Bathymetry</strong></a><a class='nav-card' href='#testcase1'><span class='nav-kicker'>Experiment</span><strong>Advection of Cosine Bell</strong></a><a class='nav-card' href='#testcase2'><span class='nav-kicker'>Experiment</span><strong>Global Steady-State Nonlinear Zonal Geostrophic Flow</strong></a><a class='nav-card' href='#testcase3'><span class='nav-kicker'>Experiment</span><strong>Steady Geostrophic Flow with Compact Support</strong></a></section>
+    <section id='case1_constant_bathymetry' class='section-card'><h2>Gaussian Patch Free Surface Initialization with Constant Bathymetry</h2><div class='media-grid'><div class='media-card'><h4>Prognostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/prognostic.webm' type='video/webm'></video></div><div class='media-card'><h4>Diagnostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/diagnostic.webm' type='video/webm'></video></div></div></section><section id='case2_real_bathymetry' class='section-card'><h2>Gaussian Patch Free Surface Initialization with Real Bathymetry</h2><div class='media-grid'><div class='media-card'><h4>Prognostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/prognostic.webm' type='video/webm'></video></div><div class='media-card'><h4>Diagnostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Real_Bathymetry/diagnostic.webm' type='video/webm'></video></div></div></section><section id='case3_geostrophic_adjustment' class='section-card'><h2>Geostrophic Free Surface Initialization with Real Bathymetry</h2><div class='media-grid'><div class='media-card'><h4>Prognostic</h4><video controls preload='metadata'><source src='videos/Geostrophic_Adjustment_with_Real_Bathymetry/prognostic.webm' type='video/webm'></video></div><div class='media-card'><h4>Diagnostic</h4><video controls preload='metadata'><source src='videos/Geostrophic_Adjustment_with_Real_Bathymetry/diagnostic.webm' type='video/webm'></video></div></div></section><section id='testcase1' class='section-card'><h2>Advection of Cosine Bell</h2><div class='tables'><div class='table-block'><h3>Numerical Settings</h3><table><thead><tr><th>rhoConst</th><th>gravity</th><th>deltaT</th><th>nTimeSteps</th><th>dumpFreq</th><th>monitorFreq</th><th>delR</th></tr></thead><tbody><tr><td>1000.</td><td>9.81</td><td>1.0</td><td>1036800</td><td>86400.</td><td>86400.</td><td>4000.</td></tr></tbody></table></div><div class='table-block'><h3>Grid And MPI Layout</h3><table><thead><tr><th>sNx</th><th>sNy</th><th>nPx</th><th>nPy</th><th>Nx</th><th>Ny</th><th>mpi_ranks</th></tr></thead><tbody><tr><td>180</td><td>360</td><td>8</td><td>2</td><td>1440</td><td>720</td><td>16</td></tr></tbody></table></div></div><div class='media-section'><h3>Passive Tracer Snapshots</h3><div class='subfigure-grid'><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_00.00_iter_0000000000.png' alt='alpha 0, Day 0' loading='lazy' /><figcaption>alpha 0, Day 0</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_01.00_iter_0000001440.png' alt='alpha 0, Day 1' loading='lazy' /><figcaption>alpha 0, Day 1</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_02.00_iter_0000002880.png' alt='alpha 0, Day 2' loading='lazy' /><figcaption>alpha 0, Day 2</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_03.00_iter_0000004320.png' alt='alpha 0, Day 3' loading='lazy' /><figcaption>alpha 0, Day 3</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_04.00_iter_0000005760.png' alt='alpha 0, Day 4' loading='lazy' /><figcaption>alpha 0, Day 4</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_05.00_iter_0000007200.png' alt='alpha 0, Day 5' loading='lazy' /><figcaption>alpha 0, Day 5</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_06.00_iter_0000008640.png' alt='alpha 0, Day 6' loading='lazy' /><figcaption>alpha 0, Day 6</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_07.00_iter_0000010080.png' alt='alpha 0, Day 7' loading='lazy' /><figcaption>alpha 0, Day 7</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_08.00_iter_0000011520.png' alt='alpha 0, Day 8' loading='lazy' /><figcaption>alpha 0, Day 8</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_09.00_iter_0000012960.png' alt='alpha 0, Day 9' loading='lazy' /><figcaption>alpha 0, Day 9</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_10.00_iter_0000014400.png' alt='alpha 0, Day 10' loading='lazy' /><figcaption>alpha 0, Day 10</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_11.00_iter_0000015840.png' alt='alpha 0, Day 11' loading='lazy' /><figcaption>alpha 0, Day 11</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase1/Snapshots/alpha_0/tracer/tc1_tracer_day_12.00_iter_0000017280.png' alt='alpha 0, Day 12' loading='lazy' /><figcaption>alpha 0, Day 12</figcaption></figure></div></div><div class='media-section'><h3>Passive Tracer Overlay Comparisons</h3><div class='subfigure-grid'><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_00.00_iter1_0000000000_iter2_0000000000.png' alt='alpha 0 vs alpha 0.05, Day 0' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 0</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_01.00_iter1_0000001440_iter2_0000001440.png' alt='alpha 0 vs alpha 0.05, Day 1' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 1</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_02.00_iter1_0000002880_iter2_0000002880.png' alt='alpha 0 vs alpha 0.05, Day 2' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 2</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_03.00_iter1_0000004320_iter2_0000004320.png' alt='alpha 0 vs alpha 0.05, Day 3' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 3</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_04.00_iter1_0000005760_iter2_0000005760.png' alt='alpha 0 vs alpha 0.05, Day 4' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 4</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_05.00_iter1_0000007200_iter2_0000007200.png' alt='alpha 0 vs alpha 0.05, Day 5' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 5</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_06.00_iter1_0000008640_iter2_0000008640.png' alt='alpha 0 vs alpha 0.05, Day 6' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 6</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_07.00_iter1_0000010080_iter2_0000010080.png' alt='alpha 0 vs alpha 0.05, Day 7' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 7</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_08.00_iter1_0000011520_iter2_0000011520.png' alt='alpha 0 vs alpha 0.05, Day 8' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 8</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_09.00_iter1_0000012960_iter2_0000012960.png' alt='alpha 0 vs alpha 0.05, Day 9' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 9</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_10.00_iter1_0000014400_iter2_0000014400.png' alt='alpha 0 vs alpha 0.05, Day 10' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 10</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_11.00_iter1_0000015840_iter2_0000015840.png' alt='alpha 0 vs alpha 0.05, Day 11' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 11</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_0.05/PassiveTracerOverlay/tc1_tracer_overlay_day_12.00_iter1_0000017280_iter2_0000017280.png' alt='alpha 0 vs alpha 0.05, Day 12' loading='lazy' /><figcaption>alpha 0 vs alpha 0.05, Day 12</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_00.00_iter1_0000000000_iter2_0000000000.png' alt='alpha 0 vs alpha 1.52, Day 0' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 0</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_01.00_iter1_0000001440_iter2_0000086400.png' alt='alpha 0 vs alpha 1.52, Day 1' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 1</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_02.00_iter1_0000002880_iter2_0000172800.png' alt='alpha 0 vs alpha 1.52, Day 2' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 2</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_03.00_iter1_0000004320_iter2_0000259200.png' alt='alpha 0 vs alpha 1.52, Day 3' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 3</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_04.00_iter1_0000005760_iter2_0000345600.png' alt='alpha 0 vs alpha 1.52, Day 4' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 4</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_05.00_iter1_0000007200_iter2_0000432000.png' alt='alpha 0 vs alpha 1.52, Day 5' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 5</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_06.00_iter1_0000008640_iter2_0000518400.png' alt='alpha 0 vs alpha 1.52, Day 6' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 6</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_07.00_iter1_0000010080_iter2_0000604800.png' alt='alpha 0 vs alpha 1.52, Day 7' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 7</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_08.00_iter1_0000011520_iter2_0000691200.png' alt='alpha 0 vs alpha 1.52, Day 8' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 8</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_09.00_iter1_0000012960_iter2_0000777600.png' alt='alpha 0 vs alpha 1.52, Day 9' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 9</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_10.00_iter1_0000014400_iter2_0000864000.png' alt='alpha 0 vs alpha 1.52, Day 10' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 10</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_11.00_iter1_0000015840_iter2_0000950400.png' alt='alpha 0 vs alpha 1.52, Day 11' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 11</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/compare_run_alpha_0_vs_run_alpha_1.52/PassiveTracerOverlay/tc1_tracer_overlay_day_12.00_iter1_0000017280_iter2_0001036800.png' alt='alpha 0 vs alpha 1.52, Day 12' loading='lazy' /><figcaption>alpha 0 vs alpha 1.52, Day 12</figcaption></figure></div></div><div class='media-section'><h3>Error Contours</h3><div class='subfigure-grid'><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/run_alpha_0.05/TC1Error/tc1_signed_error_contours.png' alt='alpha 0.05, signed error contours, Day 12' loading='lazy' /><figcaption>alpha 0.05, signed error contours, Day 12</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/run_alpha_0/TC1Error/tc1_signed_error_contours.png' alt='alpha 0, signed error contours, Day 12' loading='lazy' /><figcaption>alpha 0, signed error contours, Day 12</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/run_alpha_1.52/TC1Error/tc1_signed_error_contours.png' alt='alpha 1.52, signed error contours, Day 12' loading='lazy' /><figcaption>alpha 1.52, signed error contours, Day 12</figcaption></figure><figure class='subfigure'><img src='assets/williamson/vortexSphere_Williamson_TC1/Scripts/output/run_alpha_1.57/TC1Error/tc1_signed_error_contours.png' alt='alpha 1.57, signed error contours, Day 12' loading='lazy' /><figcaption>alpha 1.57, signed error contours, Day 12</figcaption></figure></div></div></section><section id='testcase2' class='section-card'><h2>Global Steady-State Nonlinear Zonal Geostrophic Flow</h2><div class='tables'><div class='table-block'><h3>Numerical Settings</h3><table><thead><tr><th>rhoConst</th><th>gravity</th><th>deltaT</th><th>nTimeSteps</th><th>dumpFreq</th><th>monitorFreq</th><th>delR</th></tr></thead><tbody><tr><td>1.</td><td>9.81</td><td>60.</td><td>17280</td><td>86400.</td><td>86400.</td><td>2996.9418960244646</td></tr></tbody></table></div><div class='table-block'><h3>Grid And MPI Layout</h3><table><thead><tr><th>sNx</th><th>sNy</th><th>nPx</th><th>nPy</th><th>Nx</th><th>Ny</th><th>mpi_ranks</th></tr></thead><tbody><tr><td>120</td><td>180</td><td>12</td><td>4</td><td>1440</td><td>720</td><td>48</td></tr></tbody></table></div></div><div class='media-section'><h3>Eta Snapshots</h3><div class='subfigure-grid'><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_00.00_iter_0000000000.png' alt='alpha 0, eta, Day 0' loading='lazy' /><figcaption>alpha 0, eta, Day 0</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_01.00_iter_0000001440.png' alt='alpha 0, eta, Day 1' loading='lazy' /><figcaption>alpha 0, eta, Day 1</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_02.00_iter_0000002880.png' alt='alpha 0, eta, Day 2' loading='lazy' /><figcaption>alpha 0, eta, Day 2</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_03.00_iter_0000004320.png' alt='alpha 0, eta, Day 3' loading='lazy' /><figcaption>alpha 0, eta, Day 3</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_04.00_iter_0000005760.png' alt='alpha 0, eta, Day 4' loading='lazy' /><figcaption>alpha 0, eta, Day 4</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_05.00_iter_0000007200.png' alt='alpha 0, eta, Day 5' loading='lazy' /><figcaption>alpha 0, eta, Day 5</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_06.00_iter_0000008640.png' alt='alpha 0, eta, Day 6' loading='lazy' /><figcaption>alpha 0, eta, Day 6</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_07.00_iter_0000010080.png' alt='alpha 0, eta, Day 7' loading='lazy' /><figcaption>alpha 0, eta, Day 7</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_08.00_iter_0000011520.png' alt='alpha 0, eta, Day 8' loading='lazy' /><figcaption>alpha 0, eta, Day 8</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_09.00_iter_0000012960.png' alt='alpha 0, eta, Day 9' loading='lazy' /><figcaption>alpha 0, eta, Day 9</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_10.00_iter_0000014400.png' alt='alpha 0, eta, Day 10' loading='lazy' /><figcaption>alpha 0, eta, Day 10</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_11.00_iter_0000015840.png' alt='alpha 0, eta, Day 11' loading='lazy' /><figcaption>alpha 0, eta, Day 11</figcaption></figure><figure class='subfigure'><img src='assets/williamson/TestCase2/Snapshots/alpha_0/eta/tc2_eta_day_12.00_iter_0000017280.png' alt='alpha 0, eta, Day 12' loading='lazy' /><figcaption>alpha 0, eta, Day 12</figcaption></figure></div></div><div class='media-section'><h3>Steady-State Error Norms</h3><div class='subfigure-grid'><figure class='subfigure'><img src='assets/williamson/TestCase2/Diagnosis/error/alpha_0/TC2_error_norms.png' alt='alpha 0, error norms, final day 12' loading='lazy' /><figcaption>alpha 0, error norms, final day 12</figcaption></figure></div></div></section><section id='testcase3' class='section-card'><h2>Steady Geostrophic Flow with Compact Support</h2><div class='tables'><div class='table-block'><h3>Numerical Settings</h3><table><thead><tr><th>rhoConst</th><th>gravity</th><th>deltaT</th><th>nTimeSteps</th><th>dumpFreq</th><th>monitorFreq</th><th>delR</th></tr></thead><tbody><tr><td>1000.</td><td>9.80616</td><td>60.</td><td>17280</td><td>86400.</td><td>86400.</td><td>4000.0</td></tr></tbody></table></div><div class='table-block'><h3>Grid And MPI Layout</h3><table><thead><tr><th>sNx</th><th>sNy</th><th>nPx</th><th>nPy</th><th>Nx</th><th>Ny</th><th>mpi_ranks</th></tr></thead><tbody><tr><td>360</td><td>180</td><td>4</td><td>4</td><td>1440</td><td>720</td><td>16</td></tr></tbody></table></div></div><p class='empty'>No media linked yet for this section.</p></section>
+  </main>
+</body>
+</html>

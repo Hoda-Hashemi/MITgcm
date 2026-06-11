@@ -1,0 +1,52 @@
+
+================================================================================
+Vortex Sphere diagnostic bundle dynDiag for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dynDiag at iteration 22...
+[UVELMASS (it=22)] land check: no finite land points.
+[UVELMASS (it=22)] ocean min=0.00000000e+00, max=0.00000000e+00
+[UVELMASS (it=22)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[UVELMASS (it=22)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[VVELMASS (it=22)] land check: no finite land points.
+[VVELMASS (it=22)] ocean min=0.00000000e+00, max=0.00000000e+00
+[VVELMASS (it=22)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[VVELMASS (it=22)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.pdf
+
+================================================================================
+Vortex Sphere diagnostic bundle dyn_Aux for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dyn_Aux at iteration 22...
+[WVELMASS (it=22)] land check: no finite land points.
+[WVELMASS (it=22)] ocean min=0.00000000e+00, max=0.00000000e+00
+[WVELMASS (it=22)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[WVELMASS (it=22)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PhiVEL (it=22)] land check: no finite land points.
+[PhiVEL (it=22)] ocean min=0.00000000e+00, max=0.00000000e+00
+[PhiVEL (it=22)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[PhiVEL (it=22)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PsiVEL (it=22)] land check: no finite land points.
+[PsiVEL (it=22)] ocean min=0.00000000e+00, max=0.00000000e+00
+[PsiVEL (it=22)] min = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+[PsiVEL (it=22)] max = 0.00000000e+00 at iLat=1, iLon=1, lat=-89.875 deg, lon=0.125 deg, level=k=1 surface, bathymetry H=1000.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.pdf

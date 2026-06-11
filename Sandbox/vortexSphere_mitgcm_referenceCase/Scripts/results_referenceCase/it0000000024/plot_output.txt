@@ -1,0 +1,477 @@
+
+================================================================================
+Vortex Sphere regular field Eta for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading Eta at iteration 24...
+[Eta (it=24)] land check: PASS (tol=5.122e-06).
+[Eta (it=24)] ocean min=-2.72287324e+00, max=5.12165107e+00
+[Eta (it=24)] min = -2.72287324e+00 at iLat=294, iLon=715, lat=-16.625 deg, lon=178.625 deg, level=k=1 surface, bathymetry H=5.000 m
+[Eta (it=24)] max = 5.12165107e+00 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PH for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PH at iteration 24...
+[PH (it=24)] WARNING land leak: 346354 points (|val| max=9.926e+02, tol=9.926e-04)
+[PH (it=24)] ocean min=-9.92575604e+02, max=3.71386186e+01
+[PH (it=24)] min = -9.92575604e+02 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[PH (it=24)] max = 3.71386186e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PHL for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PHL at iteration 24...
+[PHL (it=24)] land check: PASS (tol=4.792e-05).
+[PHL (it=24)] ocean min=-2.98421546e+01, max=4.79237326e+01
+[PHL (it=24)] min = -2.98421546e+01 at iLat=335, iLon=691, lat=-6.375 deg, lon=172.625 deg, level=k=1 surface, bathymetry H=5336.000 m
+[PHL (it=24)] max = 4.79237326e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field S for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading S at iteration 24...
+[S (it=24)] land check: PASS (tol=3.000e-05).
+[S (it=24)] ocean min=0.00000000e+00, max=3.00000000e+01
+[S (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[S (it=24)] max = 3.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field T for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading T at iteration 24...
+[T (it=24)] land check: PASS (tol=2.000e-05).
+[T (it=24)] ocean min=0.00000000e+00, max=2.00000000e+01
+[T (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[T (it=24)] max = 2.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field U for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+[U (it=24)] land check: PASS (tol=7.306e-06).
+[U (it=24)] ocean min=-7.30591907e+00, max=6.37581538e+00
+[U (it=24)] min = -7.30591907e+00 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[U (it=24)] max = 6.37581538e+00 at iLat=211, iLon=699, lat=-37.375 deg, lon=174.625 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field V for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading V at iteration 24...
+[V (it=24)] land check: PASS (tol=9.426e-06).
+[V (it=24)] ocean min=-7.20624336e+00, max=9.42591660e+00
+[V (it=24)] min = -7.20624336e+00 at iLat=290, iLon=585, lat=-17.625 deg, lon=146.125 deg, level=k=1 surface, bathymetry H=10.000 m
+[V (it=24)] max = 9.42591660e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field W for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading W at iteration 24...
+[W (it=24)] land check: PASS (tol=1.100e-09).
+[W (it=24)] ocean min=-1.10036702e-03, max=7.20900502e-04
+[W (it=24)] min = -1.10036702e-03 at iLat=291, iLon=712, lat=-17.375 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=3.000 m
+[W (it=24)] max = 7.20900502e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.pdf
+
+================================================================================
+Vortex Sphere speed diagnostic for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+Reading V at iteration 24...
+[speed (it=24)] land check: PASS (tol=9.426e-06).
+[speed (it=24)] ocean min=0.00000000e+00, max=9.42609791e+00
+[speed (it=24)] min = 0.00000000e+00 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+[speed (it=24)] max = 9.42609791e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field Eta for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading Eta at iteration 24...
+[Eta (it=24)] land check: PASS (tol=5.122e-06).
+[Eta (it=24)] ocean min=-2.72287324e+00, max=5.12165107e+00
+[Eta (it=24)] min = -2.72287324e+00 at iLat=294, iLon=715, lat=-16.625 deg, lon=178.625 deg, level=k=1 surface, bathymetry H=5.000 m
+[Eta (it=24)] max = 5.12165107e+00 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PH for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PH at iteration 24...
+[PH (it=24)] WARNING land leak: 346354 points (|val| max=9.926e+02, tol=9.926e-04)
+[PH (it=24)] ocean min=-9.92575604e+02, max=3.71386186e+01
+[PH (it=24)] min = -9.92575604e+02 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[PH (it=24)] max = 3.71386186e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PHL for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PHL at iteration 24...
+[PHL (it=24)] land check: PASS (tol=4.792e-05).
+[PHL (it=24)] ocean min=-2.98421546e+01, max=4.79237326e+01
+[PHL (it=24)] min = -2.98421546e+01 at iLat=335, iLon=691, lat=-6.375 deg, lon=172.625 deg, level=k=1 surface, bathymetry H=5336.000 m
+[PHL (it=24)] max = 4.79237326e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field S for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading S at iteration 24...
+[S (it=24)] land check: PASS (tol=3.000e-05).
+[S (it=24)] ocean min=0.00000000e+00, max=3.00000000e+01
+[S (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[S (it=24)] max = 3.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field T for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading T at iteration 24...
+[T (it=24)] land check: PASS (tol=2.000e-05).
+[T (it=24)] ocean min=0.00000000e+00, max=2.00000000e+01
+[T (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[T (it=24)] max = 2.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field U for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+[U (it=24)] land check: PASS (tol=7.306e-06).
+[U (it=24)] ocean min=-7.30591907e+00, max=6.37581538e+00
+[U (it=24)] min = -7.30591907e+00 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[U (it=24)] max = 6.37581538e+00 at iLat=211, iLon=699, lat=-37.375 deg, lon=174.625 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field V for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading V at iteration 24...
+[V (it=24)] land check: PASS (tol=9.426e-06).
+[V (it=24)] ocean min=-7.20624336e+00, max=9.42591660e+00
+[V (it=24)] min = -7.20624336e+00 at iLat=290, iLon=585, lat=-17.625 deg, lon=146.125 deg, level=k=1 surface, bathymetry H=10.000 m
+[V (it=24)] max = 9.42591660e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field W for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading W at iteration 24...
+[W (it=24)] land check: PASS (tol=1.100e-09).
+[W (it=24)] ocean min=-1.10036702e-03, max=7.20900502e-04
+[W (it=24)] min = -1.10036702e-03 at iLat=291, iLon=712, lat=-17.375 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=3.000 m
+[W (it=24)] max = 7.20900502e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.pdf
+
+================================================================================
+Vortex Sphere speed diagnostic for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+Reading V at iteration 24...
+[speed (it=24)] land check: PASS (tol=9.426e-06).
+[speed (it=24)] ocean min=0.00000000e+00, max=9.42609791e+00
+[speed (it=24)] min = 0.00000000e+00 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+[speed (it=24)] max = 9.42609791e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field Eta for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading Eta at iteration 24...
+[Eta (it=24)] land check: PASS (tol=5.122e-06).
+[Eta (it=24)] ocean min=-2.72287324e+00, max=5.12165107e+00
+[Eta (it=24)] min = -2.72287324e+00 at iLat=294, iLon=715, lat=-16.625 deg, lon=178.625 deg, level=k=1 surface, bathymetry H=5.000 m
+[Eta (it=24)] max = 5.12165107e+00 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PH for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PH at iteration 24...
+[PH (it=24)] WARNING land leak: 346354 points (|val| max=9.926e+02, tol=9.926e-04)
+[PH (it=24)] ocean min=-9.92575604e+02, max=3.71386186e+01
+[PH (it=24)] min = -9.92575604e+02 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[PH (it=24)] max = 3.71386186e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PHL for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PHL at iteration 24...
+[PHL (it=24)] land check: PASS (tol=4.792e-05).
+[PHL (it=24)] ocean min=-2.98421546e+01, max=4.79237326e+01
+[PHL (it=24)] min = -2.98421546e+01 at iLat=335, iLon=691, lat=-6.375 deg, lon=172.625 deg, level=k=1 surface, bathymetry H=5336.000 m
+[PHL (it=24)] max = 4.79237326e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field S for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading S at iteration 24...
+[S (it=24)] land check: PASS (tol=3.000e-05).
+[S (it=24)] ocean min=0.00000000e+00, max=3.00000000e+01
+[S (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[S (it=24)] max = 3.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field T for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading T at iteration 24...
+[T (it=24)] land check: PASS (tol=2.000e-05).
+[T (it=24)] ocean min=0.00000000e+00, max=2.00000000e+01
+[T (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[T (it=24)] max = 2.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field U for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+[U (it=24)] land check: PASS (tol=7.306e-06).
+[U (it=24)] ocean min=-7.30591907e+00, max=6.37581538e+00
+[U (it=24)] min = -7.30591907e+00 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[U (it=24)] max = 6.37581538e+00 at iLat=211, iLon=699, lat=-37.375 deg, lon=174.625 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field V for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading V at iteration 24...
+[V (it=24)] land check: PASS (tol=9.426e-06).
+[V (it=24)] ocean min=-7.20624336e+00, max=9.42591660e+00
+[V (it=24)] min = -7.20624336e+00 at iLat=290, iLon=585, lat=-17.625 deg, lon=146.125 deg, level=k=1 surface, bathymetry H=10.000 m
+[V (it=24)] max = 9.42591660e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field W for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading W at iteration 24...
+[W (it=24)] land check: PASS (tol=1.100e-09).
+[W (it=24)] ocean min=-1.10036702e-03, max=7.20900502e-04
+[W (it=24)] min = -1.10036702e-03 at iLat=291, iLon=712, lat=-17.375 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=3.000 m
+[W (it=24)] max = 7.20900502e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.pdf
+
+================================================================================
+Vortex Sphere speed diagnostic for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+Reading V at iteration 24...
+[speed (it=24)] land check: PASS (tol=9.426e-06).
+[speed (it=24)] ocean min=0.00000000e+00, max=9.42609791e+00
+[speed (it=24)] min = 0.00000000e+00 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+[speed (it=24)] max = 9.42609791e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.pdf
+
+================================================================================
+Vortex Sphere setup for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+
+--- vortexSphere_mitgcm_referenceCase run plotting from: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/run
+Vortex Sphere plotting backend: matplotlib imshow (MITgcmutils available=True, used_for_vortex_case=False)
+Discovered Vortex Sphere regular time-dependent output variables:
+  Eta: iterations [0, 12, 24]
+  PH: iterations [12, 24]
+  PHL: iterations [12, 24]
+  S: iterations [0, 12, 24]
+  T: iterations [0, 12, 24]
+  U: iterations [0, 12, 24]
+  V: iterations [0, 12, 24]
+  W: iterations [0, 12, 24]
+Diagnostic bundles reserved for Cell 3/5:
+  dynDiag: iterations [22]
+  dyn_Aux: iterations [22]
+Using bathymetry mask from /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/input/bathymetry.bin (ocean where depth < 0).
+Bathymetry consistency check:
+  input ocean cells = 690446
+  model wet cells   = 689086
+  overlap cells     = 689086
+  wet-mask mismatch = 1360
+  max |Depth - input bathy| = 1.819e-12 m
+  bathy match within 1e-9 m = 100.00% of overlap cells
+  unique model wet depths   = 7236
+  hFacC wet range           = [9.09091e-05, 0.976455]
+  hFacC unique wet values   = 7236
+
+================================================================================
+Vortex Sphere depth plot for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_depth_masked.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_depth_masked.pdf
+[Depth] land check: no finite land points.
+[Depth] ocean min=2.91338755e-27, max=1.07410000e+04
+[Depth] min = 2.91338755e-27 at iLat=612, iLon=30, lat=62.875 deg, lon=7.375 deg, level=k=1 surface, bathymetry H=0.000 m
+[Depth] max = 1.07410000e+04 at iLat=406, iLon=570, lat=11.375 deg, lon=142.375 deg, level=k=1 surface, bathymetry H=10741.000 m
+
+================================================================================
+Vortex Sphere regular field Eta for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading Eta at iteration 24...
+[Eta (it=24)] land check: PASS (tol=5.122e-06).
+[Eta (it=24)] ocean min=-2.72287324e+00, max=5.12165107e+00
+[Eta (it=24)] min = -2.72287324e+00 at iLat=294, iLon=715, lat=-16.625 deg, lon=178.625 deg, level=k=1 surface, bathymetry H=5.000 m
+[Eta (it=24)] max = 5.12165107e+00 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_Eta_Eta_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PH for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PH at iteration 24...
+[PH (it=24)] WARNING land leak: 346354 points (|val| max=9.926e+02, tol=9.926e-04)
+[PH (it=24)] ocean min=-9.92575604e+02, max=3.71386186e+01
+[PH (it=24)] min = -9.92575604e+02 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[PH (it=24)] max = 3.71386186e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PH_PH_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field PHL for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading PHL at iteration 24...
+[PHL (it=24)] land check: PASS (tol=4.792e-05).
+[PHL (it=24)] ocean min=-2.98421546e+01, max=4.79237326e+01
+[PHL (it=24)] min = -2.98421546e+01 at iLat=335, iLon=691, lat=-6.375 deg, lon=172.625 deg, level=k=1 surface, bathymetry H=5336.000 m
+[PHL (it=24)] max = 4.79237326e+01 at iLat=220, iLon=693, lat=-35.125 deg, lon=173.125 deg, level=k=1 surface, bathymetry H=3.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_PHL_PHL_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field S for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading S at iteration 24...
+[S (it=24)] land check: PASS (tol=3.000e-05).
+[S (it=24)] ocean min=0.00000000e+00, max=3.00000000e+01
+[S (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[S (it=24)] max = 3.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_S_S_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field T for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading T at iteration 24...
+[T (it=24)] land check: PASS (tol=2.000e-05).
+[T (it=24)] ocean min=0.00000000e+00, max=2.00000000e+01
+[T (it=24)] min = 0.00000000e+00 at iLat=66, iLon=939, lat=-73.625 deg, lon=234.625 deg, level=k=1 surface, bathymetry H=0.000 m
+[T (it=24)] max = 2.00000000e+01 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_T_T_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field U for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+[U (it=24)] land check: PASS (tol=7.306e-06).
+[U (it=24)] ocean min=-7.30591907e+00, max=6.37581538e+00
+[U (it=24)] min = -7.30591907e+00 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[U (it=24)] max = 6.37581538e+00 at iLat=211, iLon=699, lat=-37.375 deg, lon=174.625 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_U_U_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field V for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading V at iteration 24...
+[V (it=24)] land check: PASS (tol=9.426e-06).
+[V (it=24)] ocean min=-7.20624336e+00, max=9.42591660e+00
+[V (it=24)] min = -7.20624336e+00 at iLat=290, iLon=585, lat=-17.625 deg, lon=146.125 deg, level=k=1 surface, bathymetry H=10.000 m
+[V (it=24)] max = 9.42591660e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_V_V_it0000000024.pdf
+
+================================================================================
+Vortex Sphere regular field W for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading W at iteration 24...
+[W (it=24)] land check: PASS (tol=1.100e-09).
+[W (it=24)] ocean min=-1.10036702e-03, max=7.20900502e-04
+[W (it=24)] min = -1.10036702e-03 at iLat=291, iLon=712, lat=-17.375 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=3.000 m
+[W (it=24)] max = 7.20900502e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_W_W_it0000000024.pdf
+
+================================================================================
+Vortex Sphere speed diagnostic for it0000000024
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/plot_output.txt
+Reading U at iteration 24...
+Reading V at iteration 24...
+[speed (it=24)] land check: PASS (tol=9.426e-06).
+[speed (it=24)] ocean min=0.00000000e+00, max=9.42609791e+00
+[speed (it=24)] min = 0.00000000e+00 at iLat=49, iLon=659, lat=-77.875 deg, lon=164.625 deg, level=k=1 surface, bathymetry H=7.000 m
+[speed (it=24)] max = 9.42609791e+00 at iLat=292, iLon=712, lat=-17.125 deg, lon=177.875 deg, level=k=1 surface, bathymetry H=234.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/it0000000024/vortex_sphere_speed_it0000000024.pdf

@@ -1,0 +1,152 @@
+
+================================================================================
+Vortex Sphere diagnostic bundle dynDiag for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dynDiag at iteration 22...
+[UVELMASS (it=22)] land check: PASS (tol=1.022e-07).
+[UVELMASS (it=22)] ocean min=-6.91900343e-02, max=1.02242287e-01
+[UVELMASS (it=22)] min = -6.91900343e-02 at iLat=440, iLon=488, lat=19.875 deg, lon=121.875 deg, level=k=1 surface, bathymetry H=1234.000 m
+[UVELMASS (it=22)] max = 1.02242287e-01 at iLat=449, iLon=809, lat=22.125 deg, lon=202.125 deg, level=k=1 surface, bathymetry H=4320.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[VVELMASS (it=22)] land check: PASS (tol=1.324e-07).
+[VVELMASS (it=22)] ocean min=-1.32396975e-01, max=9.64691160e-02
+[VVELMASS (it=22)] min = -1.32396975e-01 at iLat=273, iLon=620, lat=-21.875 deg, lon=154.875 deg, level=k=1 surface, bathymetry H=3188.000 m
+[VVELMASS (it=22)] max = 9.64691160e-02 at iLat=548, iLon=607, lat=46.875 deg, lon=151.625 deg, level=k=1 surface, bathymetry H=1968.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[ETAN (it=22)] land check: PASS (tol=4.737e-06).
+[ETAN (it=22)] ocean min=-1.93637292e+00, max=4.73725080e+00
+[ETAN (it=22)] min = -1.93637292e+00 at iLat=341, iLon=686, lat=-4.875 deg, lon=171.375 deg, level=k=1 surface, bathymetry H=3782.000 m
+[ETAN (it=22)] max = 4.73725080e+00 at iLat=295, iLon=582, lat=-16.375 deg, lon=145.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETAN_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETAN_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[ETANSQ (it=22)] land check: PASS (tol=2.244e-05).
+[ETANSQ (it=22)] ocean min=0.00000000e+00, max=2.24415451e+01
+[ETANSQ (it=22)] min = 0.00000000e+00 at iLat=51, iLon=856, lat=-77.375 deg, lon=213.875 deg, level=k=1 surface, bathymetry H=10.000 m
+[ETANSQ (it=22)] max = 2.24415451e+01 at iLat=295, iLon=582, lat=-16.375 deg, lon=145.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETANSQ_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETANSQ_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[DETADT2 (it=22)] land check: PASS (tol=1.000e-12).
+[DETADT2 (it=22)] ocean min=0.00000000e+00, max=8.93058598e-07
+[DETADT2 (it=22)] min = 0.00000000e+00 at iLat=51, iLon=856, lat=-77.375 deg, lon=213.875 deg, level=k=1 surface, bathymetry H=10.000 m
+[DETADT2 (it=22)] max = 8.93058598e-07 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_DETADT2_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_DETADT2_it0000000022.pdf
+
+================================================================================
+Vortex Sphere diagnostic bundle dyn_Aux for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dyn_Aux at iteration 22...
+[WVELMASS (it=22)] land check: PASS (tol=9.450e-10).
+[WVELMASS (it=22)] ocean min=-9.45017776e-04, max=6.32107595e-04
+[WVELMASS (it=22)] min = -9.45017776e-04 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[WVELMASS (it=22)] max = 6.32107595e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PhiVEL (it=22)] land check: PASS (tol=8.784e-01).
+[PhiVEL (it=22)] ocean min=-8.78426734e+05, max=2.44190367e+05
+[PhiVEL (it=22)] min = -8.78426734e+05 at iLat=325, iLon=595, lat=-8.875 deg, lon=148.625 deg, level=k=1 surface, bathymetry H=12.000 m
+[PhiVEL (it=22)] max = 2.44190367e+05 at iLat=484, iLon=988, lat=30.875 deg, lon=246.875 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PsiVEL (it=22)] WARNING land leak: 346354 points (|val| max=1.876e+08, tol=5.426e+02)
+[PsiVEL (it=22)] ocean min=-2.04477890e+08, max=5.42599776e+08
+[PsiVEL (it=22)] min = -2.04477890e+08 at iLat=315, iLon=709, lat=-11.375 deg, lon=177.125 deg, level=k=1 surface, bathymetry H=4266.000 m
+[PsiVEL (it=22)] max = 5.42599776e+08 at iLat=417, iLon=708, lat=14.125 deg, lon=176.875 deg, level=k=1 surface, bathymetry H=4686.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.pdf
+
+================================================================================
+Vortex Sphere diagnostic bundle dynDiag for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dynDiag at iteration 22...
+[UVELMASS (it=22)] land check: PASS (tol=1.022e-07).
+[UVELMASS (it=22)] ocean min=-6.91900343e-02, max=1.02242287e-01
+[UVELMASS (it=22)] min = -6.91900343e-02 at iLat=440, iLon=488, lat=19.875 deg, lon=121.875 deg, level=k=1 surface, bathymetry H=1234.000 m
+[UVELMASS (it=22)] max = 1.02242287e-01 at iLat=449, iLon=809, lat=22.125 deg, lon=202.125 deg, level=k=1 surface, bathymetry H=4320.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_UVELMASS_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[VVELMASS (it=22)] land check: PASS (tol=1.324e-07).
+[VVELMASS (it=22)] ocean min=-1.32396975e-01, max=9.64691160e-02
+[VVELMASS (it=22)] min = -1.32396975e-01 at iLat=273, iLon=620, lat=-21.875 deg, lon=154.875 deg, level=k=1 surface, bathymetry H=3188.000 m
+[VVELMASS (it=22)] max = 9.64691160e-02 at iLat=548, iLon=607, lat=46.875 deg, lon=151.625 deg, level=k=1 surface, bathymetry H=1968.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_VVELMASS_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[ETAN (it=22)] land check: PASS (tol=4.737e-06).
+[ETAN (it=22)] ocean min=-1.93637292e+00, max=4.73725080e+00
+[ETAN (it=22)] min = -1.93637292e+00 at iLat=341, iLon=686, lat=-4.875 deg, lon=171.375 deg, level=k=1 surface, bathymetry H=3782.000 m
+[ETAN (it=22)] max = 4.73725080e+00 at iLat=295, iLon=582, lat=-16.375 deg, lon=145.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETAN_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETAN_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[ETANSQ (it=22)] land check: PASS (tol=2.244e-05).
+[ETANSQ (it=22)] ocean min=0.00000000e+00, max=2.24415451e+01
+[ETANSQ (it=22)] min = 0.00000000e+00 at iLat=51, iLon=856, lat=-77.375 deg, lon=213.875 deg, level=k=1 surface, bathymetry H=10.000 m
+[ETANSQ (it=22)] max = 2.24415451e+01 at iLat=295, iLon=582, lat=-16.375 deg, lon=145.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETANSQ_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_ETANSQ_it0000000022.pdf
+Reading dynDiag at iteration 22...
+[DETADT2 (it=22)] land check: PASS (tol=1.000e-12).
+[DETADT2 (it=22)] ocean min=0.00000000e+00, max=8.93058598e-07
+[DETADT2 (it=22)] min = 0.00000000e+00 at iLat=51, iLon=856, lat=-77.375 deg, lon=213.875 deg, level=k=1 surface, bathymetry H=10.000 m
+[DETADT2 (it=22)] max = 8.93058598e-07 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_DETADT2_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dynDiag_DETADT2_it0000000022.pdf
+
+================================================================================
+Vortex Sphere diagnostic bundle dyn_Aux for it0000000022
+Logging console output to: /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/plot_output.txt
+
+--- Vortex Sphere diagnostic bundle plotting ---
+Reading dyn_Aux at iteration 22...
+[WVELMASS (it=22)] land check: PASS (tol=9.450e-10).
+[WVELMASS (it=22)] ocean min=-9.45017776e-04, max=6.32107595e-04
+[WVELMASS (it=22)] min = -9.45017776e-04 at iLat=291, iLon=711, lat=-17.375 deg, lon=177.625 deg, level=k=1 surface, bathymetry H=2.000 m
+[WVELMASS (it=22)] max = 6.32107595e-04 at iLat=216, iLon=698, lat=-36.125 deg, lon=174.375 deg, level=k=1 surface, bathymetry H=10.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_WVELMASS_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PhiVEL (it=22)] land check: PASS (tol=8.784e-01).
+[PhiVEL (it=22)] ocean min=-8.78426734e+05, max=2.44190367e+05
+[PhiVEL (it=22)] min = -8.78426734e+05 at iLat=325, iLon=595, lat=-8.875 deg, lon=148.625 deg, level=k=1 surface, bathymetry H=12.000 m
+[PhiVEL (it=22)] max = 2.44190367e+05 at iLat=484, iLon=988, lat=30.875 deg, lon=246.875 deg, level=k=1 surface, bathymetry H=1.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PhiVEL_it0000000022.pdf
+Reading dyn_Aux at iteration 22...
+[PsiVEL (it=22)] WARNING land leak: 346354 points (|val| max=1.876e+08, tol=5.426e+02)
+[PsiVEL (it=22)] ocean min=-2.04477890e+08, max=5.42599776e+08
+[PsiVEL (it=22)] min = -2.04477890e+08 at iLat=315, iLon=709, lat=-11.375 deg, lon=177.125 deg, level=k=1 surface, bathymetry H=4266.000 m
+[PsiVEL (it=22)] max = 5.42599776e+08 at iLat=417, iLon=708, lat=14.125 deg, lon=176.875 deg, level=k=1 surface, bathymetry H=4686.000 m
+Saved publication plots:
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.png
+  /Users/hodahashemi/Documents/Github/Playground/MITgcm/verification/vortexSphere_mitgcm_referenceCase/Scripts/results/dyn/it0000000022/vortex_sphere_dyn_Aux_PsiVEL_it0000000022.pdf
