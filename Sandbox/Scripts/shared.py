@@ -11,12 +11,14 @@ SANDBOX_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_ROOT = SANDBOX_DIR / "output"
 
 CASE_OUTPUT_NAMES = {
+    "TC1_prime": "TestCase1Prime",
     "TC1": "TestCase1",
     "TC2": "TestCase2",
     "TC3": "TestCase3",
 }
 
 RUN_LABELS = {
+    "TC1_prime": {"c1": "0", "c2": "0.05", "c3": "1.52", "c4": "1.57"},
     "TC1": {"c1": "0", "c2": "0.05", "c3": "1.52", "c4": "1.57"},
     "TC2": {"c1": "0", "c2": "0.05", "c3": "1.52", "c4": "1.57"},
     "TC3": {"c1": "0", "c2": "1.0472"},

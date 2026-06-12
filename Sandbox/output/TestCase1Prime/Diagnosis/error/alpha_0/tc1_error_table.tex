@@ -1,0 +1,26 @@
+% Requires: \usepackage[table]{xcolor}
+% Requires: \usepackage{booktabs}
+\begin{table}[htbp]
+\centering
+\rowcolors{2}{gray!10}{white}
+\begin{tabular}{rrrrrr}
+\toprule
+\rowcolor{gray!25}
+day & $L_1$ & $L_2$ & $L_\infty$ & RMSE [m] & mass err. \\ 
+\midrule
+0.00 & 2.056e-08 & 2.344e-08 & 3.047e-08 & 1.620e-06 & -3.648e-10 \\ 
+1.00 & 1.981e+00 & 1.413e+00 & 1.000e+00 & 9.761e+01 & -3.648e-10 \\ 
+2.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+3.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+4.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+5.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+6.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+7.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+8.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+9.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+10.00 & 2.000e+00 & 1.414e+00 & 1.000e+00 & 9.772e+01 & -3.648e-10 \\ 
+11.00 & 1.981e+00 & 1.413e+00 & 1.000e+00 & 9.761e+01 & -3.648e-10 \\ 
+\bottomrule
+\end{tabular}
+\caption{Williamson TC1 error metrics. Error is MITgcm minus exact cosine-bell height.}
+\end{table}

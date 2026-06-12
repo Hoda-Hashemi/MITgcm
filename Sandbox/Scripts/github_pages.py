@@ -72,25 +72,24 @@ SECTIONS = [
         "media": [],
         "dynamic_gallery": "tc1",
     },
-    {
-        "slug": "testcase2",
-        "title": "Global Steady-State Nonlinear Zonal Geostrophic Flow",
-        "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC2",
-        "media": [],
-        "dynamic_gallery": "tc2",
-    },
-    {
-        "slug": "testcase3",
-        "title": "Steady Geostrophic Flow with Compact Support",
-        "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC3",
-        "media": [],
-    },
+    # {
+    #     "slug": "testcase2",
+    #     "title": "Global Steady-State Nonlinear Zonal Geostrophic Flow",
+    #     "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC2",
+    #     "media": [],
+    #     "dynamic_gallery": "tc2",
+    # },
+    # {
+    #     "slug": "testcase3",
+    #     "title": "Steady Geostrophic Flow with Compact Support",
+    #     "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC3",
+    #     "media": [],
+    # },
 ]
 
 DATA_COLUMNS = ["rhoConst", "gravity", "deltaT", "nTimeSteps", "dumpFreq", "monitorFreq", "delR"]
 SIZE_COLUMNS = ["sNx", "sNy", "nPx", "nPy", "Nx", "Ny", "mpi_ranks"]
 DAY_PATTERN = re.compile(r"_day_([0-9]+(?:\.[0-9]+)?)")
-
 
 def parse_data_file(path: Path) -> dict[str, str]:
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -99,7 +98,6 @@ def parse_data_file(path: Path) -> dict[str, str]:
         match = re.search(rf"\b{re.escape(key)}\s*=\s*([^,\n/]+)", text, re.IGNORECASE)
         values[key] = match.group(1).strip() if match else "—"
     return values
-
 
 def parse_size_file(path: Path) -> dict[str, str]:
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -121,13 +119,11 @@ def parse_size_file(path: Path) -> dict[str, str]:
         "mpi_ranks": str(mpi_ranks),
     }
 
-
 def relative_to_root(path: Path, root: Path) -> Path | None:
     try:
         return path.relative_to(root)
     except ValueError:
         return None
-
 
 def ensure_docs_asset(source: Path, slug: str) -> str:
     source = source.resolve()
@@ -149,34 +145,27 @@ def ensure_docs_asset(source: Path, slug: str) -> str:
     shutil.copy2(source, target)
     return target.relative_to(DOCS_DIR).as_posix()
 
-
 def natural_key(text: str) -> list[str]:
     return [part.zfill(12) if part.isdigit() else part for part in re.split(r"(\d+)", text)]
-
 
 def path_sort_key(path: Path) -> tuple[object, ...]:
     day = extract_day(path)
     day_key = f"{day:012.6f}" if day is not None else ""
     return (*natural_key(path.as_posix()), day_key)
 
-
 def extract_day(path: Path) -> float | None:
     match = DAY_PATTERN.search(path.name)
     return float(match.group(1)) if match else None
 
-
 def format_number(value: float) -> str:
     return f"{value:.2f}".rstrip("0").rstrip(".")
-
 
 def day_caption(path: Path) -> str:
     day = extract_day(path)
     return "Day unknown" if day is None else f"Day {format_number(day)}"
 
-
 def path_preference(path: Path) -> tuple[int, int]:
     return (1 if "_iter" in path.name else 0, len(path.name))
-
 
 def alpha_from_name(name: str) -> str:
     if name.startswith("alpha_"):
@@ -184,7 +173,6 @@ def alpha_from_name(name: str) -> str:
     if name.startswith("run_alpha_"):
         return name.removeprefix("run_alpha_")
     return name
-
 
 def comparison_caption(path: Path) -> str:
     parts = list(path.parts)
@@ -202,7 +190,6 @@ def comparison_caption(path: Path) -> str:
 
     return "TC1 tracer comparison"
 
-
 def final_day_from_error_table(error_dir: Path) -> float | None:
     table = error_dir / "tc1_error_table.csv"
     if not table.exists():
@@ -213,7 +200,6 @@ def final_day_from_error_table(error_dir: Path) -> float | None:
         return None
     value = rows[-1].get("day")
     return float(value) if value not in (None, "") else None
-
 
 def tc1_snapshot_items() -> list[dict[str, object]]:
     snapshot_root = SANDBOX_OUTPUT_ROOT / "TestCase1" / "Snapshots"
@@ -243,7 +229,6 @@ def tc1_snapshot_items() -> list[dict[str, object]]:
                 )
                 break
     return items
-
 
 def tc1_tracer_overlay_items() -> list[dict[str, object]]:
     central = (
@@ -275,7 +260,6 @@ def tc1_tracer_overlay_items() -> list[dict[str, object]]:
         }
         for path in sorted(by_case_day.values(), key=path_sort_key)
     ]
-
 
 def tc1_error_contour_items() -> list[dict[str, object]]:
     items: list[dict[str, object]] = []
@@ -317,7 +301,6 @@ def tc1_error_contour_items() -> list[dict[str, object]]:
         )
     return items
 
-
 def final_day_from_tc2_table(error_dir: Path) -> float | None:
     table = error_dir / "TC2_error_norms.csv"
     if not table.exists():
@@ -328,7 +311,6 @@ def final_day_from_tc2_table(error_dir: Path) -> float | None:
         return None
     value = rows[-1].get("day")
     return float(value) if value not in (None, "") else None
-
 
 def tc2_snapshot_items() -> list[dict[str, object]]:
     snapshot_root = SANDBOX_OUTPUT_ROOT / "TestCase2" / "Snapshots"
@@ -360,7 +342,6 @@ def tc2_snapshot_items() -> list[dict[str, object]]:
             break
     return items
 
-
 def tc2_error_norm_items() -> list[dict[str, object]]:
     error_root = SANDBOX_OUTPUT_ROOT / "TestCase2" / "Diagnosis" / "error"
     items: list[dict[str, object]] = []
@@ -379,7 +360,6 @@ def tc2_error_norm_items() -> list[dict[str, object]]:
         )
     return items
 
-
 def render_table(title: str, columns: list[str], values: dict[str, str]) -> str:
     header = "".join(f"<th>{html.escape(column)}</th>" for column in columns)
     row = "".join(f"<td>{html.escape(values.get(column, '—'))}</td>" for column in columns)
@@ -387,7 +367,6 @@ def render_table(title: str, columns: list[str], values: dict[str, str]) -> str:
         f"<div class='table-block'><h3>{html.escape(title)}</h3>"
         f"<table><thead><tr>{header}</tr></thead><tbody><tr>{row}</tr></tbody></table></div>"
     )
-
 
 def render_media_card(media: dict[str, object], slug: str) -> str:
     source = Path(media["source"])
@@ -410,7 +389,6 @@ def render_media_card(media: dict[str, object], slug: str) -> str:
         f"{body}"
         "</div>"
     )
-
 
 def render_subfigure_gallery(title: str, items: list[dict[str, object]], slug: str) -> str:
     figures = []
@@ -439,7 +417,6 @@ def render_subfigure_gallery(title: str, items: list[dict[str, object]], slug: s
         "</div>"
     )
 
-
 def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
     gallery = section.get("dynamic_gallery")
     if gallery == "tc1":
@@ -458,7 +435,6 @@ def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
             ]
         )
     return ""
-
 
 def render_section(section: dict[str, object]) -> str:
     slug = str(section["slug"])
@@ -498,7 +474,6 @@ def render_section(section: dict[str, object]) -> str:
         "</section>"
     )
 
-
 def render_navigation() -> str:
     cards = []
     for section in SECTIONS:
@@ -512,7 +487,6 @@ def render_navigation() -> str:
             "</a>"
         )
     return "<section class='nav-grid'>" + "".join(cards) + "</section>"
-
 
 def build_html() -> str:
     nav_html = render_navigation()
@@ -685,7 +659,6 @@ def build_html() -> str:
 </html>
 """
 
-
 def main() -> None:
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     ASSET_ROOT.mkdir(parents=True, exist_ok=True)
@@ -693,8 +666,8 @@ def main() -> None:
     index_path.write_text(build_html(), encoding="utf-8")
     print(f"wrote {index_path}")
 
-
 if __name__ == "__main__":
     main()
 
 # %%
+

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from shared import read_text_value
+from shared import alpha_from_data_mypackage, alpha_from_gendata, read_text_value
 
 DIAGNOSTIC_STREAMS = {
     "ETAN": "dynDiag",
@@ -29,10 +29,12 @@ def read_delta_t(run_dir: Path, default: float = 60.0) -> float:
 
 
 def read_package_alpha(run_dir: Path, default: float = 0.0) -> float:
-    for path in (run_dir / "data.mypackage", run_dir.parent / "input" / "data.mypackage"):
-        value = read_text_value(path, r"myPa_param1\s*=\s*([+\-0-9.eEdD]+)")
-        if value is not None:
-            return value
+    value = alpha_from_data_mypackage(run_dir)
+    if value is not None:
+        return value
+    value = alpha_from_gendata(run_dir)
+    if value is not None:
+        return value
     return default
 
 

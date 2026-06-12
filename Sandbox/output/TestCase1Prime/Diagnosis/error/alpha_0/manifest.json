@@ -1,0 +1,12 @@
+{
+  "alpha": "0",
+  "case": "TC1_prime",
+  "product": "error_analysis",
+  "saved": [
+    "tc1_cosine_bell_overlay",
+    "tc1_signed_error_contours",
+    "tc1_error_metrics",
+    "tc1_error_table"
+  ],
+  "source_run": "/Users/hodahashemi/Documents/Github/Playground/MITgcm/Sandbox/vortexSphere_Williamson_TC1_prime/run_alpha_0"
+}
