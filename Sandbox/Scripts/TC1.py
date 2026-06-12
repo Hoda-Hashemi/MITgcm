@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from conservation import ConservationSpec, analyze_conservation
+from github_pages import build_site
 from snapshot_plots import SnapshotSpec, run_snapshots
 from williamson_errors import analyze_tc1_error
 
@@ -54,9 +55,9 @@ def main() -> None:
             analyze_tc1_error(run_dir)
         if MAKE_CONSERVATION:
             analyze_conservation(run_dir, CONSERVATION_SPEC)
+    build_site(["testcase1"])
 
 if __name__ == "__main__":
     main()
 
 # %%
-

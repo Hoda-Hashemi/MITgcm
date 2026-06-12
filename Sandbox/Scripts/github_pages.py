@@ -13,6 +13,7 @@ REPO_DIR = Path(__file__).resolve().parents[2]
 SANDBOX_DIR = REPO_DIR / "Sandbox"
 DOCS_DIR = REPO_DIR / "docs"
 ASSET_ROOT = DOCS_DIR / "assets" / "williamson"
+FRAGMENT_DIR = DOCS_DIR / "fragments"
 SANDBOX_OUTPUT_ROOT = SANDBOX_DIR / "output"
 SITE_TITLE = "SHALLOW WATER MITGCM VERIFICATION CASES"
 
@@ -668,6 +669,39 @@ def render_section(section: dict[str, object]) -> str:
         "</section>"
     )
 
+def section_fragment_path(slug: str) -> Path:
+    return FRAGMENT_DIR / f"{slug}.html"
+
+def write_section_fragment(section: dict[str, object]) -> Path:
+    slug = str(section["slug"])
+    FRAGMENT_DIR.mkdir(parents=True, exist_ok=True)
+    path = section_fragment_path(slug)
+    path.write_text(render_section(section) + "\n", encoding="utf-8")
+    return path
+
+def write_section_fragments(slugs: list[str] | tuple[str, ...] | None = None) -> list[Path]:
+    selected = set(slugs) if slugs is not None else None
+    if selected is not None:
+        known = {str(section["slug"]) for section in SECTIONS}
+        unknown = sorted(selected - known)
+        if unknown:
+            raise ValueError(f"unknown GitHub Pages section slug(s): {', '.join(unknown)}")
+
+    paths: list[Path] = []
+    for section in SECTIONS:
+        slug = str(section["slug"])
+        if selected is None or slug in selected or not section_fragment_path(slug).exists():
+            paths.append(write_section_fragment(section))
+    return paths
+
+def render_fragment_inputs() -> str:
+    inputs: list[str] = []
+    for section in SECTIONS:
+        slug = str(section["slug"])
+        path = section_fragment_path(slug).relative_to(DOCS_DIR).as_posix()
+        inputs.append(f"{{% include_relative {path} %}}")
+    return "\n    ".join(inputs)
+
 def render_navigation() -> str:
     cards = []
     for section in SECTIONS:
@@ -684,8 +718,10 @@ def render_navigation() -> str:
 
 def build_html() -> str:
     nav_html = render_navigation()
-    sections_html = "".join(render_section(section) for section in SECTIONS)
-    return f"""<!DOCTYPE html>
+    sections_html = render_fragment_inputs()
+    return f"""---
+---
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -863,14 +899,22 @@ def build_html() -> str:
 </html>
 """
 
-def main() -> None:
+def build_site(section_slugs: list[str] | tuple[str, ...] | None = None) -> tuple[Path, list[Path]]:
     COPIED_ASSETS.clear()
     MISSING_SNAPSHOT_ROOTS.clear()
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     ASSET_ROOT.mkdir(parents=True, exist_ok=True)
+    FRAGMENT_DIR.mkdir(parents=True, exist_ok=True)
+    fragment_paths = write_section_fragments(section_slugs)
     index_path = DOCS_DIR / "index.html"
     index_path.write_text(build_html(), encoding="utf-8")
+    return index_path, fragment_paths
+
+def main() -> None:
+    index_path, fragment_paths = build_site()
     print(f"wrote {index_path}")
+    for path in fragment_paths:
+        print(f"wrote {path}")
     print(f"copied/updated {len(COPIED_ASSETS)} asset files")
     if MISSING_SNAPSHOT_ROOTS:
         print("missing snapshot roots:")
@@ -881,4 +925,3 @@ if __name__ == "__main__":
     main()
 
 # %%
-

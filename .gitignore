@@ -148,6 +148,6 @@ Sandbox/vortexSphere_Williamson_TC1/build
 Sandbox/vortexSphere_Williamson_TC2/build
 
 Sandbox/*/logs
-Sandbox/vortexSphere_Williamson_TC2/run_*/
-Sandbox/vortexSphere_Williamson_TC1/run_*/
+# Sandbox/vortexSphere_Williamson_TC2/run_*/
+# Sandbox/vortexSphere_Williamson_TC1/run_*/
 
