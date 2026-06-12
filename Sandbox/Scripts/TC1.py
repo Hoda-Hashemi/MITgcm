@@ -12,7 +12,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_CODE = "TC1"
 CASE_DIR = SCRIPT_DIR.parent / "vortexSphere_Williamson_TC1"
 
-RUN_DIRS = [CASE_DIR / "run_alpha_0"]
+RUN_DIRS = [CASE_DIR / "run_alpha_1.57"]
 MAKE_SNAPSHOTS = True
 MAKE_ERROR_ANALYSIS = True
 MAKE_CONSERVATION = True

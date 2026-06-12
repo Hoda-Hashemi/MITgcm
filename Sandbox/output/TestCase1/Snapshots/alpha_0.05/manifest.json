@@ -1,0 +1,13 @@
+{
+  "alpha": "0.05",
+  "case": "TC1",
+  "product": "snapshots",
+  "saved": [
+    "tracer",
+    "etan",
+    "psi",
+    "phi",
+    "velocity_magnitude"
+  ],
+  "source_run": "/Users/hodahashemi/Documents/Github/Playground/MITgcm/Sandbox/vortexSphere_Williamson_TC1/run_alpha_0.05"
+}

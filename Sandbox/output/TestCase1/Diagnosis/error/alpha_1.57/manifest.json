@@ -1,0 +1,12 @@
+{
+  "alpha": "1.57",
+  "case": "TC1",
+  "product": "error_analysis",
+  "saved": [
+    "tc1_cosine_bell_overlay",
+    "tc1_signed_error_contours",
+    "tc1_error_metrics",
+    "tc1_error_table"
+  ],
+  "source_run": "/Users/hodahashemi/Documents/Github/Playground/MITgcm/Sandbox/vortexSphere_Williamson_TC1/run_alpha_1.57"
+}
