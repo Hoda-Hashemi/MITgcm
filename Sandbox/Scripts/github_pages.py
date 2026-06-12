@@ -123,6 +123,7 @@ DATA_COLUMNS = [
 ]
 SIZE_COLUMNS = ["sNx", "sNy", "nPx", "nPy", "Nx", "Ny", "mpi_ranks"]
 DAY_PATTERN = re.compile(r"_day_([0-9]+(?:\.[0-9]+)?)")
+KEY_SNAPSHOT_DAYS = (0.0, 3.0, 6.0, 9.0, 12.0)
 CASE_OUTPUT_NAMES = {
     "TC1_prime": "TestCase1Prime",
     "TC1": "TestCase1",
@@ -141,6 +142,12 @@ SNAPSHOT_FIELD_ORDER = {
     field: index
     for index, field in enumerate(("tracer", "eta", "etan", "psi", "phi", "velocity_magnitude"))
 }
+FIELD_TAB_ORDER = (
+    ("etan", "ETAN"),
+    ("tracer", "Tracer"),
+    ("psi", "PsiVEL"),
+    ("phi", "PhiVEL"),
+)
 COPIED_ASSETS: set[Path] = set()
 MISSING_SNAPSHOT_ROOTS: set[Path] = set()
 
@@ -312,6 +319,10 @@ def reduce_to_one_image_per_day(paths: list[Path]) -> list[Path]:
             by_day[key] = path
     return sorted(by_day.values(), key=path_sort_key)
 
+def is_key_snapshot_day(path: Path) -> bool:
+    day = extract_day(path)
+    return day is not None and any(abs(day - key_day) < 0.01 for key_day in KEY_SNAPSHOT_DAYS)
+
 def case_snapshot_items(snapshot_root: Path, folder: str, field_label: str) -> list[dict[str, object]]:
     items: list[dict[str, object]] = []
     for alpha_dir in sorted(snapshot_root.glob("alpha_*"), key=lambda path: natural_key(path.name)):
@@ -329,7 +340,54 @@ def case_snapshot_items(snapshot_root: Path, folder: str, field_label: str) -> l
         )
     return items
 
-def render_case_snapshot_galleries(case: dict[str, object], slug: str) -> str:
+def case_alpha_snapshot_items(
+    snapshot_root: Path,
+    alpha_dir: Path,
+    folder: str,
+    field_label: str,
+) -> list[dict[str, object]]:
+    field_dir = alpha_dir / folder
+    if not field_dir.is_dir():
+        return []
+
+    alpha = alpha_from_name(alpha_dir.name)
+    paths = [
+        path
+        for path in reduce_to_one_image_per_day(sorted(field_dir.glob("*.png"), key=path_sort_key))
+        if is_key_snapshot_day(path)
+    ]
+    return [
+        {
+            "source": path,
+            "caption": f"alpha {alpha}, {field_label}, {day_caption(path)}",
+        }
+        for path in paths
+    ]
+
+def render_plot_figure(item: dict[str, object], slug: str, figure_class: str = "subfigure") -> str:
+    source = Path(item["source"])
+    if not source.exists():
+        return ""
+    relative_path = ensure_docs_asset(source, slug)
+    caption = html.escape(str(item["caption"]))
+    return (
+        f"<figure class='{html.escape(figure_class)}'>"
+        "<button class='plot-open' type='button' "
+        f"data-modal-src='{html.escape(relative_path)}' "
+        f"data-modal-caption='{caption}'>"
+        f"<img src='{html.escape(relative_path)}' alt='{caption}' loading='lazy' />"
+        "</button>"
+        f"<figcaption>{caption}</figcaption>"
+        "</figure>"
+    )
+
+def render_snapshot_grid(items: list[dict[str, object]], slug: str) -> str:
+    figures = "".join(render_plot_figure(item, slug) for item in items)
+    if not figures:
+        return "<p class='empty'>No key-day snapshots available.</p>"
+    return f"<div class='snapshot-grid'>{figures}</div>"
+
+def render_case_snapshot_browser(case: dict[str, object], slug: str) -> str:
     snapshot_root = case_snapshot_root(case)
     if snapshot_root is None:
         return ""
@@ -337,15 +395,76 @@ def render_case_snapshot_galleries(case: dict[str, object], slug: str) -> str:
         MISSING_SNAPSHOT_ROOTS.add(snapshot_root)
         return ""
 
-    label = case_display_label(case)
-    sections: list[str] = []
-    for folder, field_label in case_snapshot_fields(case, snapshot_root):
-        items = case_snapshot_items(snapshot_root, folder, field_label)
-        if not items:
+    configured_fields = dict(case_snapshot_fields(case, snapshot_root))
+    alpha_dirs = [
+        alpha_dir
+        for alpha_dir in sorted(snapshot_root.glob("alpha_*"), key=lambda path: natural_key(path.name))
+        if alpha_dir.is_dir()
+    ]
+    if not alpha_dirs:
+        return ""
+
+    alpha_blocks: list[str] = []
+    for alpha_index, alpha_dir in enumerate(alpha_dirs):
+        alpha = alpha_from_name(alpha_dir.name)
+        tab_base = f"{slug}-{alpha_dir.name.replace('.', '_')}"
+        buttons: list[str] = []
+        panels: list[str] = []
+        first_panel = True
+
+        for folder, button_label in FIELD_TAB_ORDER:
+            field_label = configured_fields.get(folder, label_from_token(folder))
+            items = case_alpha_snapshot_items(snapshot_root, alpha_dir, folder, field_label)
+            if not items:
+                continue
+
+            tab_id = f"{tab_base}-{folder}"
+            active_class = " is-active" if first_panel else ""
+            selected = "true" if first_panel else "false"
+            hidden = "" if first_panel else " hidden"
+            buttons.append(
+                "<button class='field-tab"
+                f"{active_class}' type='button' data-tab-target='{html.escape(tab_id)}' "
+                f"aria-selected='{selected}'>{html.escape(button_label)}</button>"
+            )
+            panels.append(
+                f"<div class='tab-panel{active_class}' data-tab-panel='{html.escape(tab_id)}'{hidden}>"
+                f"{render_snapshot_grid(items, slug)}"
+                "</div>"
+            )
+            first_panel = False
+
+        if not panels:
             continue
-        title = f"{label}: {field_label} Snapshots" if label else f"{field_label} Snapshots"
-        sections.append(render_subfigure_gallery(title, items, slug))
-    return "".join(sections)
+
+        buttons.append(
+            f"<a class='field-tab field-tab-link' href='#{html.escape(slug)}-errors'>Error</a>"
+        )
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if alpha_index == 0 else ''}>"
+            f"<summary>&alpha;={html.escape(alpha)}</summary>"
+            "<div class='field-tabs'>"
+            f"<div class='tab-list'>{''.join(buttons)}</div>"
+            f"{''.join(panels)}"
+            "</div>"
+            "</details>"
+        )
+
+    if not alpha_blocks:
+        return ""
+
+    days = ", ".join(format_number(day) for day in KEY_SNAPSHOT_DAYS)
+    label = html.escape(case_display_label(case))
+    return (
+        "<div class='media-section snapshot-browser'>"
+        f"<h3>{label}: key-day snapshots</h3>"
+        f"<p class='section-note'>Rendered days: {html.escape(days)}.</p>"
+        f"{''.join(alpha_blocks)}"
+        "</div>"
+    )
+
+def render_case_snapshot_galleries(case: dict[str, object], slug: str) -> str:
+    return render_case_snapshot_browser(case, slug)
 
 def comparison_caption(path: Path) -> str:
     parts = list(path.parts)
@@ -560,14 +679,79 @@ def render_case_tables(case: dict[str, object], show_label: bool) -> str:
         else ""
     )
     return (
-        "<div class='case-block'>"
+        "<details class='details-panel case-block'>"
+        "<summary>Numerical settings</summary>"
         f"{heading}"
         "<div class='tables'>"
         f"{render_table('Numerical Settings', DATA_COLUMNS, data_values)}"
         f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values)}"
         "</div>"
-        "</div>"
+        "</details>"
     )
+
+def count_case_key_snapshots(case: dict[str, object]) -> tuple[int, int, int]:
+    snapshot_root = case_snapshot_root(case)
+    if snapshot_root is None or not snapshot_root.exists():
+        return 0, 0, 0
+
+    alphas: set[str] = set()
+    fields: set[str] = set()
+    count = 0
+    configured_fields = dict(case_snapshot_fields(case, snapshot_root))
+    for alpha_dir in sorted(snapshot_root.glob("alpha_*"), key=lambda path: natural_key(path.name)):
+        if not alpha_dir.is_dir():
+            continue
+        alpha_has_items = False
+        for folder in configured_fields:
+            paths = [
+                path
+                for path in reduce_to_one_image_per_day(sorted((alpha_dir / folder).glob("*.png"), key=path_sort_key))
+                if is_key_snapshot_day(path)
+            ]
+            if paths:
+                fields.add(folder)
+                count += len(paths)
+                alpha_has_items = True
+        if alpha_has_items:
+            alphas.add(alpha_from_name(alpha_dir.name))
+    return len(alphas), len(fields), count
+
+def render_metric_cards(section: dict[str, object], case_configs: list[dict[str, object]]) -> str:
+    metrics: list[tuple[str, str]] = []
+    alpha_count = 0
+    field_count = 0
+    snapshot_count = 0
+    for case in case_configs:
+        case_alpha_count, case_field_count, case_snapshot_count = count_case_key_snapshots(case)
+        alpha_count += case_alpha_count
+        field_count = max(field_count, case_field_count)
+        snapshot_count += case_snapshot_count
+
+    error_count = len(tc1_error_contour_items()) if section.get("dynamic_gallery") == "tc1" else 0
+    media_count = sum(1 for media in section.get("media", []) if Path(media["source"]).exists())
+    if snapshot_count:
+        metrics = [
+            ("Alphas", str(alpha_count)),
+            ("Fields", str(field_count)),
+            ("Key Days", ", ".join(format_number(day) for day in KEY_SNAPSHOT_DAYS)),
+            ("Error Plots", str(error_count)),
+        ]
+    else:
+        metrics = [
+            ("Main Panels", str(media_count)),
+            ("Primary", "Prognostic / Diagnostic" if media_count >= 2 else "Linked media"),
+            ("Format", "WEBM" if media_count else "None"),
+            ("Details", "Collapsible"),
+        ]
+
+    cards = "".join(
+        "<div class='metric-card'>"
+        f"<span>{html.escape(label)}</span>"
+        f"<strong>{html.escape(value)}</strong>"
+        "</div>"
+        for label, value in metrics
+    )
+    return f"<div class='metric-grid'>{cards}</div>"
 
 def render_media_card(media: dict[str, object], slug: str) -> str:
     source = Path(media["source"])
@@ -594,17 +778,9 @@ def render_media_card(media: dict[str, object], slug: str) -> str:
 def render_subfigure_gallery(title: str, items: list[dict[str, object]], slug: str) -> str:
     figures = []
     for item in items:
-        source = Path(item["source"])
-        if not source.exists():
-            continue
-        relative_path = ensure_docs_asset(source, slug)
-        caption = html.escape(str(item["caption"]))
-        figures.append(
-            "<figure class='subfigure'>"
-            f"<img src='{html.escape(relative_path)}' alt='{caption}' loading='lazy' />"
-            f"<figcaption>{caption}</figcaption>"
-            "</figure>"
-        )
+        figure = render_plot_figure(item, slug)
+        if figure:
+            figures.append(figure)
 
     if not figures:
         return ""
@@ -618,15 +794,27 @@ def render_subfigure_gallery(title: str, items: list[dict[str, object]], slug: s
         "</div>"
     )
 
+def render_error_comparison_block(title: str, items: list[dict[str, object]], slug: str) -> str:
+    figures = []
+    for item in items:
+        figure = render_plot_figure(item, slug, "subfigure comparison-figure")
+        if figure:
+            figures.append(figure)
+    if not figures:
+        return ""
+    return (
+        f"<div id='{html.escape(slug)}-errors' class='media-section error-block'>"
+        f"<h3>{html.escape(title)}</h3>"
+        "<div class='comparison-grid'>"
+        f"{''.join(figures)}"
+        "</div>"
+        "</div>"
+    )
+
 def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
     gallery = section.get("dynamic_gallery")
     if gallery == "tc1":
-        return "".join(
-            [
-                render_subfigure_gallery("Passive Tracer Overlay Comparisons", tc1_tracer_overlay_items(), slug),
-                render_subfigure_gallery("Error Contours", tc1_error_contour_items(), slug),
-            ]
-        )
+        return render_error_comparison_block("Error Contours", tc1_error_contour_items(), slug)
     if gallery == "tc2":
         return "".join(
             [
@@ -639,6 +827,7 @@ def render_section(section: dict[str, object]) -> str:
     slug = str(section["slug"])
     title = html.escape(str(section["title"]))
     case_configs = section_case_configs(section)
+    metrics_html = render_metric_cards(section, case_configs)
     tables_html = "".join(
         render_case_tables(case, show_label=len(case_configs) > 1)
         for case in case_configs
@@ -651,7 +840,7 @@ def render_section(section: dict[str, object]) -> str:
     ]
     media_blocks = []
     if media_items:
-        media_blocks.append(f"<div class='media-grid'>{''.join(media_items)}</div>")
+        media_blocks.append(f"<div class='main-panels'>{''.join(media_items)}</div>")
     for case in case_configs:
         snapshot_html = render_case_snapshot_galleries(case, slug)
         if snapshot_html:
@@ -663,7 +852,13 @@ def render_section(section: dict[str, object]) -> str:
 
     return (
         f"<section id='{html.escape(slug)}' class='section-card'>"
+        "<header class='experiment-top'>"
+        "<div>"
+        "<span class='section-label'>Experiment</span>"
         f"<h2>{title}</h2>"
+        "</div>"
+        f"{metrics_html}"
+        "</header>"
         f"{tables_html}"
         f"{media_html}"
         "</section>"
@@ -700,21 +895,22 @@ def render_fragment_inputs() -> str:
         slug = str(section["slug"])
         path = section_fragment_path(slug).relative_to(DOCS_DIR).as_posix()
         inputs.append(f"{{% include_relative {path} %}}")
-    return "\n    ".join(inputs)
+    return "\n      ".join(inputs)
 
 def render_navigation() -> str:
-    cards = []
+    links = []
     for section in SECTIONS:
         slug = html.escape(str(section["slug"]))
         title = html.escape(str(section["title"]))
-        cards.append(
-            "<a class='nav-card' "
-            f"href='#{slug}'>"
-            f"<span class='nav-kicker'>Experiment</span>"
-            f"<strong>{title}</strong>"
-            "</a>"
-        )
-    return "<section class='nav-grid'>" + "".join(cards) + "</section>"
+        links.append(f"      <a href='#{slug}'>{title}</a>")
+    return "\n".join(
+        [
+            "<aside class='side-nav'>",
+            "      <strong>Experiments</strong>",
+            *links,
+            "    </aside>",
+        ]
+    )
 
 def build_html() -> str:
     nav_html = render_navigation()
@@ -727,174 +923,27 @@ def build_html() -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{SITE_TITLE}</title>
-  <style>
-    :root {{
-      --ink: #122033;
-      --paper: #f6f7fb;
-      --card: #ffffff;
-      --accent: #0a6c74;
-      --accent-soft: #dff1f3;
-      --line: #d6dbe6;
-    }}
-    * {{ box-sizing: border-box; }}
-    html {{ scroll-behavior: smooth; }}
-    body {{
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(10,108,116,0.16), transparent 30%),
-        linear-gradient(180deg, #eef4f7 0%, var(--paper) 100%);
-    }}
-    main {{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 14px 44px;
-    }}
-    h1 {{
-      margin: 0 0 12px;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      letter-spacing: 0.04em;
-    }}
-    .intro {{
-      margin: 0 0 22px;
-      font-size: 1.05rem;
-      max-width: 70ch;
-    }}
-    .nav-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin: 0 0 22px;
-    }}
-    .nav-card {{
-      display: block;
-      text-decoration: none;
-      color: var(--ink);
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 16px;
-      box-shadow: 0 12px 34px rgba(18, 32, 51, 0.06);
-      transition: transform 120ms ease, border-color 120ms ease;
-    }}
-    .nav-card:hover {{
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }}
-    .nav-kicker {{
-      display: block;
-      margin-bottom: 6px;
-      color: var(--accent);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }}
-    .section-card {{
-      scroll-margin-top: 24px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 14px 40px rgba(18, 32, 51, 0.08);
-    }}
-    .case-block {{
-      margin: 16px 0 18px;
-    }}
-    .case-block:first-of-type {{
-      margin-top: 0;
-    }}
-    .case-heading {{
-      margin: 0 0 10px;
-      font-size: 1.05rem;
-    }}
-    .tables {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 12px;
-      margin: 14px 0 16px;
-    }}
-    .table-block h3 {{
-      margin: 0 0 10px;
-      font-size: 1rem;
-      color: var(--accent);
-    }}
-    table {{
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-      table-layout: fixed;
-    }}
-    th, td {{
-      border: 1px solid var(--line);
-      padding: 7px 8px;
-      text-align: center;
-      word-wrap: break-word;
-    }}
-    th {{
-      background: var(--accent-soft);
-    }}
-    .media-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 12px;
-    }}
-    .media-card {{
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: #fbfcfe;
-    }}
-    .media-card h4 {{
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }}
-    .media-section {{
-      margin-top: 14px;
-    }}
-    .media-section h3 {{
-      margin: 0 0 12px;
-      font-size: 1rem;
-      color: var(--accent);
-    }}
-    .subfigure-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-    }}
-    .subfigure {{
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px;
-      background: #fbfcfe;
-    }}
-    .subfigure figcaption {{
-      margin-top: 8px;
-      font-size: 0.9rem;
-      text-align: center;
-    }}
-    video, img {{
-      width: 100%;
-      display: block;
-      border-radius: 10px;
-      background: #000;
-    }}
-    .empty {{
-      margin: 0;
-      color: #556273;
-      font-style: italic;
-    }}
-  </style>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <main>
-    <h1>{SITE_TITLE}</h1>
-    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the clickable section cards below to jump to each experiment and inspect its current results.</p>
+  <div class="site-layout">
     {nav_html}
-    {sections_html}
-  </main>
+    <main>
+      <header class="site-header">
+        <h1>{SITE_TITLE}</h1>
+        <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
+      </header>
+      {sections_html}
+    </main>
+  </div>
+  <div class="plot-modal" data-modal hidden>
+    <button class="modal-close" type="button" data-modal-close aria-label="Close enlarged plot">x</button>
+    <figure>
+      <img data-modal-img alt="">
+      <figcaption data-modal-caption></figcaption>
+    </figure>
+  </div>
+  <script src="site.js" defer></script>
 </body>
 </html>
 """

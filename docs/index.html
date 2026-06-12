@@ -6,176 +6,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SHALLOW WATER MITGCM VERIFICATION CASES</title>
-  <style>
-    :root {
-      --ink: #122033;
-      --paper: #f6f7fb;
-      --card: #ffffff;
-      --accent: #0a6c74;
-      --accent-soft: #dff1f3;
-      --line: #d6dbe6;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(10,108,116,0.16), transparent 30%),
-        linear-gradient(180deg, #eef4f7 0%, var(--paper) 100%);
-    }
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 14px 44px;
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      letter-spacing: 0.04em;
-    }
-    .intro {
-      margin: 0 0 22px;
-      font-size: 1.05rem;
-      max-width: 70ch;
-    }
-    .nav-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin: 0 0 22px;
-    }
-    .nav-card {
-      display: block;
-      text-decoration: none;
-      color: var(--ink);
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 16px;
-      box-shadow: 0 12px 34px rgba(18, 32, 51, 0.06);
-      transition: transform 120ms ease, border-color 120ms ease;
-    }
-    .nav-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
-    .nav-kicker {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--accent);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .section-card {
-      scroll-margin-top: 24px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 14px 40px rgba(18, 32, 51, 0.08);
-    }
-    .case-block {
-      margin: 16px 0 18px;
-    }
-    .case-block:first-of-type {
-      margin-top: 0;
-    }
-    .case-heading {
-      margin: 0 0 10px;
-      font-size: 1.05rem;
-    }
-    .tables {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 12px;
-      margin: 14px 0 16px;
-    }
-    .table-block h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      color: var(--accent);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-      table-layout: fixed;
-    }
-    th, td {
-      border: 1px solid var(--line);
-      padding: 7px 8px;
-      text-align: center;
-      word-wrap: break-word;
-    }
-    th {
-      background: var(--accent-soft);
-    }
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 12px;
-    }
-    .media-card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: #fbfcfe;
-    }
-    .media-card h4 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-    .media-section {
-      margin-top: 14px;
-    }
-    .media-section h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
-      color: var(--accent);
-    }
-    .subfigure-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-    }
-    .subfigure {
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px;
-      background: #fbfcfe;
-    }
-    .subfigure figcaption {
-      margin-top: 8px;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    video, img {
-      width: 100%;
-      display: block;
-      border-radius: 10px;
-      background: #000;
-    }
-    .empty {
-      margin: 0;
-      color: #556273;
-      font-style: italic;
-    }
-  </style>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <main>
-    <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
-    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the clickable section cards below to jump to each experiment and inspect its current results.</p>
-    <section class='nav-grid'><a class='nav-card' href='#case1_constant_bathymetry'><span class='nav-kicker'>Experiment</span><strong>Gaussian Patch Free Surface Initialization with Constant Bathymetry</strong></a><a class='nav-card' href='#case2_real_bathymetry'><span class='nav-kicker'>Experiment</span><strong>Gaussian Patch Free Surface Initialization with Real Bathymetry</strong></a><a class='nav-card' href='#case3_geostrophic_adjustment'><span class='nav-kicker'>Experiment</span><strong>Geostrophic Free Surface Initialization with Real Bathymetry</strong></a><a class='nav-card' href='#testcase1'><span class='nav-kicker'>Experiment</span><strong>Advection of Cosine Bell</strong></a></section>
-    {% include_relative fragments/case1_constant_bathymetry.html %}
-    {% include_relative fragments/case2_real_bathymetry.html %}
-    {% include_relative fragments/case3_geostrophic_adjustment.html %}
-    {% include_relative fragments/testcase1.html %}
-  </main>
+  <div class="site-layout">
+    <aside class='side-nav'>
+      <strong>Experiments</strong>
+      <a href='#case1_constant_bathymetry'>Gaussian Patch Free Surface Initialization with Constant Bathymetry</a>
+      <a href='#case2_real_bathymetry'>Gaussian Patch Free Surface Initialization with Real Bathymetry</a>
+      <a href='#case3_geostrophic_adjustment'>Geostrophic Free Surface Initialization with Real Bathymetry</a>
+      <a href='#testcase1'>Advection of Cosine Bell</a>
+    </aside>
+    <main>
+      <header class="site-header">
+        <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
+        <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
+      </header>
+      {% include_relative fragments/case1_constant_bathymetry.html %}
+      {% include_relative fragments/case2_real_bathymetry.html %}
+      {% include_relative fragments/case3_geostrophic_adjustment.html %}
+      {% include_relative fragments/testcase1.html %}
+    </main>
+  </div>
+  <div class="plot-modal" data-modal hidden>
+    <button class="modal-close" type="button" data-modal-close aria-label="Close enlarged plot">x</button>
+    <figure>
+      <img data-modal-img alt="">
+      <figcaption data-modal-caption></figcaption>
+    </figure>
+  </div>
+  <script src="site.js" defer></script>
 </body>
 </html>
