@@ -926,13 +926,13 @@ def build_html() -> str:
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <header class="site-header">
+    <h1>{SITE_TITLE}</h1>
+    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
+  </header>
   <div class="site-layout">
     {nav_html}
     <main>
-      <header class="site-header">
-        <h1>{SITE_TITLE}</h1>
-        <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
-      </header>
       {sections_html}
     </main>
   </div>

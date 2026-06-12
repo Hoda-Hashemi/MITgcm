@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <header class="site-header">
+    <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
+    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
+  </header>
   <div class="site-layout">
     <aside class='side-nav'>
       <strong>Experiments</strong>
@@ -18,10 +22,6 @@
       <a href='#testcase1'>Advection of Cosine Bell</a>
     </aside>
     <main>
-      <header class="site-header">
-        <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
-        <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
-      </header>
       {% include_relative fragments/case1_constant_bathymetry.html %}
       {% include_relative fragments/case2_real_bathymetry.html %}
       {% include_relative fragments/case3_geostrophic_adjustment.html %}

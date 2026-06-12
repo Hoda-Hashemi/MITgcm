@@ -1,10 +1,10 @@
 :root {
   --ink: #122033;
-  --muted: #556273;
+  --muted: #637080;
   --paper: #f6f7fb;
   --card: #ffffff;
   --panel: #fbfcfe;
-  --accent: #0a6c74;
+  --accent: #07a8b6;
   --accent-soft: #dff1f3;
   --line: #d6dbe6;
 }
@@ -20,20 +20,24 @@ body {
   background: linear-gradient(180deg, #eef4f7 0%, var(--paper) 100%);
 }
 
+.site-header,
+.site-layout {
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.site-header {
+  padding: 24px 18px 14px;
+}
+
 .site-layout {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 18px;
-  max-width: 1480px;
-  margin: 0 auto;
   padding: 24px 18px 48px;
 }
 
 main { min-width: 0; }
-
-.site-header {
-  margin-bottom: 16px;
-}
 
 h1 {
   margin: 0 0 10px;
@@ -360,9 +364,13 @@ img {
 }
 
 @media (max-width: 1000px) {
+  .site-header {
+    padding: 16px 12px 12px;
+  }
+
   .site-layout {
     grid-template-columns: 1fr;
-    padding: 16px 12px 36px;
+    padding: 0 12px 36px;
   }
 
   .side-nav {
