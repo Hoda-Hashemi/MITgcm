@@ -115,6 +115,13 @@ h2 {
   font-size: 1.45rem;
 }
 
+.experiment-summary {
+  max-width: 78ch;
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -190,6 +197,19 @@ td {
 
 th { background: var(--accent-soft); }
 
+.table-symbol,
+.table-unit {
+  display: block;
+}
+
+.table-unit {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
 .main-panels {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -221,6 +241,12 @@ th { background: var(--accent-soft); }
 .section-note {
   margin: 0 0 12px;
   color: var(--muted);
+}
+
+.field-units {
+  margin: -4px 0 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .alpha-panel {
@@ -265,6 +291,12 @@ th { background: var(--accent-soft); }
 .field-tab:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+.unit {
+  color: var(--muted);
+  font-size: 0.82em;
+  white-space: nowrap;
 }
 
 .snapshot-grid,

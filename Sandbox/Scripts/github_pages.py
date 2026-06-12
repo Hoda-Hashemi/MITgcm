@@ -122,6 +122,26 @@ DATA_COLUMNS = [
     "delY",
 ]
 SIZE_COLUMNS = ["sNx", "sNy", "nPx", "nPy", "Nx", "Ny", "mpi_ranks"]
+DATA_COLUMN_META = {
+    "rhoConst": ("rhoConst", "kg m<sup>-3</sup>"),
+    "gravity": ("gravity", "m s<sup>-2</sup>"),
+    "deltaT": ("deltaT", "s"),
+    "nTimeSteps": ("nTimeSteps", "steps"),
+    "dumpFreq": ("dumpFreq", "s"),
+    "monitorFreq": ("monitorFreq", "s"),
+    "delR": ("delR", "m"),
+    "delX": ("delX", "deg"),
+    "delY": ("delY", "deg"),
+}
+SIZE_COLUMN_META = {
+    "sNx": ("sNx", "cells"),
+    "sNy": ("sNy", "cells"),
+    "nPx": ("nPx", "MPI tiles"),
+    "nPy": ("nPy", "MPI tiles"),
+    "Nx": ("Nx", "cells"),
+    "Ny": ("Ny", "cells"),
+    "mpi_ranks": ("mpi_ranks", "ranks"),
+}
 DAY_PATTERN = re.compile(r"_day_([0-9]+(?:\.[0-9]+)?)")
 KEY_SNAPSHOT_DAYS = (0.0, 3.0, 6.0, 9.0, 12.0)
 CASE_OUTPUT_NAMES = {
@@ -137,6 +157,14 @@ SNAPSHOT_FIELD_LABELS = {
     "psi": "PsiVEL",
     "phi": "PhiVEL",
     "velocity_magnitude": "Velocity Magnitude",
+}
+SNAPSHOT_FIELD_UNITS = {
+    "tracer": "m",
+    "eta": "m",
+    "etan": "m",
+    "psi": "m<sup>3</sup> s<sup>-1</sup>",
+    "phi": "m<sup>2</sup> s<sup>-1</sup>",
+    "velocity_magnitude": "m s<sup>-1</sup>",
 }
 SNAPSHOT_FIELD_ORDER = {
     field: index
@@ -237,6 +265,15 @@ def alpha_from_name(name: str) -> str:
 
 def label_from_token(token: str) -> str:
     return SNAPSHOT_FIELD_LABELS.get(token, token.replace("_", " ").title())
+
+def unit_from_token(token: str) -> str:
+    return SNAPSHOT_FIELD_UNITS.get(token, "")
+
+def label_with_unit(label: str, unit: str) -> str:
+    label_html = html.escape(label)
+    if not unit:
+        return label_html
+    return f"{label_html} <span class='unit'>[{unit}]</span>"
 
 def infer_case_output_name(case_dir: Path) -> str | None:
     case_name = case_dir.name.lower()
@@ -387,6 +424,16 @@ def render_snapshot_grid(items: list[dict[str, object]], slug: str) -> str:
         return "<p class='empty'>No key-day snapshots available.</p>"
     return f"<div class='snapshot-grid'>{figures}</div>"
 
+def render_field_units_note(fields: list[tuple[str, str]]) -> str:
+    entries = [
+        label_with_unit(label, unit_from_token(folder))
+        for folder, label in fields
+        if unit_from_token(folder)
+    ]
+    if not entries:
+        return ""
+    return f"<p class='field-units'>Units: {', '.join(entries)}.</p>"
+
 def render_case_snapshot_browser(case: dict[str, object], slug: str) -> str:
     snapshot_root = case_snapshot_root(case)
     if snapshot_root is None:
@@ -422,10 +469,11 @@ def render_case_snapshot_browser(case: dict[str, object], slug: str) -> str:
             active_class = " is-active" if first_panel else ""
             selected = "true" if first_panel else "false"
             hidden = "" if first_panel else " hidden"
+            button_label_html = label_with_unit(button_label, unit_from_token(folder))
             buttons.append(
                 "<button class='field-tab"
                 f"{active_class}' type='button' data-tab-target='{html.escape(tab_id)}' "
-                f"aria-selected='{selected}'>{html.escape(button_label)}</button>"
+                f"aria-selected='{selected}'>{button_label_html}</button>"
             )
             panels.append(
                 f"<div class='tab-panel{active_class}' data-tab-panel='{html.escape(tab_id)}'{hidden}>"
@@ -455,10 +503,12 @@ def render_case_snapshot_browser(case: dict[str, object], slug: str) -> str:
 
     days = ", ".join(format_number(day) for day in KEY_SNAPSHOT_DAYS)
     label = html.escape(case_display_label(case))
+    field_units_note = render_field_units_note(case_snapshot_fields(case, snapshot_root))
     return (
         "<div class='media-section snapshot-browser'>"
         f"<h3>{label}: key-day snapshots</h3>"
         f"<p class='section-note'>Rendered days: {html.escape(days)}.</p>"
+        f"{field_units_note}"
         f"{''.join(alpha_blocks)}"
         "</div>"
     )
@@ -652,8 +702,18 @@ def tc2_error_norm_items() -> list[dict[str, object]]:
         )
     return items
 
-def render_table(title: str, columns: list[str], values: dict[str, str]) -> str:
-    header = "".join(f"<th>{html.escape(column)}</th>" for column in columns)
+def render_column_header(column: str, column_meta: dict[str, tuple[str, str]]) -> str:
+    label, unit = column_meta.get(column, (column, ""))
+    unit_html = f"<span class='table-unit'>[{unit}]</span>" if unit else ""
+    return f"<th><span class='table-symbol'>{html.escape(label)}</span>{unit_html}</th>"
+
+def render_table(
+    title: str,
+    columns: list[str],
+    values: dict[str, str],
+    column_meta: dict[str, tuple[str, str]],
+) -> str:
+    header = "".join(render_column_header(column, column_meta) for column in columns)
     row = "".join(f"<td>{html.escape(values.get(column, '—'))}</td>" for column in columns)
     return (
         f"<div class='table-block'><h3>{html.escape(title)}</h3>"
@@ -683,8 +743,8 @@ def render_case_tables(case: dict[str, object], show_label: bool) -> str:
         "<summary>Numerical settings</summary>"
         f"{heading}"
         "<div class='tables'>"
-        f"{render_table('Numerical Settings', DATA_COLUMNS, data_values)}"
-        f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values)}"
+        f"{render_table('Numerical Settings', DATA_COLUMNS, data_values, DATA_COLUMN_META)}"
+        f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values, SIZE_COLUMN_META)}"
         "</div>"
         "</details>"
     )
@@ -752,6 +812,12 @@ def render_metric_cards(section: dict[str, object], case_configs: list[dict[str,
         for label, value in metrics
     )
     return f"<div class='metric-grid'>{cards}</div>"
+
+def render_experiment_summary(section: dict[str, object]) -> str:
+    summary = str(section.get("summary", "")).strip()
+    if not summary:
+        return ""
+    return f"<p class='experiment-summary'>{html.escape(summary)}</p>"
 
 def render_media_card(media: dict[str, object], slug: str) -> str:
     source = Path(media["source"])
@@ -828,6 +894,7 @@ def render_section(section: dict[str, object]) -> str:
     title = html.escape(str(section["title"]))
     case_configs = section_case_configs(section)
     metrics_html = render_metric_cards(section, case_configs)
+    summary_html = render_experiment_summary(section)
     tables_html = "".join(
         render_case_tables(case, show_label=len(case_configs) > 1)
         for case in case_configs
@@ -856,6 +923,7 @@ def render_section(section: dict[str, object]) -> str:
         "<div>"
         "<span class='section-label'>Experiment</span>"
         f"<h2>{title}</h2>"
+        f"{summary_html}"
         "</div>"
         f"{metrics_html}"
         "</header>"
