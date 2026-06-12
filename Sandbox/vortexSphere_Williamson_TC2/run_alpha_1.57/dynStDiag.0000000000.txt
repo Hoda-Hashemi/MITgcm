@@ -1,0 +1,249 @@
+# header of file: dynStDiag
+# frequency (s):     -86400.000000
+# phase (s)    :          0.000000
+# Regions      :   0
+# Fields       : ETAN     ETANSQ   DETADT2  UVEL     VVEL    
+# Nb of levels :    1   1   1   1   1
+# end of header ------------------------------------------------------------
+ 
+ field : ETAN     ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0 -6.3480121665569E+02  5.6778397582114E+02 -1.9043870849609E+03 -4.3142790673301E-08  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  7.2535122786681E+05  9.6713557018516E+05  1.8613003870802E-15  3.6266901693660E+06  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  2.1990432351070E-04  9.4286395806552E-02  1.5595631351773E-27  6.9302393432770E+01  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  0.0000000000000E+00  1.5762213446046E+01 -3.8609256744385E+01  3.8609256744385E+01  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  1.3397617939849E-15  2.7300802899456E+01 -3.8609256744385E+01  3.8609256744385E+01  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      1440 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      1440 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      1440 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      1440 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      1440 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      2880 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      2880 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      2880 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      2880 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      2880 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      4320 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      4320 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      4320 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      4320 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      4320 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      5760 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      5760 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      5760 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      5760 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      5760 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      7200 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      7200 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      7200 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      7200 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      7200 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =      8640 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =      8640 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =      8640 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =      8640 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =      8640 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =     10080 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =     10080 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =     10080 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =     10080 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =     10080 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =     11520 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =     11520 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =     11520 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =     11520 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =     11520 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =     12960 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =     12960 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =     12960 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =     12960 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =     12960 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =     14400 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =     14400 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =     14400 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =     14400 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =     14400 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+ field : ETAN     ; Iter =     15840 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : ETANSQ   ; Iter =     15840 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : DETADT2  ; Iter =     15840 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  5.1006447190980E+14
+ 
+ field : UVEL     ; Iter =     15840 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286335847784E+18
+ 
+ field : VVEL     ; Iter =     15840 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0                  NaN                  NaN                  NaN                  NaN  1.5286299469016E+18
+ 
+# records End here.

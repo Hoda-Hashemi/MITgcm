@@ -1,0 +1,16 @@
+{
+  "alpha": "0",
+  "case": "TC1",
+  "fields": {
+    "eta": "Eta",
+    "u": "U",
+    "v": "V"
+  },
+  "product": "conservation",
+  "saved": [
+    "tc1_mass_conservation",
+    "tc1_mechanical_energy",
+    "tc1_conservation_table"
+  ],
+  "source_run": "/Users/hodahashemi/Documents/Github/Playground/MITgcm/Sandbox/vortexSphere_Williamson_TC1/run_alpha_0"
+}

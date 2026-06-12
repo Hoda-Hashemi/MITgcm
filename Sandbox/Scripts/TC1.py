@@ -13,8 +13,8 @@ CASE_CODE = "TC1"
 CASE_DIR = SCRIPT_DIR.parent / "vortexSphere_Williamson_TC1"
 
 RUN_DIRS = [CASE_DIR / "run_alpha_0"]
-MAKE_SNAPSHOTS = False
-MAKE_ERROR_ANALYSIS = False
+MAKE_SNAPSHOTS = True
+MAKE_ERROR_ANALYSIS = True
 MAKE_CONSERVATION = True
 
 CONSERVATION_SPEC = ConservationSpec(
@@ -59,3 +59,4 @@ if __name__ == "__main__":
     main()
 
 # %%
+

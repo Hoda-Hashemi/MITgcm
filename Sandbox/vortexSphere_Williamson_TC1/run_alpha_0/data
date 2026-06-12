@@ -1,0 +1,84 @@
+# ===============================================================
+# Oceanic Williamson TC1 passive-tracer advection.
+# One-layer, global lat-lon ocean with prescribed solid-body velocity.
+# ===============================================================
+
+# Continuous equation parameters
+&PARM01
+# Planet / fluid
+ omega = 7.292E-5,
+ gravity = 9.81,
+ rhoConst = 1000.,
+ buoyancyRelation = 'OCEANIC',
+ eosType = 'LINEAR',
+ tAlpha = 0.,
+ sBeta = 0.,
+
+# Dynamics switches
+ rigidLid = .FALSE.,
+ implicitFreeSurface = .TRUE.,
+ exactConserv = .TRUE.,
+ momStepping = .FALSE.,
+ momAdvection = .FALSE.,
+ useCoriolis = .TRUE.,
+ tempStepping = .FALSE.,
+ saltStepping = .TRUE.,
+ saltAdvScheme = 33,
+
+# Viscosity / diffusion (set to zero to stay close to inviscid linear regime)
+ viscAh = 0.,
+ viscA4 = 0.,
+ diffKhT = 0.,
+ diffKhS = 0.,
+ no_slip_sides = .FALSE.,
+ no_slip_bottom = .FALSE.,
+ hFacMin = 1.E-5,
+ hFacMinDr = 0.5,
+
+# I/O precision
+ readBinaryPrec = 32,
+ writeBinaryPrec = 64,
+ useSingleCpuIO = .TRUE.,
+/
+
+# Elliptic solver parameters
+&PARM02
+ cg2dMaxIters = 5000,
+ cg2dTargetResidual = 1.E-10,
+ cg2dPreCondFreq = 1,
+/
+
+# Time stepping parameters
+&PARM03
+ nIter0=0,
+ nTimeSteps= 17280 ,
+ abEps=0.1,
+ deltaT=60.,
+ cAdjFreq=0.,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ dumpFreq=86400.,
+ monitorSelect=1,
+ monitorFreq=86400.,
+/
+
+# Grid parameters
+&PARM04
+ usingSphericalPolarGrid = .TRUE.,
+ delX = 1440*0.25,
+ delY = 720*0.25,
+ xgOrigin = 0.,
+ ygOrigin = -90.,
+ rSphere = 6371000.,
+ delR = 4000.,
+/
+
+# Input datasets
+&PARM05
+ checkIniSalt = .FALSE.,
+ bathyFile = 'bathymetry_flat4000.bin',
+ hydrogSaltFile = 'S_init.bin',
+ uVelInitFile   = 'u_init.bin',
+ vVelInitFile   = 'v_init.bin',
+/
+

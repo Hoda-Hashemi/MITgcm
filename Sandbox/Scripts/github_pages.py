@@ -68,7 +68,29 @@ SECTIONS = [
     {
         "slug": "testcase1",
         "title": "Advection of Cosine Bell",
-        "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC1",
+        "cases": [
+            {
+                "label": "TC1 passive tracer",
+                "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC1",
+                "snapshot_fields": [
+                    ("tracer", "Passive Tracer"),
+                    ("etan", "ETAN"),
+                    ("psi", "PsiVEL"),
+                    ("phi", "PhiVEL"),
+                ],
+            },
+            # {
+            #     "label": "TC1 prime free surface",
+            #     "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC1_prime",
+            #     "snapshot_fields": [
+            #         ("eta", "Eta"),
+            #         ("etan", "ETAN"),
+            #         ("psi", "PsiVEL"),
+            #         ("phi", "PhiVEL"),
+            #         ("velocity_magnitude", "Velocity Magnitude"),
+            #     ],
+            # },
+        ],
         "media": [],
         "dynamic_gallery": "tc1",
     },
@@ -87,9 +109,39 @@ SECTIONS = [
     # },
 ]
 
-DATA_COLUMNS = ["rhoConst", "gravity", "deltaT", "nTimeSteps", "dumpFreq", "monitorFreq", "delR"]
+DATA_COLUMNS = [
+    "rhoConst",
+    "gravity",
+    "deltaT",
+    "nTimeSteps",
+    "dumpFreq",
+    "monitorFreq",
+    "delR",
+    "delX",
+    "delY",
+]
 SIZE_COLUMNS = ["sNx", "sNy", "nPx", "nPy", "Nx", "Ny", "mpi_ranks"]
 DAY_PATTERN = re.compile(r"_day_([0-9]+(?:\.[0-9]+)?)")
+CASE_OUTPUT_NAMES = {
+    "TC1_prime": "TestCase1Prime",
+    "TC1": "TestCase1",
+    "TC2": "TestCase2",
+    "TC3": "TestCase3",
+}
+SNAPSHOT_FIELD_LABELS = {
+    "tracer": "Passive Tracer",
+    "eta": "Eta",
+    "etan": "ETAN",
+    "psi": "PsiVEL",
+    "phi": "PhiVEL",
+    "velocity_magnitude": "Velocity Magnitude",
+}
+SNAPSHOT_FIELD_ORDER = {
+    field: index
+    for index, field in enumerate(("tracer", "eta", "etan", "psi", "phi", "velocity_magnitude"))
+}
+COPIED_ASSETS: set[Path] = set()
+MISSING_SNAPSHOT_ROOTS: set[Path] = set()
 
 def parse_data_file(path: Path) -> dict[str, str]:
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -143,6 +195,7 @@ def ensure_docs_asset(source: Path, slug: str) -> str:
 
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, target)
+    COPIED_ASSETS.add(target)
     return target.relative_to(DOCS_DIR).as_posix()
 
 def natural_key(text: str) -> list[str]:
@@ -173,6 +226,125 @@ def alpha_from_name(name: str) -> str:
     if name.startswith("run_alpha_"):
         return name.removeprefix("run_alpha_")
     return name
+
+def label_from_token(token: str) -> str:
+    return SNAPSHOT_FIELD_LABELS.get(token, token.replace("_", " ").title())
+
+def infer_case_output_name(case_dir: Path) -> str | None:
+    case_name = case_dir.name.lower()
+    for case_code, output_name in sorted(CASE_OUTPUT_NAMES.items(), key=lambda item: len(item[0]), reverse=True):
+        if case_code.lower() in case_name:
+            return output_name
+    return None
+
+def section_case_configs(section: dict[str, object]) -> list[dict[str, object]]:
+    configured_cases = section.get("cases")
+    if configured_cases:
+        return [dict(case) for case in configured_cases]  # type: ignore[arg-type]
+
+    case_dir = section.get("case_dir")
+    if case_dir is None:
+        return []
+
+    case: dict[str, object] = {"case_dir": case_dir}
+    for key in ("label", "output_name", "snapshot_fields"):
+        if key in section:
+            case[key] = section[key]
+    return [case]
+
+def case_display_label(case: dict[str, object]) -> str:
+    label = case.get("label")
+    if label:
+        return str(label)
+    case_dir = case.get("case_dir")
+    return Path(case_dir).name if case_dir is not None else ""
+
+def case_snapshot_root(case: dict[str, object]) -> Path | None:
+    case_dir = case.get("case_dir")
+    if case_dir is None:
+        return None
+    case_path = Path(case_dir)
+    output_name = case.get("output_name") or infer_case_output_name(case_path)
+    if output_name is None:
+        return None
+    return SANDBOX_OUTPUT_ROOT / str(output_name) / "Snapshots"
+
+def normalize_snapshot_field(field: object) -> tuple[str, str]:
+    if isinstance(field, dict):
+        folder = str(field["folder"])
+        return folder, str(field.get("label", label_from_token(folder)))
+    if isinstance(field, (list, tuple)):
+        folder = str(field[0])
+        label = str(field[1]) if len(field) > 1 else label_from_token(folder)
+        return folder, label
+    folder = str(field)
+    return folder, label_from_token(folder)
+
+def snapshot_field_sort_key(field: tuple[str, str]) -> tuple[int, list[str]]:
+    folder, label = field
+    return (SNAPSHOT_FIELD_ORDER.get(folder, len(SNAPSHOT_FIELD_ORDER)), natural_key(label))
+
+def discover_snapshot_fields(snapshot_root: Path) -> list[tuple[str, str]]:
+    fields: set[str] = set()
+    for alpha_dir in snapshot_root.glob("alpha_*"):
+        if not alpha_dir.is_dir():
+            continue
+        for field_dir in alpha_dir.iterdir():
+            if field_dir.is_dir() and any(field_dir.glob("*.png")):
+                fields.add(field_dir.name)
+    return sorted(((field, label_from_token(field)) for field in fields), key=snapshot_field_sort_key)
+
+def case_snapshot_fields(case: dict[str, object], snapshot_root: Path) -> list[tuple[str, str]]:
+    configured_fields = case.get("snapshot_fields")
+    if configured_fields:
+        return [normalize_snapshot_field(field) for field in configured_fields]  # type: ignore[union-attr]
+    return discover_snapshot_fields(snapshot_root)
+
+def reduce_to_one_image_per_day(paths: list[Path]) -> list[Path]:
+    by_day: dict[float | str, Path] = {}
+    for path in paths:
+        key: float | str = extract_day(path)
+        if key is None:
+            key = path.name
+        old_path = by_day.get(key)
+        if old_path is None or path_preference(path) > path_preference(old_path):
+            by_day[key] = path
+    return sorted(by_day.values(), key=path_sort_key)
+
+def case_snapshot_items(snapshot_root: Path, folder: str, field_label: str) -> list[dict[str, object]]:
+    items: list[dict[str, object]] = []
+    for alpha_dir in sorted(snapshot_root.glob("alpha_*"), key=lambda path: natural_key(path.name)):
+        field_dir = alpha_dir / folder
+        if not field_dir.is_dir():
+            continue
+        alpha = alpha_from_name(alpha_dir.name)
+        paths = sorted(field_dir.glob("*.png"), key=path_sort_key)
+        items.extend(
+            {
+                "source": path,
+                "caption": f"alpha {alpha}, {field_label}, {day_caption(path)}",
+            }
+            for path in reduce_to_one_image_per_day(paths)
+        )
+    return items
+
+def render_case_snapshot_galleries(case: dict[str, object], slug: str) -> str:
+    snapshot_root = case_snapshot_root(case)
+    if snapshot_root is None:
+        return ""
+    if not snapshot_root.exists():
+        MISSING_SNAPSHOT_ROOTS.add(snapshot_root)
+        return ""
+
+    label = case_display_label(case)
+    sections: list[str] = []
+    for folder, field_label in case_snapshot_fields(case, snapshot_root):
+        items = case_snapshot_items(snapshot_root, folder, field_label)
+        if not items:
+            continue
+        title = f"{label}: {field_label} Snapshots" if label else f"{field_label} Snapshots"
+        sections.append(render_subfigure_gallery(title, items, slug))
+    return "".join(sections)
 
 def comparison_caption(path: Path) -> str:
     parts = list(path.parts)
@@ -368,6 +540,34 @@ def render_table(title: str, columns: list[str], values: dict[str, str]) -> str:
         f"<table><thead><tr>{header}</tr></thead><tbody><tr>{row}</tr></tbody></table></div>"
     )
 
+def render_case_tables(case: dict[str, object], show_label: bool) -> str:
+    case_dir = case.get("case_dir")
+    if case_dir is None:
+        return ""
+
+    case_path = Path(case_dir)
+    data_path = case_path / "input" / "data"
+    size_path = case_path / "code" / "SIZE.h"
+    if not data_path.exists() or not size_path.exists():
+        return ""
+
+    data_values = parse_data_file(data_path)
+    size_values = parse_size_file(size_path)
+    heading = (
+        f"<h3 class='case-heading'>{html.escape(case_display_label(case))}</h3>"
+        if show_label
+        else ""
+    )
+    return (
+        "<div class='case-block'>"
+        f"{heading}"
+        "<div class='tables'>"
+        f"{render_table('Numerical Settings', DATA_COLUMNS, data_values)}"
+        f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values)}"
+        "</div>"
+        "</div>"
+    )
+
 def render_media_card(media: dict[str, object], slug: str) -> str:
     source = Path(media["source"])
     relative_path = ensure_docs_asset(source, slug)
@@ -422,7 +622,6 @@ def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
     if gallery == "tc1":
         return "".join(
             [
-                render_subfigure_gallery("Passive Tracer Snapshots", tc1_snapshot_items(), slug),
                 render_subfigure_gallery("Passive Tracer Overlay Comparisons", tc1_tracer_overlay_items(), slug),
                 render_subfigure_gallery("Error Contours", tc1_error_contour_items(), slug),
             ]
@@ -430,7 +629,6 @@ def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
     if gallery == "tc2":
         return "".join(
             [
-                render_subfigure_gallery("Eta Snapshots", tc2_snapshot_items(), slug),
                 render_subfigure_gallery("Steady-State Error Norms", tc2_error_norm_items(), slug),
             ]
         )
@@ -439,19 +637,11 @@ def render_dynamic_gallery(section: dict[str, object], slug: str) -> str:
 def render_section(section: dict[str, object]) -> str:
     slug = str(section["slug"])
     title = html.escape(str(section["title"]))
-    tables_html = ""
-
-    case_dir = section.get("case_dir")
-    if case_dir is not None:
-        case_path = Path(case_dir)
-        data_values = parse_data_file(case_path / "input" / "data")
-        size_values = parse_size_file(case_path / "code" / "SIZE.h")
-        tables_html = (
-            "<div class='tables'>"
-            f"{render_table('Numerical Settings', DATA_COLUMNS, data_values)}"
-            f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values)}"
-            "</div>"
-        )
+    case_configs = section_case_configs(section)
+    tables_html = "".join(
+        render_case_tables(case, show_label=len(case_configs) > 1)
+        for case in case_configs
+    )
 
     media_items = [
         render_media_card(media, slug)
@@ -461,6 +651,10 @@ def render_section(section: dict[str, object]) -> str:
     media_blocks = []
     if media_items:
         media_blocks.append(f"<div class='media-grid'>{''.join(media_items)}</div>")
+    for case in case_configs:
+        snapshot_html = render_case_snapshot_galleries(case, slug)
+        if snapshot_html:
+            media_blocks.append(snapshot_html)
     dynamic_html = render_dynamic_gallery(section, slug)
     if dynamic_html:
         media_blocks.append(dynamic_html)
@@ -519,7 +713,7 @@ def build_html() -> str:
     main {{
       max-width: 1200px;
       margin: 0 auto;
-      padding: 48px 20px 64px;
+      padding: 32px 14px 44px;
     }}
     h1 {{
       margin: 0 0 12px;
@@ -527,15 +721,15 @@ def build_html() -> str:
       letter-spacing: 0.04em;
     }}
     .intro {{
-      margin: 0 0 28px;
+      margin: 0 0 22px;
       font-size: 1.05rem;
       max-width: 70ch;
     }}
     .nav-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin: 0 0 28px;
+      gap: 12px;
+      margin: 0 0 22px;
     }}
     .nav-card {{
       display: block;
@@ -544,7 +738,7 @@ def build_html() -> str:
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 16px 18px;
+      padding: 14px 16px;
       box-shadow: 0 12px 34px rgba(18, 32, 51, 0.06);
       transition: transform 120ms ease, border-color 120ms ease;
     }}
@@ -565,15 +759,25 @@ def build_html() -> str:
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 24px;
+      padding: 18px;
+      margin-bottom: 18px;
       box-shadow: 0 14px 40px rgba(18, 32, 51, 0.08);
+    }}
+    .case-block {{
+      margin: 16px 0 18px;
+    }}
+    .case-block:first-of-type {{
+      margin-top: 0;
+    }}
+    .case-heading {{
+      margin: 0 0 10px;
+      font-size: 1.05rem;
     }}
     .tables {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
-      margin: 18px 0 20px;
+      gap: 12px;
+      margin: 14px 0 16px;
     }}
     .table-block h3 {{
       margin: 0 0 10px;
@@ -588,7 +792,7 @@ def build_html() -> str:
     }}
     th, td {{
       border: 1px solid var(--line);
-      padding: 8px 10px;
+      padding: 7px 8px;
       text-align: center;
       word-wrap: break-word;
     }}
@@ -598,12 +802,12 @@ def build_html() -> str:
     .media-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
+      gap: 12px;
     }}
     .media-card {{
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 14px;
+      padding: 12px;
       background: #fbfcfe;
     }}
     .media-card h4 {{
@@ -611,7 +815,7 @@ def build_html() -> str:
       font-size: 1rem;
     }}
     .media-section {{
-      margin-top: 18px;
+      margin-top: 14px;
     }}
     .media-section h3 {{
       margin: 0 0 12px;
@@ -621,13 +825,13 @@ def build_html() -> str:
     .subfigure-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
+      gap: 12px;
     }}
     .subfigure {{
       margin: 0;
       border: 1px solid var(--line);
       border-radius: 10px;
-      padding: 10px;
+      padding: 8px;
       background: #fbfcfe;
     }}
     .subfigure figcaption {{
@@ -660,11 +864,18 @@ def build_html() -> str:
 """
 
 def main() -> None:
+    COPIED_ASSETS.clear()
+    MISSING_SNAPSHOT_ROOTS.clear()
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     ASSET_ROOT.mkdir(parents=True, exist_ok=True)
     index_path = DOCS_DIR / "index.html"
     index_path.write_text(build_html(), encoding="utf-8")
     print(f"wrote {index_path}")
+    print(f"copied/updated {len(COPIED_ASSETS)} asset files")
+    if MISSING_SNAPSHOT_ROOTS:
+        print("missing snapshot roots:")
+        for path in sorted(MISSING_SNAPSHOT_ROOTS, key=lambda item: item.as_posix()):
+            print(f"  {path.relative_to(REPO_DIR)}")
 
 if __name__ == "__main__":
     main()
