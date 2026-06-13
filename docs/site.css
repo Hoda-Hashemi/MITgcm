@@ -1,14 +1,13 @@
 :root {
-  --ink: #122033;
-  --muted: #637080;
-  --paper: #f6f7fb;
+  --ink: #102033;
+  --muted: #5f6f7f;
+  --paper: #f4f8fb;
   --card: #ffffff;
-  --panel: #fbfcfe;
-  --accent: #2fff00;
-  --accent-soft: #dff1f3;
-  --line: #d6dbe6;
+  --panel: #eef6f8;
+  --accent: #0077b6;
+  --accent-soft: #d8f3f7;
+  --line: #ccd8e2;
 }
-
 * { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
