@@ -4,7 +4,7 @@
   --paper: #f6f7fb;
   --card: #ffffff;
   --panel: #fbfcfe;
-  --accent: #07a8b6;
+  --accent: #2fff00;
   --accent-soft: #dff1f3;
   --line: #d6dbe6;
 }
@@ -421,3 +421,4 @@ img {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+

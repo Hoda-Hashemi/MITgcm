@@ -9,6 +9,20 @@ from shared import alpha_from_data_mypackage, alpha_from_gendata, read_text_valu
 
 DIAGNOSTIC_STREAMS = {
     "ETAN": "dynDiag",
+    "ETANSQ": "dynDiag",
+    "DETADT2": "dynDiag",
+    "SALT": "dynDiag",
+    "SALTSQ": "dynDiag",
+    "UVEL": "dynDiag",
+    "VVEL": "dynDiag",
+    "UVELMASS": "dynDiag",
+    "VVELMASS": "dynDiag",
+    "momKE": "dynDiag",
+    "K.E.": "dynDiag",
+    "KE": "dynDiag",
+    "momVort3": "dynDiag",
+    "Vort3": "dynDiag",
+    "WVELMASS": "dyn_Aux",
     "PhiVEL": "dyn_Aux",
     "PsiVEL": "dyn_Aux",
 }

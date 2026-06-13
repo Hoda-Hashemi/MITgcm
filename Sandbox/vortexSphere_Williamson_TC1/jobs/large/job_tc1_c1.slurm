@@ -4,7 +4,7 @@
 #SBATCH --partition=large
 #SBATCH --nodelist=onode16
 #SBATCH --nodes=1
-#SBATCH --ntasks=16
+#SBATCH --ntasks=48
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=48G
 #SBATCH --time=1-00:00:00
@@ -23,139 +23,138 @@ source /home/hmh85/scratch/MITgcm/.venv/bin/activate
 export MITGCM_DIR=/home/hmh85/scratch/MITgcm
 export CASE_DIR=$MITGCM_DIR/Sandbox/vortexSphere_Williamson_TC1
 export CASE_NAME=c1
-export PREPARE_MODE=tc1
 export ALPHA_VALUE=0.0
-export BUILD_DIR=$CASE_DIR/build/c1_large16
 export RUN_DIR=$CASE_DIR/run_alpha_0
-export MPI_TASKS=${SLURM_NTASKS:-16}
-export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-16}
-export FINAL_FIELD=S
-export FINAL_ITER=0001036800
-
+export BUILD_DIR=$CASE_DIR/build/$CASE_NAME
+export MPI_TASKS=${SLURM_NTASKS:-48}
+export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-48}
 
 START_TIME=$(date +%s)
-
-echo "======================================"
-echo "MITgcm compile + run"
-echo "Job ID: $SLURM_JOB_ID"
-echo "Nodes:  $SLURM_JOB_NODELIST"
-echo "Start:  $(date)"
-echo "======================================"
 
 TOOLS_DIR=$MITGCM_DIR/tools
 BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
 BUILD_MODS_DIR=$BUILD_DIR/code
+PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC1.py
 
-prepare_size_h() {
-    if [ -n "${SIZE_SNX:-}" ] && [ -n "${SIZE_SNY:-}" ] && [ -n "${SIZE_NPX:-}" ] && [ -n "${SIZE_NPY:-}" ]; then
-        python3 - "$BUILD_MODS_DIR/SIZE.h" "$SIZE_SNX" "$SIZE_SNY" "$SIZE_NPX" "$SIZE_NPY" <<'PY2'
-from pathlib import Path
-import re
-import sys
-
-path = Path(sys.argv[1])
-snx, sny, npx, npy = sys.argv[2:6]
-text = path.read_text()
-patterns = {
-    r'^(\s*PARAMETER \( sNx =\s*)\d+(\s*\).*)$': snx,
-    r'^(\s*PARAMETER \( sNy =\s*)\d+(\s*\).*)$': sny,
-    r'^(\s*PARAMETER \( nPx =\s*)\d+(\s*\).*)$': npx,
-    r'^(\s*PARAMETER \( nPy =\s*)\d+(\s*\).*)$': npy,
-}
-for pattern, value in patterns.items():
-    text, count = re.subn(pattern, rf'\g<1>{value}\g<2>', text, flags=re.MULTILINE)
-    if count != 1:
-        raise SystemExit(f'Failed to patch SIZE.h with pattern: {pattern}')
-path.write_text(text)
-PY2
-    fi
+finish() {
+    local status=$1
+    local end_time elapsed
+    end_time=$(date +%s)
+    elapsed=$((end_time-START_TIME))
+    echo "======================================"
+    echo "End: $(date)"
+    echo "Status: $status"
+    echo "Elapsed: $((elapsed/3600))h $(((elapsed%3600)/60))m $((elapsed%60))s"
+    echo "======================================"
 }
 
-stage_case_inputs() {
-    find "$CASE_DIR/input" -maxdepth 1 -type f -exec cp {} "$RUN_DIR/" \;
-
-    case "$CASE_DIR" in
-        */vortexSphere_Williamson_TC1_prime)
-            sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
-            (cd "$RUN_DIR" && python3 gendata_ref.py)
-            ;;
-        */vortexSphere_Williamson_TC1)
-            sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
-            (cd "$RUN_DIR" && python3 gendata_ref.py)
-            ;;
-        */vortexSphere_Williamson_TC2)
-            case "$CASE_NAME" in
-                c1) suffix="" ;;
-                c2) suffix="_c2" ;;
-                c3) suffix="_c3" ;;
-                c4) suffix="_c4" ;;
-                *)
-                    echo "ERROR: unsupported CASE_NAME=$CASE_NAME" >&2
-                    exit 1
-                    ;;
-            esac
-            if [ -n "$suffix" ]; then
-                cp "$RUN_DIR/eta_init${suffix}.bin" "$RUN_DIR/eta_init.bin"
-                cp "$RUN_DIR/u_init${suffix}.bin" "$RUN_DIR/u_init.bin"
-                cp "$RUN_DIR/v_init${suffix}.bin" "$RUN_DIR/v_init.bin"
-            fi
-            ;;
+require_safe_dir() {
+    local dir=$1
+    case "$dir" in
+        "$CASE_DIR"/build/*|"$CASE_DIR"/run_alpha_*) ;;
         *)
-            echo "ERROR: unsupported CASE_DIR=$CASE_DIR" >&2
+            echo "ERROR: refusing unsafe cleanup target: $dir" >&2
             exit 1
             ;;
     esac
 }
 
+empty_dir_contents() {
+    local dir=$1
+    require_safe_dir "$dir"
+    mkdir -p "$dir"
+    find "$dir" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+}
+
+stage_case_inputs() {
+    find "$CASE_DIR/input" -maxdepth 1 -type f -exec cp {} "$RUN_DIR/" \;
+    sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
+    (cd "$RUN_DIR" && python3 gendata_ref.py)
+}
+
+clean_run_after_plot() {
+    local path name
+    shopt -s nullglob dotglob
+    for path in "$RUN_DIR"/*; do
+        name=${path##*/}
+        case "$name" in
+            data|data.pkg|data.diagnostics|eedata|eedata.mth|gendata_ref.py)
+                continue
+                ;;
+            S_init.bin|u_init.bin|v_init.bin|bathymetry_flat4000.bin|mitgcmuv)
+                continue
+                ;;
+            available_diagnostics.log|run_inventory.log|STDOUT*|STDERR*)
+                continue
+                ;;
+        esac
+        rm -rf -- "$path"
+    done
+    shopt -u nullglob dotglob
+}
+
+echo "======================================"
+echo "MITgcm COMPILE AND RUN"
+echo "Job ID: ${SLURM_JOB_ID:-unknown}"
+echo "Nodes:  ${SLURM_JOB_NODELIST:-unknown}"
+echo "Start:  $(date)"
+echo "======================================"
+
 mkdir -p "$BUILD_DIR" "$RUN_DIR"
 
-# -----------------------------
-# Compile
-# -----------------------------
+echo "Cleaning build directory: $BUILD_DIR"
+empty_dir_contents "$BUILD_DIR"
 cd "$BUILD_DIR" || exit 1
 
-rm -f Makefile
-make CLEAN >/dev/null 2>&1 || true
-rm -rf "$BUILD_MODS_DIR"
 mkdir -p "$BUILD_MODS_DIR"
 find "$CASE_DIR/code" -maxdepth 1 -type f -exec cp {} "$BUILD_MODS_DIR/" \;
-prepare_size_h
 
-"$TOOLS_DIR/genmake2"     -mpi     -mods="$BUILD_MODS_DIR"     -of="$BUILD_OPTIONS"
-
+"$TOOLS_DIR/genmake2" -mpi -mods="$BUILD_MODS_DIR" -of="$BUILD_OPTIONS"
 make depend
-make -j "${MAKE_JOBS:-8}"
+make -j "${MAKE_JOBS}"
 
 if [ ! -x mitgcmuv ]; then
-    echo "ERROR: mitgcmuv not created"
+    echo "ERROR: mitgcmuv not created" >&2
     exit 1
 fi
 
-# -----------------------------
-# Prepare run directory
-# -----------------------------
-find "$RUN_DIR" -maxdepth 1 -type f     \( -name "*.data" -o -name "*.meta" -o -name "*.bin" -o -name "*.py"     -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" -o -name "pickup*"     -o -name "slurm-*" -o -name "available_diagnostics.log" -o -name "run.log"     -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg"     -o -name "data.diagnostics" -o -name "eedata" -o -name "eedata.mth" \)     -delete
-
+echo "Cleaning run directory: $RUN_DIR"
+empty_dir_contents "$RUN_DIR"
 cp mitgcmuv "$RUN_DIR/"
 stage_case_inputs
 
 cd "$RUN_DIR" || exit 1
 
 echo "======================================"
-echo "Running MITgcm"
-echo "MPI tasks = ${MPI_TASKS:-$SLURM_NTASKS}"
+echo "RUNNING MITGCM"
+echo "MPI tasks = ${MPI_TASKS}"
 echo "======================================"
 
-mpirun -np "${MPI_TASKS:-$SLURM_NTASKS}" ./mitgcmuv
-
+set +e
+mpirun -np "${MPI_TASKS}" ./mitgcmuv
 STATUS=$?
-END_TIME=$(date +%s)
-ELAPSED=$((END_TIME-START_TIME))
+set -e
+
+if [ "$STATUS" -ne 0 ]; then
+    finish "$STATUS"
+    exit "$STATUS"
+fi
 
 echo "======================================"
-echo "End: $(date)"
-echo "Status: $STATUS"
-echo "Elapsed: $((ELAPSED/3600))h $(((ELAPSED%3600)/60))m $((ELAPSED%60))s"
+echo "PLOTTING TC1"
+echo "RUN_DIR = $RUN_DIR"
 echo "======================================"
 
-exit $STATUS
+set +e
+TC1_RUN_DIRS="$RUN_DIR" python3 "$PLOT_SCRIPT"
+STATUS=$?
+set -e
+
+if [ "$STATUS" -ne 0 ]; then
+    finish "$STATUS"
+    exit "$STATUS"
+fi
+
+clean_run_after_plot
+finish 0
+exit 0

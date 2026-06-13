@@ -23,8 +23,9 @@
   xPsi0 = 135.,
   yPsi0 =  0.,
 #--
-  fields(1:6,3) = 'UVEL    ','VVEL    ',
+  fields(1:8,3) = 'UVEL    ','VVEL    ',
                   'ETAN    ','ETANSQ  ','SALT    ','SALTSQ  ',
+                  'momKE ', 'momVort3',
   fileName(3) = 'dynDiag',
   frequency(3) = -86400.,
   timePhase(3) = 0.,
@@ -61,3 +62,4 @@
    stat_freq(1) = -86400.,
   stat_phase(1) = 0.,
  &
+

@@ -16,6 +16,12 @@ ASSET_ROOT = DOCS_DIR / "assets" / "williamson"
 FRAGMENT_DIR = DOCS_DIR / "fragments"
 SANDBOX_OUTPUT_ROOT = SANDBOX_DIR / "output"
 SITE_TITLE = "SHALLOW WATER MITGCM VERIFICATION CASES"
+FAVICON_HREF = (
+    "data:image/svg+xml,"
+    "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E"
+    "%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8A%3C/text%3E"
+    "%3C/svg%3E"
+)
 
 SECTIONS = [
     {
@@ -69,6 +75,7 @@ SECTIONS = [
     {
         "slug": "testcase1",
         "title": "Advection of Cosine Bell",
+        "summary": "",
         "cases": [
             {
                 "label": "TC1 passive tracer",
@@ -159,7 +166,7 @@ SNAPSHOT_FIELD_LABELS = {
     "velocity_magnitude": "Velocity Magnitude",
 }
 SNAPSHOT_FIELD_UNITS = {
-    "tracer": "m",
+    "tracer": "psu",
     "eta": "m",
     "etan": "m",
     "psi": "m<sup>3</sup> s<sup>-1</sup>",
@@ -991,12 +998,13 @@ def build_html() -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{SITE_TITLE}</title>
+  <link rel="icon" href="{FAVICON_HREF}">
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
   <header class="site-header">
     <h1>{SITE_TITLE}</h1>
-    <p class="intro">Verification homepage for the shallow-water MITgcm experiments. Use the section navigation to inspect current results.</p>
+    <p class="intro">Verification homepage for the shallow-water MITgcm experiments.</p>
   </header>
   <div class="site-layout">
     {nav_html}
