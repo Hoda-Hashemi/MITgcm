@@ -5,28 +5,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SHALLOW WATER MITGCM VERIFICATION CASES</title>
+  <title>WILLIAMSON TESTS</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8A%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
   <header class="site-header">
-    <h1>SHALLOW WATER MITGCM VERIFICATION CASES</h1>
-    <p class="intro">Verification homepage for the shallow-water MITgcm experiments.</p>
+    <h1>WILLIAMSON TESTS</h1>
+    <p class="intro">Source-backed MITgcm shallow-water verification pages for the Williamson et al. standard spherical test suite.</p>
+    <div class='source-strip'><a class='source-pill' href='https://www.sciencedirect.com/science/article/pii/S0021999105800166' target='_blank' rel='noopener noreferrer'><strong>ScienceDirect JCP article</strong><span>Williamson et al., Journal of Computational Physics 102(1), 211-224, 1992.</span></a><a class='source-pill' href='https://www.osti.gov/servlets/purl/5232139' target='_blank' rel='noopener noreferrer'><strong>OSTI full report</strong><span>Open report version with the shallow-water equation forms and test definitions.</span></a><a class='source-pill' href='https://digital.library.unt.edu/ark:/67531/metadc1069483/' target='_blank' rel='noopener noreferrer'><strong>UNT archived record</strong><span>Archived metadata and downloadable report record.</span></a></div>
   </header>
   <div class="site-layout">
     <aside class='side-nav'>
-      <strong>Experiments</strong>
+      <strong>Williamson Tests</strong>
+      <a href='#testcase1'>Williamson TC1: Advection of Cosine Bell</a>
+      <a href='#testcase2'>Williamson TC2: Global Steady-State Nonlinear Zonal Geostrophic Flow</a>
+      <a href='#testcase3'>Williamson TC3: Steady Geostrophic Flow with Compact Support</a>
+      <a href='#testcase4'>Williamson TC4: Forced Nonlinear Translating Low</a>
+      <a href='#testcase5'>Williamson TC5: Zonal Flow Over an Isolated Mountain</a>
+      <a href='#testcase6'>Williamson TC6: Rossby-Haurwitz Wave</a>
+      <a href='#testcase7'>Williamson TC7: Analyzed 500 mb Initial State</a>
       <a href='#case1_constant_bathymetry'>Gaussian Patch Free Surface Initialization with Constant Bathymetry</a>
       <a href='#case2_real_bathymetry'>Gaussian Patch Free Surface Initialization with Real Bathymetry</a>
       <a href='#case3_geostrophic_adjustment'>Geostrophic Free Surface Initialization with Real Bathymetry</a>
-      <a href='#testcase1'>Advection of Cosine Bell</a>
     </aside>
     <main>
+      {% include_relative fragments/testcase1.html %}
+      {% include_relative fragments/testcase2.html %}
+      {% include_relative fragments/testcase3.html %}
+      {% include_relative fragments/testcase4.html %}
+      {% include_relative fragments/testcase5.html %}
+      {% include_relative fragments/testcase6.html %}
+      {% include_relative fragments/testcase7.html %}
       {% include_relative fragments/case1_constant_bathymetry.html %}
       {% include_relative fragments/case2_real_bathymetry.html %}
       {% include_relative fragments/case3_geostrophic_adjustment.html %}
-      {% include_relative fragments/testcase1.html %}
     </main>
   </div>
   <div class="plot-modal" data-modal hidden>
