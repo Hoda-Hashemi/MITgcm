@@ -41,13 +41,43 @@ if ("IntersectionObserver" in window && sections.length) {
 
       const id = `#${visible.target.id}`;
       navLinks.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === id);
+        const active = link.getAttribute("href") === id;
+        link.classList.toggle("is-active", active);
+        link.classList.toggle("active", active);
       });
     },
     { rootMargin: "-18% 0px -68% 0px", threshold: [0.08, 0.24, 0.5] }
   );
 
   sections.forEach((section) => navObserver.observe(section));
+}
+
+const parallaxLayers = Array.from(document.querySelectorAll("[data-parallax]"));
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let parallaxPending = false;
+
+function updateParallax() {
+  const scrollY = window.scrollY || window.pageYOffset || 0;
+  parallaxLayers.forEach((layer) => {
+    const speed = Number(layer.getAttribute("data-parallax")) || 0;
+    layer.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+  });
+  parallaxPending = false;
+}
+
+if (parallaxLayers.length && !reducedMotion) {
+  updateParallax();
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (parallaxPending) {
+        return;
+      }
+      parallaxPending = true;
+      window.requestAnimationFrame(updateParallax);
+    },
+    { passive: true }
+  );
 }
 
 function closeModal(modal) {
@@ -78,6 +108,10 @@ document.addEventListener("click", (event) => {
       panel.classList.toggle("is-active", active);
       panel.hidden = !active;
     });
+
+    if (tabsRoot && window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([tabsRoot]);
+    }
     return;
   }
 

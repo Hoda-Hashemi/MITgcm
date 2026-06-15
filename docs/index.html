@@ -8,27 +8,41 @@
   <title>WILLIAMSON TESTS</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8A%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="site.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
   <header class="site-header">
     <h1>WILLIAMSON TESTS</h1>
     <p class="intro">MITgcm shallow-water verification pages for the Williamson standard spherical test suite.</p>
+    <p class="site-credit">Code and website by Hoda Hashemi</p>
   </header>
   <div class="site-layout">
     <aside class='side-nav'>
-      <strong>Williamson Tests</strong>
-      <a href='#testcase1'>Williamson TC1: Advection of Cosine Bell</a>
-      <a href='#testcase2'>Williamson TC2: Global Steady-State Nonlinear Zonal Geostrophic Flow</a>
-      <a href='#testcase3'>Williamson TC3: Steady Geostrophic Flow with Compact Support</a>
-      <a href='#testcase4'>Williamson TC4: Forced Nonlinear Translating Low</a>
-      <a href='#testcase5'>Williamson TC5: Zonal Flow Over an Isolated Mountain</a>
-      <a href='#testcase6'>Williamson TC6: Rossby-Haurwitz Wave</a>
-      <a href='#testcase7'>Williamson TC7: Analyzed 500 mb Initial State</a>
-      <a href='#case1_constant_bathymetry'>Gaussian Patch Free Surface Initialization with Constant Bathymetry</a>
-      <a href='#case2_real_bathymetry'>Gaussian Patch Free Surface Initialization with Real Bathymetry</a>
-      <a href='#case3_geostrophic_adjustment'>Geostrophic Free Surface Initialization with Real Bathymetry</a>
+      <strong>Experiments</strong>
+      <a class='nav-link' href='#home'>Home</a>
+      <a class='nav-link' href='#testcase1'>TC1 - Cosine bell</a>
+      <a class='nav-link' href='#testcase2'>TC2 - Steady zonal</a>
+      <a class='nav-link' href='#testcase3'>TC3 - Compact jet</a>
+      <a class='nav-link' href='#testcase4'>TC4 - Translating low</a>
+      <a class='nav-link' href='#testcase5'>TC5 - Mountain flow</a>
+      <a class='nav-link' href='#testcase6'>TC6 - Rossby wave</a>
+      <a class='nav-link' href='#testcase7'>TC7 - 500 mb state</a>
+      <a class='nav-link' href='#case1_constant_bathymetry'>Patch - Constant depth</a>
+      <a class='nav-link' href='#case2_real_bathymetry'>Patch - Real bathymetry</a>
+      <a class='nav-link' href='#case3_geostrophic_adjustment'>Geostrophic adjustment</a>
     </aside>
     <main>
+      <section id='home' class='home-section hero section-card' data-parallax-root><div class='parallax-layer parallax-layer-one' data-parallax='0.10'></div><div class='parallax-layer parallax-layer-two' data-parallax='0.18'></div><div class='home-copy'><span class='section-label'>MITgcm verification website</span><h2>Shallow-water experiments on the sphere</h2><p>This site presents MITgcm shallow-water verification experiments, including the Williamson standard test cases and free-surface initialization runs over constant and real bathymetry. Each section collects the governing equations, expected output, numerical settings, snapshots, and available result diagnostics.</p><p class='author-credit'>Code and website by <strong>Hoda Hashemi</strong>.</p><div class='home-actions'><a class='btn-primary' href='#testcase1'>Start with TC1</a><a class='btn-secondary' href='#case1_constant_bathymetry'>View initialization runs</a></div></div><div class='home-experiment-list'><h3>Experiments</h3><a class='home-experiment-link' href='#testcase1'><span>Williamson testcase</span><strong>TC1 - Cosine bell</strong></a><a class='home-experiment-link' href='#testcase2'><span>Williamson testcase</span><strong>TC2 - Steady zonal</strong></a><a class='home-experiment-link' href='#testcase3'><span>Williamson testcase</span><strong>TC3 - Compact jet</strong></a><a class='home-experiment-link' href='#testcase4'><span>Williamson testcase</span><strong>TC4 - Translating low</strong></a><a class='home-experiment-link' href='#testcase5'><span>Williamson testcase</span><strong>TC5 - Mountain flow</strong></a><a class='home-experiment-link' href='#testcase6'><span>Williamson testcase</span><strong>TC6 - Rossby wave</strong></a><a class='home-experiment-link' href='#testcase7'><span>Williamson testcase</span><strong>TC7 - 500 mb state</strong></a><a class='home-experiment-link' href='#case1_constant_bathymetry'><span>Initialization experiment</span><strong>Patch - Constant depth</strong></a><a class='home-experiment-link' href='#case2_real_bathymetry'><span>Initialization experiment</span><strong>Patch - Real bathymetry</strong></a><a class='home-experiment-link' href='#case3_geostrophic_adjustment'><span>Initialization experiment</span><strong>Geostrophic adjustment</strong></a></div></section>
       {% include_relative fragments/testcase1.html %}
       {% include_relative fragments/testcase2.html %}
       {% include_relative fragments/testcase3.html %}
