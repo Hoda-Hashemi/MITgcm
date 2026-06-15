@@ -194,6 +194,7 @@ function scrollToSection(hash) {
 }
 
 decoratePage();
+window.addEventListener("load", () => typesetMath(document.body));
 
 if (navToggle) {
   navToggle.addEventListener("click", () => {
@@ -294,6 +295,15 @@ document.addEventListener("click", (event) => {
     caption.textContent = openButton.getAttribute("data-modal-caption") || "";
     modal.hidden = false;
     return;
+  }
+
+  const detailLink = event.target.closest("a[href^='#']");
+  if (detailLink) {
+    const target = document.querySelector(detailLink.getAttribute("href"));
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
+      typesetMath(target);
+    }
   }
 
   if (modal && (event.target.closest("[data-modal-close]") || event.target === modal)) {
