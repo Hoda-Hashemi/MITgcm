@@ -1,7 +1,7 @@
 document.body.classList.add("js-ready");
 
 const revealTargets = document.querySelectorAll(
-  ".section-card, .info-card, .metric-card, .subfigure"
+  ".section-card, .description-block, .metric-card, .subfigure"
 );
 
 if ("IntersectionObserver" in window) {
