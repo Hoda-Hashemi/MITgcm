@@ -1,10 +1,4 @@
-document.body.classList.add("js-ready");
-
-const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-const prefersReducedMotion = reducedMotionQuery.matches;
-
 const navToggle = document.querySelector("[data-nav-toggle]");
-const navDrawer = document.querySelector("[data-nav-drawer]");
 const navClose = document.querySelector("[data-nav-close]");
 const navBackdrop = document.querySelector("[data-nav-backdrop]");
 const navLinks = Array.from(document.querySelectorAll(".side-nav a[href^='#']"));
@@ -44,16 +38,15 @@ function scrollToSection(hash) {
   if (!target) {
     return;
   }
-  target.scrollIntoView({
-    behavior: prefersReducedMotion ? "auto" : "smooth",
-    block: "start",
-  });
+  target.scrollIntoView({ block: "start" });
   window.history.replaceState(null, "", hash);
   setActiveNav(hash);
 }
 
 if (navToggle) {
-  navToggle.addEventListener("click", () => setNavOpen(!document.body.classList.contains("nav-open")));
+  navToggle.addEventListener("click", () => {
+    setNavOpen(!document.body.classList.contains("nav-open"));
+  });
 }
 
 [navClose, navBackdrop].forEach((control) => {
@@ -102,54 +95,6 @@ if (sections.length) {
   updateActiveFromScroll();
   window.addEventListener("scroll", requestActiveUpdate, { passive: true });
   window.addEventListener("resize", requestActiveUpdate);
-}
-
-const revealTargets = document.querySelectorAll(
-  ".section-card, .description-block, .metric-card, .subfigure"
-);
-
-if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
-  );
-
-  revealTargets.forEach((target) => revealObserver.observe(target));
-} else {
-  revealTargets.forEach((target) => target.classList.add("is-visible"));
-}
-
-const parallaxLayers = Array.from(document.querySelectorAll("[data-parallax]"));
-let parallaxPending = false;
-
-function updateParallax() {
-  const scrollY = window.scrollY || window.pageYOffset || 0;
-  parallaxLayers.forEach((layer) => {
-    const speed = Number(layer.getAttribute("data-parallax")) || 0;
-    layer.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
-  });
-  parallaxPending = false;
-}
-
-function requestParallaxUpdate() {
-  if (parallaxPending) {
-    return;
-  }
-  parallaxPending = true;
-  window.requestAnimationFrame(updateParallax);
-}
-
-if (parallaxLayers.length && !prefersReducedMotion) {
-  updateParallax();
-  window.addEventListener("scroll", requestParallaxUpdate, { passive: true });
 }
 
 function closeModal(modal) {
