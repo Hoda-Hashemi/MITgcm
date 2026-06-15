@@ -1,0 +1,38 @@
+{
+  "alpha": "1.52",
+  "case": "TC2",
+  "fields": {
+    "eta": "Eta",
+    "kinetic": "momKE",
+    "scalar": null,
+    "u": "U",
+    "v": "V",
+    "vorticity": null
+  },
+  "iterations": [
+    0,
+    115200,
+    230400,
+    345600,
+    460800,
+    576000,
+    691200,
+    806400,
+    921600,
+    1036800,
+    1152000,
+    1267200,
+    1382400
+  ],
+  "product": "conservation",
+  "saved": [
+    "conservation_timeseries.csv"
+  ],
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.52",
+  "summary": {
+    "max_abs_mass_rel_change": 6.374269012029547e-16,
+    "max_abs_mechanical_energy_rel_change": 0.14785896379801106,
+    "max_abs_potential_enstrophy_rel_change": 0.02204506047848028,
+    "max_abs_tracer_mass_rel_change": NaN
+  }
+}

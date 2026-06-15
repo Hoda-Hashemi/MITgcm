@@ -1,0 +1,23 @@
+{
+  "case": "TC4",
+  "configured_diagnostics": [
+    "UVEL",
+    "VVEL",
+    "ETAN",
+    "ETANSQ",
+    "momKE",
+    "dynDiag",
+    "WVELMASS",
+    "PhiVEL",
+    "PsiVEL",
+    "dyn_Aux",
+    "D",
+    "dynStDiag"
+  ],
+  "product": "conservation",
+  "reason": "scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified",
+  "saved": [
+    "conservation_summary.json"
+  ],
+  "status": "unavailable"
+}

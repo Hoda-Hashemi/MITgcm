@@ -1,0 +1,77 @@
+<section id='cfl-deltat-audit' class='section-card experiment-section'>
+  <header class='experiment-top'>
+    <div>
+      <span class='section-label'>Numerical audit</span>
+      <h2>CFL and deltaT Audit</h2>
+    </div>
+    <div class='metric-grid'>
+      <div class='metric-card'><span>Grid</span><strong>1440 x 720</strong></div>
+      <div class='metric-card'><span>Min dx</span><strong>60.65 m</strong></div>
+      <div class='metric-card'><span>dy</span><strong>27.80 km</strong></div>
+      <div class='metric-card'><span>Warn CFL</span><strong>0.5</strong></div>
+    </div>
+  </header>
+  <div class='experiment-body'>
+    <article class='experiment-description' aria-label='CFL audit details'>
+      <section class='description-block detail-definition'>
+        <h3>Equations</h3>
+        <div class='description-copy'>
+          <p>The advective audit uses the local spherical-polar metrics from the 0.25 degree grid:</p>
+          <div class='equation-box'>
+            <div class='math-line'>\[C_{adv}=\Delta t\left(\frac{|u|}{\Delta x}+\frac{|v|}{\Delta y}\right)\]</div>
+            <div class='math-line'>\[\Delta x=a\cos\phi\,\Delta\lambda,\quad \Delta y=a\Delta\phi\]</div>
+            <div class='math-line'>\[C_g=\frac{\sqrt{gH}\,\Delta t}{\Delta x}\]</div>
+          </div>
+          <p>The polar row dominates the metric audit: center-cell <code>dx_min=60.65 m</code>, while <code>dy=27798.73 m</code>. The gravity-wave CFL is shown as an explicit-wave diagnostic only because every active data file has <code>implicitFreeSurface=.TRUE.</code>.</p>
+        </div>
+      </section>
+      <section class='description-block detail-measure'>
+        <h3>How deltaT Was Chosen</h3>
+        <div class='description-copy'>
+          <p>The template <code>input/data</code> files provide the grid and default schedule, but the submitted Slurm files are the source of truth for runs. Each job exports <code>DELTA_T</code>, computes <code>nTimeSteps=round(TOTAL_SECONDS/DELTA_T)</code>, copies the input directory, then rewrites the run-local <code>data</code> file. The table keeps template, job, and archived-run <code>deltaT</code> separate.</p>
+          <p>TC1 has the most visible discrepancy: its legacy <code>tools/check_cfl_tc1.py</code> prints the template <code>deltaT=1 s</code>, while the submitted jobs use <code>60 s</code>, <code>10 s</code>, or <code>0.75 s</code>. Use this audit table for submitted-run CFL decisions.</p>
+          <p>The small near-polar/tilted cases use <code>0.75 s</code>, the mildly tilted cases use <code>10 s</code>, standard zonal cases use <code>60 s</code>, and TC6 uses <code>30 s</code>.</p>
+        </div>
+      </section>
+      <section class='description-block detail-expected'>
+        <h3>Decision</h3>
+        <div class='description-copy'>
+          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 becomes non-finite after iteration 1440 despite an initial advective CFL of 0.043, so that case needs a run-health investigation rather than a CFL-only explanation.</p>
+          <p>TC4 and TC7 are not submission-ready from the full experiment perspective: TC4 still needs the analytic forcing implementation, and TC7 still needs the raw NPZ initial-condition source. Their CFL entries are preflight checks only.</p>
+        </div>
+      </section>
+    </article>
+    <div class='settings-stack'>
+      <div class='table-block data-panel'>
+        <h3>Compact CFL Table</h3>
+        <div class='table-scroll'><table><thead><tr><th>Case</th><th>Run</th><th>alpha(rad)</th><th>template dt(s)</th><th>job dt(s)</th><th>run dt(s)</th><th>steps</th><th>H(m)</th><th>sqrt(gH)</th><th>init adv CFL</th><th>saved adv CFL</th><th>max speed</th><th>explicit Cg,x</th><th>Decision</th></tr></thead><tbody><tr><td>TC1</td><td>alpha=0</td><td>0</td><td>1.00</td><td>60.0</td><td>60.0</td><td>17280</td><td>4000</td><td>198</td><td>0.083</td><td>0.083</td><td>38.6</td><td>196</td><td>no advective deltaT change indicated</td></tr><tr><td>TC1</td><td>alpha=0.05</td><td>0.05</td><td>1.00</td><td>10.0</td><td>10.0</td><td>103680</td><td>4000</td><td>198</td><td>0.332</td><td>0.332</td><td>38.6</td><td>32.7</td><td>no advective deltaT change indicated</td></tr><tr><td>TC1</td><td>alpha=1.52</td><td>1.5208</td><td>1.00</td><td>0.75</td><td>0.75</td><td>1382400</td><td>4000</td><td>198</td><td>0.490</td><td>0.477</td><td>38.7</td><td>2</td><td>no advective deltaT change indicated</td></tr><tr><td>TC1</td><td>alpha=1.57</td><td>1.5708</td><td>1.00</td><td>0.75</td><td>0.75</td><td>1382400</td><td>4000</td><td>198</td><td>0.477</td><td>0.477</td><td>38.7</td><td>2</td><td>no advective deltaT change indicated</td></tr><tr><td>TC2</td><td>alpha=0</td><td>0</td><td>60.0</td><td>60.0</td><td>60.0</td><td>17280</td><td>2997</td><td>171</td><td>0.083</td><td>0.083</td><td>38.6</td><td>170</td><td>no advective deltaT change indicated</td></tr><tr><td>TC2</td><td>alpha=0.05</td><td>0.05</td><td>60.0</td><td>10.0</td><td>10.0</td><td>103680</td><td>2997</td><td>171</td><td>0.332</td><td>0.560</td><td>39.0</td><td>28.3</td><td>above 0.5 margin; use deltaT &lt;= 8.93 s for margin</td></tr><tr><td>TC2</td><td>alpha=1.52</td><td>1.5208</td><td>60.0</td><td>0.75</td><td>0.75</td><td>1382400</td><td>2997</td><td>171</td><td>0.477</td><td>0.477</td><td>38.7</td><td>2</td><td>no advective deltaT change indicated</td></tr><tr><td>TC2</td><td>alpha=1.57</td><td>1.5708</td><td>60.0</td><td>0.75</td><td>0.75</td><td>1382400</td><td>2997</td><td>171</td><td>0.477</td><td>0.477</td><td>38.7</td><td>2</td><td>no advective deltaT change indicated</td></tr><tr><td>TC3</td><td>alpha=0</td><td>0</td><td>60.0</td><td>60.0</td><td>60.0</td><td>7200</td><td>2997</td><td>171</td><td>0.124</td><td>0.124</td><td>38.6</td><td>170</td><td>no advective deltaT change indicated</td></tr><tr><td>TC3</td><td>alpha=1.0472</td><td>1.0472</td><td>60.0</td><td>0.75</td><td>0.75</td><td>576000</td><td>2997</td><td>171</td><td>0.477</td><td>0.477</td><td>38.7</td><td>2</td><td>no advective deltaT change indicated</td></tr><tr><td>TC4</td><td>alpha=0</td><td>0</td><td>60.0</td><td>60.0</td><td>n/a</td><td>7200</td><td>2997</td><td>171</td><td>0.083</td><td>n/a</td><td>38.6</td><td>170</td><td>no advective deltaT change indicated</td></tr><tr><td>TC5</td><td>standard</td><td>0</td><td>60.0</td><td>60.0</td><td>60.0</td><td>21600</td><td>5960</td><td>242</td><td>0.043</td><td>0.043</td><td>20.0</td><td>239</td><td>investigate non-finite run; not explained by initial advective CFL</td></tr><tr><td>TC6</td><td>standard</td><td>0</td><td>30.0</td><td>30.0</td><td>30.0</td><td>40320</td><td>8000</td><td>280</td><td>0.126</td><td>0.131</td><td>95.2</td><td>139</td><td>no advective deltaT change indicated</td></tr><tr><td>TC7</td><td>analysis</td><td>0</td><td>60.0</td><td>60.0</td><td>n/a</td><td>7200</td><td>8000</td><td>280</td><td>n/a</td><td>n/a</td><td>n/a</td><td>277</td><td>cannot verify advective CFL until inputs/run output exist</td></tr></tbody></table></div>
+      </div>
+      <details class='details-panel case-block' open>
+        <summary>Check commands</summary>
+        <pre><code>cd /home/hmh85/scratch/MITgcm
+/home/hmh85/scratch/MITgcm/.venv/bin/python Sandbox/Scripts/cfl_deltaT_audit.py --write-fragments
+
+cd Sandbox/vortexSphere_Williamson_TC1
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc1.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC2
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc2.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC3
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc3.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC4
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc4.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC5
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc5.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC6
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc6.py --all
+
+cd Sandbox/vortexSphere_Williamson_TC7
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc7.py --all</code></pre>
+      </details>
+    </div>
+  </div>
+</section>

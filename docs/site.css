@@ -1560,6 +1560,10 @@ mjx-container[jax="SVG"] svg {
   border-bottom-color: rgba(176, 132, 255, 0.42);
 }
 
+.audit-plot-grid {
+  padding: 12px;
+}
+
 .error-details {
   padding: 0;
 }

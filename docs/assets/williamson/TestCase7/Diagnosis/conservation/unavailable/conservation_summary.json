@@ -1,0 +1,42 @@
+{
+  "alpha": "unavailable",
+  "availability": {
+    "configured_diagnostics": [
+      "UVEL",
+      "VVEL",
+      "ETAN",
+      "ETANSQ",
+      "momKE",
+      "dynDiag",
+      "WVELMASS",
+      "PhiVEL",
+      "PsiVEL",
+      "dyn_Aux",
+      "D",
+      "dynStDiag"
+    ],
+    "derived": {},
+    "diagnostic_stream_fields": {},
+    "direct_mds_counts": {}
+  },
+  "case": "TC7",
+  "energy_verdict": "unavailable",
+  "enstrophy_verdict": "unavailable",
+  "fields": "",
+  "first_bad_day": null,
+  "health_verdict": "unavailable",
+  "iterations": 0,
+  "last_day": null,
+  "mass_verdict": "unavailable",
+  "max_abs_mass_rel_change": null,
+  "max_abs_mechanical_energy_rel_change": null,
+  "max_abs_potential_enstrophy_rel_change": null,
+  "max_abs_tracer_mass_rel_change": null,
+  "min_state_finite_fraction": null,
+  "nonfinite_state_records": 0,
+  "output_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase7/Diagnosis/conservation/unavailable",
+  "quantity_verdict": "unavailable",
+  "reason": "needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked",
+  "run_dir": "",
+  "status": "unavailable"
+}

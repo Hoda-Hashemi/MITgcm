@@ -1,0 +1,70 @@
+<section id="submission-readiness" class="section-card experiment-section status-pending">
+  <header class="experiment-top">
+    <div>
+      <span class="section-label">Numerical audit</span>
+      <h2>Submission Readiness <span class="status-chip status-pending">Runbook</span></h2>
+      <p class="experiment-summary">Audit date: 2026-06-16. Final-submit commands tonight: TC1, TC2 after archive/restage, TC3 after archive/restage, and TC6.</p>
+    </div>
+    <div class="metric-grid">
+      <div class="metric-card"><span>Submit</span><strong>TC1 TC2 TC3 TC6</strong></div>
+      <div class="metric-card"><span>Blocked</span><strong>TC4 TC7</strong></div>
+      <div class="metric-card"><span>Debug only</span><strong>TC5</strong></div>
+    </div>
+  </header>
+  <div class="experiment-body">
+    <div class="settings-stack">
+      <div class="table-block data-panel">
+        <h3>Tonight Actions</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Case</th>
+                <th>Tonight action</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TC1</td>
+                <td>Submit/rerun after optional cleanup</td>
+                <td>Ready; current run ends normally, but TC1 alpha <code>1.57</code> has stale extra iterations/assets.</td>
+              </tr>
+              <tr>
+                <td>TC2</td>
+                <td>Archive stale run dirs, then submit</td>
+                <td>Templates fixed; current run dirs lack <code>selectCoriMap=3</code> and <code>fCori*.bin</code>.</td>
+              </tr>
+              <tr>
+                <td>TC3</td>
+                <td>Archive stale run dirs, then submit</td>
+                <td>Templates fixed; current run dirs lack <code>selectCoriMap=3</code> and <code>fCori*.bin</code>.</td>
+              </tr>
+              <tr>
+                <td>TC4</td>
+                <td>Do not submit</td>
+                <td>Forced case is still scaffold/pending validation.</td>
+              </tr>
+              <tr>
+                <td>TC5</td>
+                <td>Debug-only</td>
+                <td>Current fields are finite at iter <code>0000000000</code>, then non-finite from iter <code>0000001440</code> onward.</td>
+              </tr>
+              <tr>
+                <td>TC6</td>
+                <td>Submit/rerun</td>
+                <td>Ready; final fields finite through iter <code>0000040320</code>.</td>
+              </tr>
+              <tr>
+                <td>TC7</td>
+                <td>Do not submit</td>
+                <td>Missing <code>input/raw/tc7_initial_conditions.npz</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="section-note">No final submission for TC4, TC5, or TC7.</p>
+  </div>
+</section>

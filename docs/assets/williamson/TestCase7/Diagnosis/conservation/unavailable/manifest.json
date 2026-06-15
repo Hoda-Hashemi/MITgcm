@@ -1,0 +1,23 @@
+{
+  "case": "TC7",
+  "configured_diagnostics": [
+    "UVEL",
+    "VVEL",
+    "ETAN",
+    "ETANSQ",
+    "momKE",
+    "dynDiag",
+    "WVELMASS",
+    "PhiVEL",
+    "PsiVEL",
+    "dyn_Aux",
+    "D",
+    "dynStDiag"
+  ],
+  "product": "conservation",
+  "reason": "needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked",
+  "saved": [
+    "conservation_summary.json"
+  ],
+  "status": "unavailable"
+}

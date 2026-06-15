@@ -1,0 +1,123 @@
+{
+  "alpha": "1.57",
+  "availability": {
+    "configured_diagnostics": [
+      "UVEL",
+      "VVEL",
+      "ETAN",
+      "ETANSQ",
+      "momKE",
+      "dynDiag",
+      "WVELMASS",
+      "PhiVEL",
+      "PsiVEL",
+      "dyn_Aux",
+      "D",
+      "dynStDiag"
+    ],
+    "derived": {
+      "free_surface_integral": true,
+      "kinetic_energy": true,
+      "mass": true,
+      "potential_enstrophy": true,
+      "potential_vorticity": true,
+      "relative_vorticity": true,
+      "tracer_amount": false
+    },
+    "diagnostic_stream_fields": {
+      "dynDiag": [
+        "UVEL",
+        "VVEL",
+        "ETAN",
+        "ETANSQ",
+        "momKE"
+      ],
+      "dyn_Aux": [
+        "WVELMASS",
+        "PhiVEL",
+        "PsiVEL"
+      ]
+    },
+    "direct_mds_counts": {
+      "DRC": 1,
+      "DRF": 1,
+      "DXC": 1,
+      "DXF": 1,
+      "DXG": 1,
+      "DXV": 1,
+      "DYC": 1,
+      "DYF": 1,
+      "DYG": 1,
+      "DYU": 1,
+      "Depth": 1,
+      "Eta": 13,
+      "PH": 12,
+      "PHL": 12,
+      "PHrefC": 1,
+      "PHrefF": 1,
+      "RAC": 1,
+      "RAS": 1,
+      "RAW": 1,
+      "RAZ": 1,
+      "RC": 1,
+      "RF": 1,
+      "RhoRef": 1,
+      "S": 13,
+      "T": 13,
+      "U": 13,
+      "V": 13,
+      "W": 13,
+      "XC": 1,
+      "XG": 1,
+      "YC": 1,
+      "YG": 1,
+      "dynDiag": 12,
+      "dyn_Aux": 12,
+      "hFacC": 1,
+      "hFacS": 1,
+      "hFacW": 1
+    },
+    "field_iteration_counts": {
+      "eta": 13,
+      "kinetic": 12,
+      "u": 13,
+      "v": 13
+    },
+    "interpreted_fields": {
+      "eta": "Eta",
+      "kinetic": "momKE",
+      "scalar": null,
+      "u": "U",
+      "v": "V",
+      "vorticity": null
+    }
+  },
+  "case": "TC2",
+  "energy_verdict": "not preserved",
+  "enstrophy_verdict": "not preserved",
+  "fields": "eta:Eta,u:U,v:V,kinetic:momKE",
+  "first_bad_day": null,
+  "health_verdict": "finite state fields",
+  "iterations": 13,
+  "last_day": 12.0,
+  "last_values": {
+    "mass_rel_change": 2.1247563339776976e-16,
+    "mechanical_energy_rel_change": -0.14634970001105785,
+    "potential_enstrophy_rel_change": -0.00019494194907520887,
+    "tracer_mass_rel_change": null
+  },
+  "mass_verdict": "preserved to roundoff",
+  "max_abs_mass_rel_change": 8.49902533591079e-16,
+  "max_abs_mechanical_energy_rel_change": 0.14634970001105785,
+  "max_abs_potential_enstrophy_rel_change": 0.02186729782856435,
+  "max_abs_tracer_mass_rel_change": null,
+  "min_state_finite_fraction": 1.0,
+  "nonfinite_state_records": 0,
+  "output_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase2/Diagnosis/conservation/alpha_1.57",
+  "quantity_verdict": "not preserved",
+  "run_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.57",
+  "saved": [
+    "conservation_timeseries.csv"
+  ],
+  "status": "available"
+}
