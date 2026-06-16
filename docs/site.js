@@ -1,4 +1,4 @@
-const pendingCaseIds = new Set(["testcase4", "testcase7"]);
+const pendingCaseIds = new Set();
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const navToggle = document.querySelector("[data-nav-toggle]");
@@ -130,7 +130,7 @@ function decoratePage() {
     });
   });
 
-  document.querySelectorAll(".diagnostics-stack .empty").forEach((empty) => {
+  document.querySelectorAll(".experiment-section.is-pending .diagnostics-stack .empty").forEach((empty) => {
     empty.textContent = "Scaffold / pending validation. No validated media linked yet.";
   });
 }
@@ -194,7 +194,10 @@ function scrollToSection(hash) {
 }
 
 decoratePage();
-window.addEventListener("load", () => typesetMath(document.body));
+window.addEventListener("load", () => {
+  typesetMath(document.body);
+  window.setTimeout(() => typesetMath(document.body), 250);
+});
 
 if (navToggle) {
   navToggle.addEventListener("click", () => {

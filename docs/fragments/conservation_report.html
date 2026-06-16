@@ -33,10 +33,10 @@
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
 <tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
-<tr><td> TC4 </td><td> Scaffold </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified </td></tr>
+<tr><td> TC4 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet </td></tr>
 <tr><td> TC5 </td><td> Issues </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid; first bad day 1 </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC7 </td><td> Needs data </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked </td></tr>
+<tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
         </tbody></table></div>
       </div>
     </div>
@@ -73,11 +73,11 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_mass.png'>Mass/free surface drift (alpha 1.0472)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_energy.png'>Energy proxy drift (alpha 1.0472)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 1.0472)</a></div>
 </details>
-<details class='details-panel case-block status-scaffold'>
-<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-scaffold'>Scaffold</span></summary>
-<p>Unavailable: scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified</p>
+<details class='details-panel case-block status-pending'>
+<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-pending'>Pending output</span></summary>
+<p>Unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet</p>
 <ul>
-<li><code>alpha=unavailable</code>: unavailable: scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified</li>
+<li><code>alpha=unavailable</code>: unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet</li>
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
@@ -97,11 +97,11 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
-<details class='details-panel case-block status-needs-data'>
-<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-needs-data'>Needs data</span></summary>
-<p>Unavailable: needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked</p>
+<details class='details-panel case-block status-pending'>
+<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Pending output</span></summary>
+<p>Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</p>
 <ul>
-<li><code>alpha=unavailable</code>: unavailable: needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked</li>
+<li><code>alpha=unavailable</code>: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</li>
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>

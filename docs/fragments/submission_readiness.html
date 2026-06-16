@@ -3,11 +3,11 @@
     <div>
       <span class="section-label">Numerical audit</span>
       <h2>Submission Readiness <span class="status-chip status-pending">Runbook</span></h2>
-      <p class="experiment-summary">Audit date: 2026-06-16. Final-submit commands tonight: TC1, TC2 after archive/restage, TC3 after archive/restage, and TC6.</p>
+      <p class="experiment-summary">Audit date: 2026-06-16. TC4 and TC7 have been submitted; final validation now depends on archived output and diagnostics.</p>
     </div>
     <div class="metric-grid">
-      <div class="metric-card"><span>Submit</span><strong>TC1 TC2 TC3 TC6</strong></div>
-      <div class="metric-card"><span>Blocked</span><strong>TC4 TC7</strong></div>
+      <div class="metric-card"><span>Submitted</span><strong>TC4 TC7</strong></div>
+      <div class="metric-card"><span>Blocked</span><strong>None</strong></div>
       <div class="metric-card"><span>Debug only</span><strong>TC5</strong></div>
     </div>
   </header>
@@ -42,8 +42,8 @@
               </tr>
               <tr>
                 <td>TC4</td>
-                <td>Do not submit</td>
-                <td>Forced case is still scaffold/pending validation.</td>
+                <td>Submitted on onode14</td>
+                <td>Analytic forcing hook is prepared; waiting for completed <code>run_u0_20</code> output and diagnostics.</td>
               </tr>
               <tr>
                 <td>TC5</td>
@@ -57,14 +57,14 @@
               </tr>
               <tr>
                 <td>TC7</td>
-                <td>Do not submit</td>
-                <td>Missing <code>input/raw/tc7_initial_conditions.npz</code>.</td>
+                <td>Submitted</td>
+                <td>Waiting for completed analysis-run output and diagnostics.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <p class="section-note">No final submission for TC4, TC5, or TC7.</p>
+    <p class="section-note">No final validation claim for TC4, TC5, or TC7 until output health checks finish.</p>
   </div>
 </section>

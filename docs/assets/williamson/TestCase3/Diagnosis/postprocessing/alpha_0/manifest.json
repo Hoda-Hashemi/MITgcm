@@ -1,0 +1,31 @@
+{
+  "alpha": "0",
+  "case": "TC3",
+  "fields": {
+    "conserved_scalar": null,
+    "eta": "Eta",
+    "kinetic_energy": "computed_from_velocity",
+    "u": "U",
+    "v": "V",
+    "vorticity": "computed_from_velocity"
+  },
+  "iterations": [
+    0,
+    1440,
+    2880,
+    4320,
+    5760,
+    7200
+  ],
+  "product": "postprocessing",
+  "saved": [
+    "postprocessing_values.csv",
+    "postprocessing_mass.pdf",
+    "postprocessing_mass.png",
+    "postprocessing_vorticity_pv.pdf",
+    "postprocessing_vorticity_pv.png",
+    "postprocessing_energies.pdf",
+    "postprocessing_energies.png"
+  ],
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC3/run_alpha_0"
+}

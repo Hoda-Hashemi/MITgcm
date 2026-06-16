@@ -7,10 +7,10 @@ These diagnostics are computed from MITgcm MDS output. `Eta/ETAN` supplies mass 
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
 | TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
 | TC3 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC4 | Scaffold | unavailable | unavailable | unavailable | unavailable | scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified |
+| TC4 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet |
 | TC5 | Issues | invalid output | invalid output | invalid output | invalid output | invalid; first bad day 1 |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
-| TC7 | Needs data | unavailable | unavailable | unavailable | unavailable | needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked |
+| TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
 
 ### Required output fields
 
@@ -48,9 +48,9 @@ Mass is preserved to roundoff (max |rel| 1.172e-15). The mechanical-energy proxy
 
 #### TC4
 
-Unavailable: scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified
+Unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet
 
-- alpha `unavailable`: unavailable: scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified
+- alpha `unavailable`: unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet
 
 #### TC5
 
@@ -66,6 +66,6 @@ Mass is preserved to roundoff (max |rel| 8.433e-16). The mechanical-energy proxy
 
 #### TC7
 
-Unavailable: needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked
+Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
 
-- alpha `unavailable`: unavailable: needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked
+- alpha `unavailable`: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet

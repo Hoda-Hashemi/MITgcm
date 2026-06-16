@@ -4,13 +4,13 @@
 
 ## Suggested Section Copy
 
-Unavailable: needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked
+Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
 
 These diagnostics use the current MITgcm MDS outputs only. Mass and free-surface drift come from `Eta/ETAN`; energy uses `momKE` when present, otherwise centered `U/V`; PV and potential enstrophy are derived from `U/V/Eta` because no run currently writes a native vorticity or PV diagnostic.
 
 ## Note
 
-TC7 needs a completed run before conservation diagnostics can be evaluated.
+TC7 has staged analyzed input and needs completed run output before conservation diagnostics can be evaluated.
 
 ## Availability
 
@@ -23,4 +23,4 @@ TC7 needs a completed run before conservation diagnostics can be evaluated.
 
 ## Per-Run Verdicts
 
-- alpha unavailable: unavailable (needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked).
+- alpha unavailable: unavailable (pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet).

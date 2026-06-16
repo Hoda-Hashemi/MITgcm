@@ -15,7 +15,7 @@
     "dynStDiag"
   ],
   "product": "conservation",
-  "reason": "needs data: TC7 requires the analyzed 500 mb initial-condition NPZ and a completed MITgcm run before conservation can be checked",
+  "reason": "pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet",
   "saved": [
     "conservation_summary.json"
   ],

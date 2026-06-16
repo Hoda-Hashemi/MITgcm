@@ -36,7 +36,7 @@
   "nonfinite_state_records": 0,
   "output_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase4/Diagnosis/conservation/unavailable",
   "quantity_verdict": "unavailable",
-  "reason": "scaffold / pending validation: no validated TC4 MDS run is available; the analytic forcing hook must be implemented before this can be verified",
+  "reason": "pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet",
   "run_dir": "",
   "status": "unavailable"
 }
