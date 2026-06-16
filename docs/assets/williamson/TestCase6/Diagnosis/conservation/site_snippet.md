@@ -15,11 +15,11 @@ These diagnostics use the current MITgcm MDS outputs only. Mass and free-surface
 
 ## Assets To Link
 
-- alpha 0: Mass/free surface drift -> `assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png`
-- alpha 0: Energy proxy drift -> `assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png`
-- alpha 0: PV/enstrophy drift -> `assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png`
-- alpha 0: Conservation time series table -> `assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_timeseries.csv`
-- alpha 0: Conservation summary data -> `assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_summary.json`
+- alpha 0: Mass/free surface drift -> `/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png`
+- alpha 0: Energy proxy drift -> `/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png`
+- alpha 0: PV/enstrophy drift -> `/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png`
+- alpha 0: Conservation time series table -> `/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_timeseries.csv`
+- alpha 0: Conservation summary data -> `/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_summary.json`
 
 ## Per-Run Verdicts
 

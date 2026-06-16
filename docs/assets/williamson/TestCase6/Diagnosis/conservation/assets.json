@@ -3,27 +3,27 @@
     {
       "alpha": "0",
       "label": "Mass/free surface drift",
-      "path": "assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png"
+      "path": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png"
     },
     {
       "alpha": "0",
       "label": "Energy proxy drift",
-      "path": "assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png"
+      "path": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png"
     },
     {
       "alpha": "0",
       "label": "PV/enstrophy drift",
-      "path": "assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png"
+      "path": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png"
     },
     {
       "alpha": "0",
       "label": "Conservation time series table",
-      "path": "assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_timeseries.csv"
+      "path": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_timeseries.csv"
     },
     {
       "alpha": "0",
       "label": "Conservation summary data",
-      "path": "assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_summary.json"
+      "path": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase6/Diagnosis/conservation/alpha_0/conservation_summary.json"
     }
   ],
   "case": "TC6"
