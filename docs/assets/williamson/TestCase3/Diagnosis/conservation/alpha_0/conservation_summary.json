@@ -16,6 +16,7 @@
       "dynStDiag"
     ],
     "derived": {
+      "coriolis_source": "fCoriC.bin",
       "free_surface_integral": true,
       "kinetic_energy": true,
       "mass": true,
@@ -93,6 +94,7 @@
     }
   },
   "case": "TC3",
+  "coriolis_source": "fCoriC.bin",
   "energy_verdict": "small drift",
   "enstrophy_verdict": "small drift",
   "fields": "eta:Eta,u:U,v:V,kinetic:momKE",
@@ -101,15 +103,15 @@
   "iterations": 6,
   "last_day": 5.0,
   "last_values": {
-    "mass_rel_change": 0.0,
-    "mechanical_energy_rel_change": -6.414498688422446e-07,
-    "potential_enstrophy_rel_change": -5.339620777814653e-07,
+    "mass_rel_change": -5.024095867609918e-16,
+    "mechanical_energy_rel_change": -6.41547437152198e-07,
+    "potential_enstrophy_rel_change": -5.34063154316524e-07,
     "tracer_mass_rel_change": null
   },
   "mass_verdict": "preserved to roundoff",
-  "max_abs_mass_rel_change": 3.3493972450732794e-16,
-  "max_abs_mechanical_energy_rel_change": 6.414498688422446e-07,
-  "max_abs_potential_enstrophy_rel_change": 5.458963520703717e-07,
+  "max_abs_mass_rel_change": 6.698794490146559e-16,
+  "max_abs_mechanical_energy_rel_change": 6.41547437152198e-07,
+  "max_abs_potential_enstrophy_rel_change": 5.460238622398025e-07,
   "max_abs_tracer_mass_rel_change": null,
   "min_state_finite_fraction": 1.0,
   "nonfinite_state_records": 0,

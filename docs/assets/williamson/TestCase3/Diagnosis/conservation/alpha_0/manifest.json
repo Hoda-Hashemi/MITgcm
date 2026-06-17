@@ -29,9 +29,9 @@
   ],
   "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC3/run_alpha_0",
   "summary": {
-    "max_abs_mass_rel_change": 3.3493972450732794e-16,
-    "max_abs_mechanical_energy_rel_change": 6.414498688422446e-07,
-    "max_abs_potential_enstrophy_rel_change": 5.458963520703717e-07,
+    "max_abs_mass_rel_change": 6.698794490146559e-16,
+    "max_abs_mechanical_energy_rel_change": 6.41547437152198e-07,
+    "max_abs_potential_enstrophy_rel_change": 5.460238622398025e-07,
     "max_abs_tracer_mass_rel_change": NaN
   }
 }

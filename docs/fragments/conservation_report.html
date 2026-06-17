@@ -1,14 +1,15 @@
-<section id='conservation-diagnostics' class='section-card experiment-section'>
+<section id='conservation-audit' class='section-card experiment-section'>
   <header class='experiment-top'>
     <div>
       <span class='section-label'>Numerical audit</span>
       <h2>Conservation Diagnostics</h2>
-      <p class='experiment-summary'>Mass, transported quantity, energy proxy, and derived PV/enstrophy checks from MITgcm outputs, with explicit finite-state health checks.</p>
+      <p class='experiment-summary'>Mass, transported quantity, energy proxy, and derived PV/enstrophy checks from MITgcm outputs, with explicit equations and finite-state health checks.</p>
     </div>
     <div class='metric-grid'>
       <div class='metric-card'><span>Fields</span><strong>Eta / U / V</strong></div>
       <div class='metric-card'><span>Health Gate</span><strong>finite state</strong></div>
       <div class='metric-card'><span>Cases</span><strong>TC1-TC7</strong></div>
+      <div class='metric-card'><span>Equations</span><strong>Rendered</strong></div>
     </div>
   </header>
   <div class='experiment-body'>
@@ -17,6 +18,20 @@
         <h3>What Is Computed</h3>
         <div class='description-copy'>
           <p>Mass and free-surface volume come from <code>Eta/ETAN</code>. TC1 tracer conservation uses <code>S/SALT</code>. The mechanical-energy proxy uses native <code>momKE</code> when it exists, otherwise centered <code>U/V</code>. Relative vorticity, PV, and potential enstrophy are derived from <code>U/V/Eta</code>.</p>
+        </div>
+      </section>
+      <section class='description-block detail-equations'>
+        <h3>Equations</h3>
+        <div class='description-copy'>
+          <p><strong>Derived potential enstrophy</strong> means this quantity is reconstructed in postprocessing from saved state fields. It is not a native MITgcm output field in these runs.</p>
+          <div class='equation-box'>
+            <div class='math-line'>\[h = H + \eta,\qquad M = \rho_0\int_\Omega h\,dA\]</div>
+            <div class='math-line'>\[E_m = \rho_0\int_\Omega hK\,dA + \frac{1}{2}\rho_0 g\int_\Omega \eta^2\,dA\]</div>
+            <div class='math-line'>\[\zeta = \frac{1}{a\cos\theta}\left(\frac{\partial v}{\partial\lambda} - \frac{\partial(u\cos\theta)}{\partial\theta}\right)\]</div>
+            <div class='math-line'>\[q = \frac{\zeta + f}{h},\qquad Z = \frac{1}{2}\int_\Omega hq^2\,dA\]</div>
+            <div class='math-line'>\[\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}\]</div>
+          </div>
+          <p>Here <code>K</code> is native <code>momKE</code> when available, otherwise it is reconstructed as <code>(u^2+v^2)/2</code>. The Coriolis term <code>f</code> comes from <code>fCoriC.bin</code> when a rotated run writes it; otherwise the diagnostic uses <code>2*omega*sin(latitude)</code>.</p>
         </div>
       </section>
       <section class='description-block detail-measure'>
@@ -30,10 +45,11 @@
       <div class='table-block data-panel'>
         <h3>Case Verdicts</h3>
         <div class='table-scroll'><table><thead><tr><th>Case</th><th>Status</th><th>Mass</th><th>Target quantity</th><th>Energy proxy</th><th>PV/enstrophy</th><th>Output health</th></tr></thead><tbody>
+<tr><td> Case </td><td> Status </td><td> Mass </td><td> Target quantity </td><td> Energy proxy </td><td> PV/enstrophy </td><td> Output health </td></tr>
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
-<tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
-<tr><td> TC4 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet </td></tr>
+<tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> small drift </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC4 </td><td> Diagnostics pending </td><td> preserved to roundoff </td><td> small drift </td><td> noticeable drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC5 </td><td> Issues </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid; first bad day 1 </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
@@ -66,20 +82,19 @@
 </details>
 <details class='details-panel case-block status-pending'>
 <summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-pending'>Pending validation</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 1.172e-15). The mechanical-energy proxy is not preserved (max |rel| 0.0830516). Derived potential enstrophy is not preserved (max |rel| 0.0365314).</p>
+<p>Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).</p>
 <ul>
 <li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
-<li><code>alpha=1.0472</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
 </ul>
-<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_mass.png'>Mass/free surface drift (alpha 1.0472)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_energy.png'>Energy proxy drift (alpha 1.0472)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 1.0472)</a></div>
+<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
-<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-pending'>Pending output</span></summary>
-<p>Unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet</p>
+<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-pending'>Diagnostics pending</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). A forcing-budget residual is still needed for final validation.</p>
 <ul>
-<li><code>alpha=unavailable</code>: unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet</li>
+<li><code>alpha=run_u0_20</code>: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift</li>
 </ul>
-<p class='section-note'>No plot assets are available for this case yet.</p>
+<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_mass.png'>Mass/free surface drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_energy.png'>Energy proxy drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha run_u0_20)</a></div>
 </details>
 <details class='details-panel case-block status-issues'>
 <summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-issues'>Issues</span></summary>

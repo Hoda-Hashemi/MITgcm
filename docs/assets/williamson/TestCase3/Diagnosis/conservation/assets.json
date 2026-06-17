@@ -24,31 +24,6 @@
       "alpha": "0",
       "label": "Conservation summary data",
       "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_summary.json"
-    },
-    {
-      "alpha": "1.0472",
-      "label": "Mass/free surface drift",
-      "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_mass.png"
-    },
-    {
-      "alpha": "1.0472",
-      "label": "Energy proxy drift",
-      "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_energy.png"
-    },
-    {
-      "alpha": "1.0472",
-      "label": "PV/enstrophy drift",
-      "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_pv_enstrophy.png"
-    },
-    {
-      "alpha": "1.0472",
-      "label": "Conservation time series table",
-      "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_timeseries.csv"
-    },
-    {
-      "alpha": "1.0472",
-      "label": "Conservation summary data",
-      "path": "assets/williamson/TestCase3/Diagnosis/conservation/alpha_1.0472/conservation_summary.json"
     }
   ],
   "case": "TC3"

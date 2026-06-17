@@ -2,12 +2,26 @@
 
 These diagnostics are computed from MITgcm MDS output. `Eta/ETAN` supplies mass and free-surface volume, `S/SALT` supplies the TC1 transported tracer when present, `momKE` or centered `U/V` supplies the mechanical-energy proxy, and `U/V/Eta` supply derived vorticity, potential vorticity, and potential enstrophy.
 
+Derived potential enstrophy is reconstructed in postprocessing; it is not a native MITgcm output field in these runs.
+
+$$h = H + \eta,\qquad M = \rho_0\int_\Omega h\,dA$$
+
+$$E_m = \rho_0\int_\Omega hK\,dA + \frac{1}{2}\rho_0 g\int_\Omega \eta^2\,dA$$
+
+$$\zeta = \frac{1}{a\cos\theta}\left(\frac{\partial v}{\partial\lambda} - \frac{\partial(u\cos\theta)}{\partial\theta}\right)$$
+
+$$q = \frac{\zeta + f}{h},\qquad Z = \frac{1}{2}\int_\Omega hq^2\,dA$$
+
+$$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
+
+`K` is native `momKE` when available, otherwise `(u^2+v^2)/2`. `f` comes from `fCoriC.bin` when a rotated run writes it; otherwise the diagnostic uses `2*omega*sin(latitude)`.
+
 | Case | Status | Mass | Target quantity | Energy proxy | PV/enstrophy | Output health |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
 | TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC3 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC4 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet |
+| TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
+| TC4 | Diagnostics pending | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
 | TC5 | Issues | invalid output | invalid output | invalid output | invalid output | invalid; first bad day 1 |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
 | TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
@@ -41,16 +55,15 @@ Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy
 
 #### TC3
 
-Mass is preserved to roundoff (max |rel| 1.172e-15). The mechanical-energy proxy is not preserved (max |rel| 0.0830516). Derived potential enstrophy is not preserved (max |rel| 0.0365314).
+Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).
 
 - alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
-- alpha `1.0472`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
 
 #### TC4
 
-Unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet
+Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). A forcing-budget residual is still needed for final validation.
 
-- alpha `unavailable`: unavailable: pending validation: the TC4 analytic forcing hook is prepared, but no completed MDS output is archived yet
+- alpha `run_u0_20`: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift
 
 #### TC5
 
