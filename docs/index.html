@@ -74,7 +74,6 @@
         <div class='nav-group-links'>
         <a class='nav-link' href='#cfl-deltat-audit'>CFL / deltaT<span class='nav-status status-pending'>Pending validation</span></a>
         <a class='nav-link' href='#conservation-audit'>Conservation<span class='nav-status status-pending'>Pending validation</span></a>
-        <a class='nav-link' href='#submission-readiness'>HPC readiness<span class='nav-status status-pending'>Runbook</span></a>
         </div>
       </details>
     </aside>
@@ -286,77 +285,6 @@ cd Sandbox/vortexSphere_Williamson_TC7
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
-  </div>
-</section>
-      <section id="submission-readiness" class="section-card experiment-section status-pending">
-  <header class="experiment-top">
-    <div>
-      <span class="section-label">Numerical audit</span>
-      <h2>Submission Readiness <span class="status-chip status-pending">Runbook</span></h2>
-      <p class="experiment-summary">Audit date: 2026-06-17. TC4 c1 output is now archived and first-checked; TC7 still depends on completed output and diagnostics.</p>
-    </div>
-    <div class="metric-grid">
-      <div class="metric-card"><span>Output checked</span><strong>TC4</strong></div>
-      <div class="metric-card"><span>Submitted</span><strong>TC7</strong></div>
-      <div class="metric-card"><span>Blocked</span><strong>None</strong></div>
-      <div class="metric-card"><span>Debug only</span><strong>TC5</strong></div>
-    </div>
-  </header>
-  <div class="experiment-body">
-    <div class="settings-stack">
-      <div class="table-block data-panel">
-        <h3>Tonight Actions</h3>
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Case</th>
-                <th>Tonight action</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>TC1</td>
-                <td>Submit/rerun after optional cleanup</td>
-                <td>Ready; current run ends normally, but TC1 alpha <code>1.57</code> has stale extra iterations/assets.</td>
-              </tr>
-              <tr>
-                <td>TC2</td>
-                <td>Archive stale run dirs, then submit</td>
-                <td>Templates fixed; current run dirs lack <code>selectCoriMap=3</code> and <code>fCori*.bin</code>.</td>
-              </tr>
-              <tr>
-                <td>TC3</td>
-                <td>Archive stale run dirs, then submit</td>
-                <td>Templates fixed; current run dirs lack <code>selectCoriMap=3</code> and <code>fCori*.bin</code>.</td>
-              </tr>
-              <tr>
-                <td>TC4</td>
-                <td>Completed on normal/onode08</td>
-                <td><code>run_u0_20</code> completed through day 5; fields are finite and the translating low follows the analytic path. Formal forcing-budget diagnostics remain pending.</td>
-              </tr>
-              <tr>
-                <td>TC5</td>
-                <td>Debug-only</td>
-                <td>Current fields are finite at iter <code>0000000000</code>, then non-finite from iter <code>0000001440</code> onward.</td>
-              </tr>
-              <tr>
-                <td>TC6</td>
-                <td>Submit/rerun</td>
-                <td>Ready; final fields finite through iter <code>0000040320</code>.</td>
-              </tr>
-              <tr>
-                <td>TC7</td>
-                <td>Submitted</td>
-                <td>Waiting for completed analysis-run output and diagnostics.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <p class="section-note">No final validation claim for TC4, TC5, or TC7 until formal diagnostics finish.</p>
   </div>
 </section>
     </main>
