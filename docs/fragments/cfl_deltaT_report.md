@@ -1,4 +1,6 @@
-## CFL and deltaT audit
+## Time-step safety check (CFL and deltaT)
+
+This check asks whether the submitted model time step is small enough for the resolved velocities and grid spacing in each Williamson run.
 
 For each submitted Williamson job, the audited Courant numbers are `C_adv = |u| deltaT / dx + |v| deltaT / dy` and `C_g = sqrt(gH) deltaT / dx`. The spherical-polar grid is 1440 x 720 with 0.25 degree spacing; the smallest center-cell zonal metric is 60.65 m in the polar row and `dy = 27798.73 m`.
 
@@ -11,13 +13,13 @@ TC1 has the most visible discrepancy: its legacy `tools/check_cfl_tc1.py` prints
 | case | run | alpha(rad) | template dt(s) | job dt(s) | run dt(s) | steps | H(m) | sqrt(gH) | init adv CFL | saved adv CFL | max speed | explicit Cg,x | decision |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TC2 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.083 | 0.083 | 38.6 | 170 | no advective deltaT change indicated |
-| TC2 | alpha=0.05 | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | 0.540 | 38.6 | 28.3 | above 0.5 margin; use deltaT <= 9.26 s for margin |
+| TC2 | alpha=0.05 | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | 0.561 | 38.6 | 28.3 | above 0.5 margin; use deltaT <= 8.91 s for margin |
 | TC2 | alpha=1.52 | 1.5208 | 60.0 | 0.75 | 60.0 | 1382400 | 2997 | 171 | 0.477 | 38.2 | 38.7 | 2 | investigate non-finite run; not explained by initial advective CFL |
 | TC2 | alpha=1.57 | 1.5708 | 60.0 | 0.75 | 60.0 | 1382400 | 2997 | 171 | 0.477 | 38.2 | 38.7 | 2 | investigate non-finite run; not explained by initial advective CFL |
 | TC3 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 2997 | 171 | 0.124 | 0.124 | 38.6 | 170 | no advective deltaT change indicated |
-| TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | 0.75 | 576000 | 2997 | 171 | 0.477 | 0.477 | 38.7 | 2 | no advective deltaT change indicated |
+| TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | 0.75 | 576000 | 2997 | 171 | 0.477 | 0.486 | 50.1 | 2 | no advective deltaT change indicated |
 | TC4 | run_u0_20 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | n/a | 0.139 | 40.0 | 313 | no advective deltaT change indicated |
-| TC5 | standard | 0 | 60.0 | 60.0 | 60.0 | 21600 | 5960 | 242 | 0.043 | 0.229 | 38.3 | 239 | no advective deltaT change indicated |
+| TC5 | standard | 0 | 60.0 | 60.0 | 60.0 | 21600 | 5960 | 242 | 0.043 | 0.909 | 40.1 | 239 | above 0.5 margin; use deltaT <= 33.00 s for margin |
 | TC6 | standard | 0 | 30.0 | 30.0 | 30.0 | 40320 | 8000 | 280 | 0.126 | 0.131 | 95.2 | 139 | no advective deltaT change indicated |
 | TC7 | analysis | 0 | 60.0 | 60.0 | 60.0 | 7200 | 8000 | 280 | 21.2 | 21.2 | 56.4 | 277 | reduce deltaT before rerun |
 

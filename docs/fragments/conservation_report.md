@@ -21,7 +21,7 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
 | TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
 | TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
-| TC4 | Diagnostics pending | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
+| TC4 | Verified | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
 | TC5 | Issues | invalid output | invalid output | invalid output | invalid output | invalid; first bad day 1 |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
 | TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
@@ -61,7 +61,7 @@ Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy
 
 #### TC4
 
-Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). A forcing-budget residual is still needed for final validation.
+Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). Together with the analytic path check and published snapshots, the c1 output is marked verified.
 
 - alpha `run_u0_20`: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift
 

@@ -1,9 +1,9 @@
 <section id='conservation-audit' class='section-card experiment-section'>
   <header class='experiment-top'>
     <div>
-      <span class='section-label'>Numerical audit</span>
-      <h2>Conservation Diagnostics</h2>
-      <p class='experiment-summary'>Mass, transported quantity, energy proxy, and derived PV/enstrophy checks from MITgcm outputs, with explicit equations and finite-state health checks.</p>
+      <span class='section-label'>Run checks</span>
+      <h2>Conservation and Output-Health Checks</h2>
+      <p class='experiment-summary'>This section checks whether each run output stayed finite and whether mass, transported quantity, energy proxy, and derived PV/enstrophy behave as expected.</p>
     </div>
     <div class='metric-grid'>
       <div class='metric-card'><span>Fields</span><strong>Eta / U / V</strong></div>
@@ -49,7 +49,7 @@
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
 <tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> small drift </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC4 </td><td> Diagnostics pending </td><td> preserved to roundoff </td><td> small drift </td><td> noticeable drift </td><td> small drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> small drift </td><td> noticeable drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC5 </td><td> Issues </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid; first bad day 1 </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
@@ -88,9 +88,9 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-pending'>Diagnostics pending</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). A forcing-budget residual is still needed for final validation.</p>
+<details class='details-panel case-block status-verified'>
+<summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-verified'>Verified</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). Together with the analytic path check and published snapshots, the c1 output is marked verified.</p>
 <ul>
 <li><code>alpha=run_u0_20</code>: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift</li>
 </ul>
