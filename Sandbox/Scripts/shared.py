@@ -15,6 +15,10 @@ CASE_OUTPUT_NAMES = {
     "TC1": "TestCase1",
     "TC2": "TestCase2",
     "TC3": "TestCase3",
+    "TC4": "TestCase4",
+    "TC5": "TestCase5",
+    "TC6": "TestCase6",
+    "TC7": "TestCase7",
 }
 
 RUN_LABELS = {
@@ -22,6 +26,10 @@ RUN_LABELS = {
     "TC1": {"c1": "0", "c2": "0.05", "c3": "1.52", "c4": "1.57"},
     "TC2": {"c1": "0", "c2": "0.05", "c3": "1.52", "c4": "1.57"},
     "TC3": {"c1": "0", "c2": "1.0472"},
+    "TC4": {"c1": "0"},
+    "TC5": {"c1": "standard"},
+    "TC6": {"c1": "standard"},
+    "TC7": {"c1": "analysis"},
 }
 
 

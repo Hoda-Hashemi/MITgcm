@@ -19,6 +19,7 @@
  momStepping            = .TRUE.,
  momAdvection           = .TRUE.,
  useCoriolis            = .TRUE.,
+ selectCoriMap          = 3,
  tempStepping           = .FALSE.,
  saltStepping           = .FALSE.,
 

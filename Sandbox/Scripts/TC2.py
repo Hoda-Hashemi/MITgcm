@@ -2,11 +2,17 @@
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
+import matplotlib
 import numpy as np
 
+matplotlib.use("Agg")
+
+from github_pages import build_site
 from postprocessing_ErrorAnalysis import DAY, ErrorAnalysisSpec, ErrorFieldSpec, analyze_error
+from postprocessing_Quantities import PostprocessingSpec, analyze_run
 from run_log import write_run_log
 from snapshot_plots import SnapshotSpec, run_snapshots
 
@@ -21,9 +27,27 @@ TC2_U0 = 2.0 * math.pi * TC2_R_EARTH / (12.0 * DAY)
 TC2_GH0 = 2.94e4
 TC2_H0 = TC2_GH0 / TC2_G
 
-RUN_DIRS = [CASE_DIR / "run_alpha_0"]
+alpha_case = "run_alpha_0"
+RUN_DIRS = [
+    Path(item).expanduser()
+    for item in os.environ.get("TC2_RUN_DIRS", "").split(os.pathsep)
+    if item
+] or [CASE_DIR / alpha_case]
 MAKE_SNAPSHOTS = True
 MAKE_ERROR_ANALYSIS = True
+MAKE_POSTPROCESSING = True
+
+POSTPROCESSING_SPEC = PostprocessingSpec(
+    case_code=CASE_CODE,
+    eta_candidates=("Eta", "ETAN"),
+    u_candidates=("U", "UVEL", "UVELMASS"),
+    v_candidates=("V", "VVEL", "VVELMASS"),
+    kinetic_energy_candidates=(),
+    vorticity_candidates=(),
+    compute_kinetic_energy_if_missing=True,
+    compute_vorticity_if_missing=True,
+    compute_potential_vorticity_if_missing=True,
+)
 
 SNAPSHOT_FIELDS = (
     SnapshotSpec("Eta", "eta", "eta", "m", -1905.0, 1905.0, center_zero=True),
@@ -90,6 +114,9 @@ def main() -> None:
             run_snapshots(CASE_CODE, run_dir, SNAPSHOT_FIELDS)
         if MAKE_ERROR_ANALYSIS:
             analyze_error(run_dir, TC2_ERROR_SPEC)
+        if MAKE_POSTPROCESSING:
+            analyze_run(run_dir, spec=POSTPROCESSING_SPEC)
+    build_site(["testcase2"])
     for run_dir in RUN_DIRS:
         write_run_log(run_dir, case_code=CASE_CODE)
 

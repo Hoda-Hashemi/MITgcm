@@ -1,0 +1,2 @@
+case,alpha,status,health_verdict,min_state_finite_fraction,first_bad_day,nonfinite_state_records,run_dir,iterations,last_day,fields,max_abs_mass_rel_change,max_abs_tracer_mass_rel_change,max_abs_mechanical_energy_rel_change,max_abs_potential_enstrophy_rel_change,mass_verdict,quantity_verdict,energy_verdict,enstrophy_verdict,output_dir
+TC7,unavailable,unavailable,unavailable,nan,nan,0,,0,nan,,nan,nan,nan,nan,unavailable,unavailable,unavailable,unavailable,/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase7/Diagnosis/conservation/unavailable

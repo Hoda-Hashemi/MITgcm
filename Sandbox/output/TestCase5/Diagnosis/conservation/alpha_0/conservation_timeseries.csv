@@ -1,0 +1,17 @@
+iteration,day,eta_finite_fraction,u_finite_fraction,v_finite_fraction,scalar_finite_fraction,minimum_state_finite_fraction,volume_m3,volume_rel_change,mass_kg,mass_rel_change,eta_volume_anomaly_m3,eta_volume_anomaly_delta_m3,tracer_area_integral,tracer_area_rel_change,tracer_mass_integral,tracer_mass_rel_change,kinetic_energy_j,kinetic_energy_rel_change,surface_potential_energy_j,surface_potential_energy_rel_change,potential_energy_anomaly_j,mechanical_energy_j,mechanical_energy_rel_change,mechanical_energy_anomaly_j,mechanical_energy_anomaly_rel_change,zeta_mean_s-1,zeta_rms_s-1,zeta_min_s-1,zeta_max_s-1,pv_mean_s-1_m-1,pv_rms_s-1_m-1,pv_min_s-1_m-1,pv_max_s-1_m-1,potential_enstrophy,potential_enstrophy_rel_change
+0,0.0,1.0,1.0,1.0,nan,1.0,2.875483149221315e+18,0.0,2.875483149221315e+18,0.0,-1.5561223691146464e+17,0.0,nan,nan,nan,nan,3.921535114173525e+20,0.0,4.9104882039422e+20,0.0,-8.673599433535763e+21,8.832023318115725e+20,0.0,-8.281445922118411e+21,0.0,8.30210211583547e-22,3.6248212255824912e-06,-6.2788320255575225e-06,6.2788320255575225e-06,3.869204721008747e-20,1.637951565624739e-08,-3.046955419022071e-08,3.046955419022071e-08,366.47855349666474,0.0
+1440,1.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+2880,2.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+4320,3.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+5760,4.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+7200,5.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+8640,6.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+10080,7.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+11520,8.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+12960,9.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+14400,10.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+15840,11.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+17280,12.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+18720,13.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+20160,14.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan
+21600,15.0,0.0,0.0,0.0,nan,0.0,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan

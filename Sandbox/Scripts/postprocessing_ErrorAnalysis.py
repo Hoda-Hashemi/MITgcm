@@ -28,6 +28,12 @@ DAY = 86_400.0
 
 ReferenceFunction = Callable[[np.ndarray, np.ndarray, float, float], np.ndarray]
 
+ERROR_FIELD_STYLES = (
+    {"color": "red", "marker": "o"},
+    {"color": "cornflowerblue", "marker": "s"},
+    {"color": "purple", "marker": "^"},
+)
+
 
 @dataclass(frozen=True)
 class ErrorFieldSpec:
@@ -297,25 +303,35 @@ def plot_error_norms(
 ) -> None:
     days = np.array([row["day"] for row in rows], dtype=np.float64)
     metric_specs = (
-        ("l1", r"$L_1$", "tab:blue"),
-        ("l2", r"$L_2$", "tab:orange"),
-        ("linf", r"$L_\infty$", "tab:green"),
+        ("l1", r"$L_1$"),
+        ("l2", r"$L_2$"),
+        ("linf", r"$L_\infty$"),
     )
     fig, axes = plt.subplots(3, 1, figsize=(8.6, 7.2), sharex=True, constrained_layout=True)
 
-    for ax, (metric, metric_label, color) in zip(axes, metric_specs):
-        for field in spec.fields:
+    for ax, (metric, metric_label) in zip(axes, metric_specs):
+        for field_index, field in enumerate(spec.fields):
+            style = ERROR_FIELD_STYLES[field_index % len(ERROR_FIELD_STYLES)]
             label = field.label or field.name
             key = f"{metric}_{field.name}"
             if key not in rows[0]:
                 continue
             values = np.array([row[key] for row in rows], dtype=np.float64)
             line_label = f"tracked {label}"
+            line_kwargs = {
+                "color": style["color"],
+                "marker": style["marker"],
+                "markersize": 3.2,
+                "markerfacecolor": "white",
+                "markeredgewidth": 0.8,
+                "lw": 1.45,
+                "label": line_label,
+            }
             if spec.log_y:
                 values = np.maximum(values, 1.0e-30)
-                ax.semilogy(days, values, color=color, lw=1.35, label=line_label)
+                ax.semilogy(days, values, **line_kwargs)
             else:
-                ax.plot(days, values, color=color, lw=1.45, label=line_label)
+                ax.plot(days, values, **line_kwargs)
         ax.set_title(metric_label)
         ax.set_ylabel("error norm")
         if days.size > 1:

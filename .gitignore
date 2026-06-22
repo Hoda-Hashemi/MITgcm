@@ -144,12 +144,13 @@ verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Gaussian_
 verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Geostrophic*/
 
 #! test cases williamson:
+Sandbox/*/build/
 Sandbox/vortexSphere_Williamson_TC1/build
 Sandbox/vortexSphere_Williamson_TC1/old_run_less_diagnosis
 
 Sandbox/vortexSphere_Williamson_TC2/build
 
 Sandbox/*/logs
+Sandbox/*/run_*/STDOUT.combined
 # Sandbox/vortexSphere_Williamson_TC2/run_*/
 # Sandbox/vortexSphere_Williamson_TC1/run_*/
-

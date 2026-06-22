@@ -1,0 +1,23 @@
+{
+  "case": "TC7",
+  "configured_diagnostics": [
+    "UVEL",
+    "VVEL",
+    "ETAN",
+    "ETANSQ",
+    "momKE",
+    "dynDiag",
+    "WVELMASS",
+    "PhiVEL",
+    "PsiVEL",
+    "dyn_Aux",
+    "D",
+    "dynStDiag"
+  ],
+  "product": "conservation",
+  "reason": "pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet",
+  "saved": [
+    "conservation_summary.json"
+  ],
+  "status": "unavailable"
+}

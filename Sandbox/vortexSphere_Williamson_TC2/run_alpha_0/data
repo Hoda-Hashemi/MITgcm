@@ -19,6 +19,7 @@
  momStepping            = .TRUE.,
  momAdvection           = .TRUE.,
  useCoriolis            = .TRUE.,
+ selectCoriMap          = 3,
  tempStepping           = .FALSE.,
  saltStepping           = .FALSE.,
 
@@ -48,9 +49,9 @@
 # Time stepping parameters
 &PARM03
  nIter0=0,
- nTimeSteps= 17280 ,
+ nTimeSteps=17280,
  abEps=0.1,
- deltaT=60.,
+ deltaT=60.0,
  cAdjFreq=0.,
  pChkptFreq=0.,
  chkptFreq=0.,

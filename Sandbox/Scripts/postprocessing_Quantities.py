@@ -27,6 +27,15 @@ DAY = 86_400.0
 SCRIPT_DIR = Path(__file__).resolve().parent
 SANDBOX_DIR = SCRIPT_DIR.parent
 
+GRID_COLOR = "#D8D8D8"
+GRID_ALPHA = 0.45
+GRID_LINEWIDTH = 0.6
+COLOR_PRIMARY = "#090708"
+COLOR_MEAN = "#FF0B0B"
+COLOR_RMS = "#3F5F9D"
+COLOR_BAND = "#3F5F9D"
+COLOR_ZERO = "#8E8E8E"
+
 ETA_NAMES = ("Eta", "ETAN")
 U_NAMES = ("U", "UVEL", "UVELMASS")
 V_NAMES = ("V", "VVEL", "VVELMASS")
@@ -340,16 +349,37 @@ def write_csv_table(output_dir: Path, rows: list[dict[str, float]]) -> Path:
     return path
 
 
+def style_timeseries_axis(ax) -> None:
+    ax.grid(True, color=GRID_COLOR, linewidth=GRID_LINEWIDTH, alpha=GRID_ALPHA)
+    ax.set_axisbelow(True)
+    ax.tick_params(direction="out", top=True, right=True)
+
+
+def legend_inside(ax) -> None:
+    ax.legend(frameon=False, fontsize=8, loc="best")
+
+
 def plot_mass(output_dir: Path, rows: list[dict[str, float]], dpi: int) -> list[Path]:
     plt = load_pyplot()
     day = np.array([row["day"] for row in rows], dtype=np.float64)
+    mass = np.array([row["mass_kg"] for row in rows], dtype=np.float64)
+    reference = next((value for value in mass if np.isfinite(value) and abs(value) > 0.0), float("nan"))
+    mass_delta = mass - reference
+    mass_relative = np.where(np.isfinite(reference), mass_delta / abs(reference), np.nan)
 
-    fig, ax = plt.subplots(figsize=(7.0, 4.2), constrained_layout=True)
-    ax.plot(day, [row["mass_kg"] for row in rows], color="black", lw=1.4)
-    ax.set_title("Mass")
-    ax.set_xlabel("time [days]")
-    ax.set_ylabel("fluid mass [kg]")
-    ax.tick_params(direction="out", top=True, right=True)
+    fig, axes = plt.subplots(2, 1, figsize=(7.0, 5.8), sharex=True, constrained_layout=True)
+    axes[0].plot(day, mass_relative, color=COLOR_PRIMARY, lw=1.4, label="mass drift")
+    axes[0].axhline(0.0, color=COLOR_ZERO, lw=0.8)
+    axes[0].set_title("Mass drift")
+    axes[0].set_ylabel(r"$\Delta M/M_0$")
+    axes[1].plot(day, mass_delta, color=COLOR_RMS, lw=1.25, label="mass anomaly")
+    axes[1].axhline(0.0, color=COLOR_ZERO, lw=0.8)
+    axes[1].set_title("Mass anomaly")
+    axes[1].set_ylabel(r"$\Delta M$ [kg]")
+    axes[1].set_xlabel("Time [days]")
+    for ax in axes:
+        style_timeseries_axis(ax)
+        legend_inside(ax)
     paths = save_figure_variants(fig, output_dir / "postprocessing_mass.pdf", dpi=dpi)
     plt.close(fig)
     return paths
@@ -371,15 +401,16 @@ def plot_conserved_integral(
 
     fig, axes = plt.subplots(2, 1, figsize=(7.0, 6.0), sharex=True, constrained_layout=True)
     unit_text = f" [{units}]" if units else ""
-    axes[0].plot(day, integral, color="black", lw=1.4)
+    axes[0].plot(day, integral, color=COLOR_PRIMARY, lw=1.4, label=f"{label} integral")
     axes[0].set_title(f"{label} integral")
-    axes[0].set_ylabel(f"I_{label}{unit_text}")
-    axes[1].plot(day, relative, color="tab:red", lw=1.25)
-    axes[1].axhline(0.0, color="0.55", lw=0.8)
-    axes[1].set_ylabel("relative change")
-    axes[1].set_xlabel("time [days]")
+    axes[0].set_ylabel(r"$I$" + unit_text)
+    axes[1].plot(day, relative, color=COLOR_MEAN, lw=1.25, label="relative change")
+    axes[1].axhline(0.0, color=COLOR_ZERO, lw=0.8)
+    axes[1].set_ylabel("Relative change")
+    axes[1].set_xlabel("Time [days]")
     for ax in axes:
-        ax.tick_params(direction="out", top=True, right=True)
+        style_timeseries_axis(ax)
+        legend_inside(ax)
     paths = save_figure_variants(fig, output_dir / "postprocessing_tracer_integral.pdf", dpi=dpi)
     plt.close(fig)
     return paths
@@ -389,18 +420,19 @@ def plot_energies(output_dir: Path, rows: list[dict[str, float]], dpi: int) -> l
     plt = load_pyplot()
     day = np.array([row["day"] for row in rows], dtype=np.float64)
     panels = (
-        ("Kinetic energy", "kinetic_energy_j", "KE [J]", "black"),
-        ("Potential energy", "potential_energy_j", "PE [J]", "0.45"),
-        ("Mechanical energy", "mechanical_energy_j", "ME [J]", "tab:red"),
+        ("Kinetic energy", "kinetic_energy_j", r"$E_K$ [J]", COLOR_MEAN),
+        ("Potential energy", "potential_energy_j", r"$E_P$ [J]", COLOR_RMS),
+        ("Mechanical energy", "mechanical_energy_j", r"$E_M$ [J]", COLOR_PRIMARY),
     )
 
     fig, axes = plt.subplots(3, 1, figsize=(7.0, 7.2), sharex=True, constrained_layout=True)
     for ax, (title, key, ylabel, color) in zip(axes, panels):
-        ax.plot(day, [row[key] for row in rows], color=color, lw=1.35)
+        ax.plot(day, [row[key] for row in rows], color=color, lw=1.35, label=ylabel.split()[0])
         ax.set_title(title)
         ax.set_ylabel(ylabel)
-        ax.tick_params(direction="out", top=True, right=True)
-    axes[-1].set_xlabel("time [days]")
+        style_timeseries_axis(ax)
+        legend_inside(ax)
+    axes[-1].set_xlabel("Time [days]")
     paths = save_figure_variants(fig, output_dir / "postprocessing_energies.pdf", dpi=dpi)
     plt.close(fig)
     return paths
@@ -416,13 +448,37 @@ def plot_min_mean_rms(
     title: str,
     ylabel: str,
 ) -> None:
-    ax.fill_between(day, minimum, maximum, color="0.85", label="min-max")
-    ax.plot(day, mean, color="black", lw=1.3, label="mean")
-    ax.plot(day, rms, color="tab:red", lw=1.2, ls="--", label="rms")
+    markevery = max(1, len(day) // 12)
+    ax.fill_between(day, minimum, maximum, color=COLOR_BAND, alpha=0.14, label="min-max")
+    ax.plot(
+        day,
+        mean,
+        color=COLOR_MEAN,
+        marker="o",
+        markersize=3.0,
+        markerfacecolor="white",
+        markeredgewidth=0.8,
+        markevery=markevery,
+        lw=1.3,
+        label="mean",
+    )
+    ax.plot(
+        day,
+        rms,
+        color=COLOR_RMS,
+        marker="s",
+        markersize=3.0,
+        markerfacecolor="white",
+        markeredgewidth=0.8,
+        markevery=markevery,
+        lw=1.2,
+        ls="--",
+        label="rms",
+    )
     ax.set_title(title)
     ax.set_ylabel(ylabel)
-    ax.legend(frameon=False, fontsize=8)
-    ax.tick_params(direction="out", top=True, right=True)
+    legend_inside(ax)
+    style_timeseries_axis(ax)
 
 
 def plot_vorticity_pv(output_dir: Path, rows: list[dict[str, float]], dpi: int) -> list[Path]:
@@ -457,9 +513,9 @@ def plot_vorticity_pv(output_dir: Path, rows: list[dict[str, float]], dpi: int) 
         q_min,
         q_max,
         "Potential vorticity",
-        r"$q$ [s$^{-1}$ m$^{-1}$]",
+        r"$Q$ [s$^{-1}$ m$^{-1}$]",
     )
-    axes[-1].set_xlabel("time [days]")
+    axes[-1].set_xlabel("Time [days]")
     paths = save_figure_variants(fig, output_dir / "postprocessing_vorticity_pv.pdf", dpi=dpi)
     plt.close(fig)
     return paths

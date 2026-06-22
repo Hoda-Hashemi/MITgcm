@@ -1,0 +1,13 @@
+{
+  "alpha": "0",
+  "case": "TC6",
+  "product": "snapshots",
+  "saved": [
+    "eta",
+    "etan",
+    "psi",
+    "phi",
+    "velocity_magnitude"
+  ],
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC6/run_standard"
+}

@@ -80,8 +80,17 @@ def plot_snapshot(
     ax.set_yticks(np.arange(-90, 91, 30))
     cbar = fig.colorbar(image, ax=ax, orientation="horizontal", pad=0.10)
     cbar.set_label(units)
-    save_figure_variants(fig, out_path, dpi=dpi)
+    save_figure_variants(fig, out_path, dpi=dpi, formats=("png",))
     plt.close(fig)
+
+
+def clear_generated_snapshot_images(output_root: Path, folder: str) -> None:
+    field_dir = output_root / folder
+    if not field_dir.exists():
+        return
+    for pattern in ("*.pdf", "*.png"):
+        for path in field_dir.glob(pattern):
+            path.unlink()
 
 
 def save_scalar_series(
@@ -100,6 +109,7 @@ def save_scalar_series(
 
     xc, yc = lon_lat(run_dir)
     case = case_code.lower()
+    wrote_any = False
     for iteration in iterations:
         field = to_2d(read_mds_field(run_dir, spec.field, iteration))
         value_range = finite_min_max(field)
@@ -128,8 +138,12 @@ def save_scalar_series(
             center_zero=spec.center_zero,
             dpi=dpi,
         )
-    print(f"wrote {spec.display}: {output_root / spec.folder}")
-    return True
+        wrote_any = True
+    if wrote_any:
+        print(f"wrote {spec.display}: {output_root / spec.folder}")
+    else:
+        print(f"skip {spec.display}: no finite snapshots")
+    return wrote_any
 
 
 def save_velocity_magnitude(
@@ -155,19 +169,32 @@ def save_velocity_magnitude(
 
     xc, yc = lon_lat(run_dir)
     case = case_code.lower()
+    wrote_any = False
     for iteration in iterations:
         u = center_to_shape(read_mds_field(run_dir, u_name, iteration), xc.shape)
         v = center_to_shape(read_mds_field(run_dir, v_name, iteration), xc.shape)
         speed = np.sqrt(u * u + v * v)
+        value_range = finite_min_max(speed)
+        if value_range is None:
+            print(f"skip velocity magnitude iteration {iteration}: no finite values")
+            continue
+        missing = int(speed.size - np.count_nonzero(np.isfinite(speed)))
+        if missing:
+            print(f"warning velocity magnitude iteration {iteration}: {missing} non-finite values")
+        speed_min, speed_max = value_range
         title = (
             f"{case_code} velocity magnitude | iteration {iteration} | "
             f"time {time_text(iteration, delta_t)} | "
-            f"min {np.nanmin(speed):.3e} | max {np.nanmax(speed):.3e}"
+            f"min {speed_min:.3e} | max {speed_max:.3e}"
         )
         out = output_root / "velocity_magnitude" / f"{case}_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
         plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
-    print(f"wrote velocity magnitude: {output_root / 'velocity_magnitude'}")
-    return True
+        wrote_any = True
+    if wrote_any:
+        print(f"wrote velocity magnitude: {output_root / 'velocity_magnitude'}")
+    else:
+        print("skip velocity magnitude: no finite snapshots")
+    return wrote_any
 
 
 def run_snapshots(
@@ -187,13 +214,15 @@ def run_snapshots(
     output_root = snapshot_output_dir(case_code, alpha)
     output_root.mkdir(parents=True, exist_ok=True)
 
-    saved = [
-        spec.folder
-        for spec in specs
-        if save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi)
-    ]
-    if save_velocity and save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi):
-        saved.append("velocity_magnitude")
+    saved = []
+    for spec in specs:
+        clear_generated_snapshot_images(output_root, spec.folder)
+        if save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi):
+            saved.append(spec.folder)
+    if save_velocity:
+        clear_generated_snapshot_images(output_root, "velocity_magnitude")
+        if save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi):
+            saved.append("velocity_magnitude")
 
     write_manifest(
         output_root,

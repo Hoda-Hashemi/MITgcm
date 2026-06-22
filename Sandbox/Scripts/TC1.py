@@ -51,9 +51,9 @@ RUN_DIRS = [
     if item
 ] or [CASE_DIR / alpha_case]
 
-MAKE_SNAPSHOTS = False
+MAKE_SNAPSHOTS = True
 MAKE_ERROR_ANALYSIS = True
-MAKE_POSTPROCESSING = False
+MAKE_POSTPROCESSING = True
 
 POSTPROCESSING_SPEC = PostprocessingSpec(
     case_code=CASE_CODE,
@@ -69,7 +69,7 @@ POSTPROCESSING_SPEC = PostprocessingSpec(
 )
 
 SNAPSHOT_FIELDS = (
-    SnapshotSpec("S", "tracer", "passive tracer", "psu", 0.0, 1000.0),
+    SnapshotSpec("S", "tracer", "passive tracer", "psu", 0.0, 1000.0, center_zero=True),
     SnapshotSpec("ETAN", "etan", "ETAN", "m", center_zero=True),
     SnapshotSpec("PsiVEL", "psi", "PsiVEL", r"m$^3$ s$^{-1}$", center_zero=True),
     SnapshotSpec("PhiVEL", "phi", "PhiVEL", r"m$^2$ s$^{-1}$", center_zero=True),

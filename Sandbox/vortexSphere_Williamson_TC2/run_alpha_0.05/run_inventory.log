@@ -1,0 +1,680 @@
+MITgcm run inventory
+generated_utc: 2026-06-17T19:17:43+00:00
+run_dir: Sandbox/vortexSphere_Williamson_TC2/run_alpha_0.05
+case_code: TC2
+alpha_label: 0.05
+log_file: run_inventory.log
+
+Summary
+  run_dir_files: 357
+  run_dir_bytes: 2031745161 (1.9 GiB)
+  run_output_groups: 38
+  requested_diagnostic_streams: 3
+  generated_product_dirs: 4
+  generated_product_files: 87
+  plotted_files: 76
+  computed_files: 7
+  docs_indexed_assets: 43
+
+Diagnostics request
+  data_diagnostics: Sandbox/vortexSphere_Williamson_TC2/run_alpha_0.05/data.diagnostics
+  available_diagnostics: Sandbox/vortexSphere_Williamson_TC2/run_alpha_0.05/available_diagnostics.log
+  [diagnostics stream 2] fileName=dyn_Aux frequency=-86400. phase=0.
+    WVELMASS: units=m/s; levels=1; title=Vertical Mass-Weighted Comp of Velocity
+    PhiVEL: units=m^2/s; levels=1; title=Horizontal Velocity Potential (m^2/s)
+    PsiVEL: units=m.m^2/s; levels=1; title=Horizontal Velocity Stream-Function
+  [diagnostics stream 3] fileName=dynDiag frequency=-86400. phase=0.
+    UVEL: units=m/s; levels=1; title=Zonal Component of Velocity (m/s)
+    VVEL: units=m/s; levels=1; title=Meridional Component of Velocity (m/s)
+    ETAN: units=m; levels=1; title=Surface Height Anomaly
+    ETANSQ: units=m^2; levels=1; title=Square of Surface Height Anomaly
+    momKE: units=m^2/s^2; levels=1; title=Kinetic Energy (in momentum Eq.)
+  [statistics stream 1] fileName=dynStDiag frequency=-86400. phase=0.
+    ETAN: units=m; levels=1; title=Surface Height Anomaly
+    ETANSQ: units=m^2; levels=1; title=Square of Surface Height Anomaly
+    momKE: units=m^2/s^2; levels=1; title=Kinetic Energy (in momentum Eq.)
+
+Run directory outputs
+  DRC: data=1 meta=1 iterations=none bytes=165 (165 B)
+  DRF: data=1 meta=1 iterations=none bytes=137 (137 B)
+  DXC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DXF: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DXG: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DXV: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DYC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DYF: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DYG: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  DYU: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  Depth: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  Eta: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  PH: data=12 meta=12 iterations=8640..103680 (12) bytes=99534756 (94.9 MiB)
+  PHL: data=12 meta=12 iterations=8640..103680 (12) bytes=99534756 (94.9 MiB)
+  PHrefC: data=1 meta=1 iterations=none bytes=137 (137 B)
+  PHrefF: data=1 meta=1 iterations=none bytes=165 (165 B)
+  RAC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  RAS: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  RAW: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  RAZ: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  RC: data=1 meta=1 iterations=none bytes=137 (137 B)
+  RF: data=1 meta=1 iterations=none bytes=165 (165 B)
+  RhoRef: data=1 meta=1 iterations=none bytes=137 (137 B)
+  S: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  T: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  U: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  V: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  W: data=13 meta=13 iterations=0..103680 (13) bytes=107829319 (102.8 MiB)
+  XC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  XG: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  YC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  YG: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  dynDiag: data=12 meta=12 iterations=0..95040 (12) bytes=497668068 (474.6 MiB)
+  dyn_Aux: data=12 meta=12 iterations=0..95040 (12) bytes=298602204 (284.8 MiB)
+  hFacC: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  hFacS: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  hFacW: data=1 meta=1 iterations=none bytes=8294529 (7.9 MiB)
+  pickup.ckptA: data=1 meta=1 iterations=none bytes=74649940 (71.2 MiB)
+
+Generated products
+  output_dir: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05
+    case=TC2 product=conservation alpha=0.05
+    saved: conservation_timeseries.csv
+    fields: {"eta": "Eta", "kinetic": "momKE", "scalar": null, "u": "U", "v": "V", "vorticity": null}
+    plotted_files: 6
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.pdf
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.png
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.pdf
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.png
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.pdf
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.png
+    computed_files: 3
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/availability.json
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_summary.json
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_timeseries.csv
+    other_files: 1
+      Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/manifest.json
+  output_dir: Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05
+    case=TC2 product=error_analysis alpha=0.05
+    saved: TC2_error_norms, TC2_error_norms.csv, TC2_error_norms.txt, TC2_error_norms.tex
+    plotted_files: 2
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.pdf
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.png
+    computed_files: 3
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.csv
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.tex
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.txt
+    other_files: 1
+      Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/manifest.json
+  output_dir: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05
+    case=TC2 product=postprocessing alpha=0.05
+    saved: postprocessing_values.csv, postprocessing_mass.pdf, postprocessing_mass.png, postprocessing_vorticity_pv.pdf, postprocessing_vorticity_pv.png, postprocessing_energies.pdf, postprocessing_energies.png
+    fields: {"conserved_scalar": null, "eta": "Eta", "kinetic_energy": "computed_from_velocity", "u": "U", "v": "V", "vorticity": "computed_from_velocity"}
+    plotted_files: 6
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_energies.pdf
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_energies.png
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_mass.pdf
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_mass.png
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_vorticity_pv.pdf
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_vorticity_pv.png
+    computed_files: 1
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_values.csv
+    other_files: 1
+      Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/manifest.json
+  output_dir: Sandbox/output/TestCase2/Snapshots/alpha_0.05
+    case=TC2 product=snapshots alpha=0.05
+    saved: eta, etan, psi, phi, velocity_magnitude
+    plotted_files: 62
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_01.00_iter_0000008640.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_02.00_iter_0000017280.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_03.00_iter_0000025920.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_04.00_iter_0000034560.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_05.00_iter_0000043200.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_06.00_iter_0000051840.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_07.00_iter_0000060480.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_08.00_iter_0000069120.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_09.00_iter_0000077760.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_10.00_iter_0000086400.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_11.00_iter_0000095040.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_12.00_iter_0000103680.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_01.00_iter_0000008640.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_02.00_iter_0000017280.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_03.00_iter_0000025920.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_04.00_iter_0000034560.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_05.00_iter_0000043200.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_06.00_iter_0000051840.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_07.00_iter_0000060480.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_08.00_iter_0000069120.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_09.00_iter_0000077760.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_10.00_iter_0000086400.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_11.00_iter_0000095040.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_01.00_iter_0000008640.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_02.00_iter_0000017280.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_03.00_iter_0000025920.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_04.00_iter_0000034560.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_05.00_iter_0000043200.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_06.00_iter_0000051840.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_07.00_iter_0000060480.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_08.00_iter_0000069120.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_09.00_iter_0000077760.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_10.00_iter_0000086400.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_11.00_iter_0000095040.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_01.00_iter_0000008640.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_02.00_iter_0000017280.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_03.00_iter_0000025920.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_04.00_iter_0000034560.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_05.00_iter_0000043200.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_06.00_iter_0000051840.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_07.00_iter_0000060480.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_08.00_iter_0000069120.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_09.00_iter_0000077760.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_10.00_iter_0000086400.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_11.00_iter_0000095040.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_01.00_iter_0000008640.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_02.00_iter_0000017280.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_03.00_iter_0000025920.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_04.00_iter_0000034560.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_05.00_iter_0000043200.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_06.00_iter_0000051840.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_07.00_iter_0000060480.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_08.00_iter_0000069120.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_09.00_iter_0000077760.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_10.00_iter_0000086400.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_11.00_iter_0000095040.png
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_12.00_iter_0000103680.png
+    computed_files: 0
+    other_files: 1
+      Sandbox/output/TestCase2/Snapshots/alpha_0.05/manifest.json
+
+Sent to docs index
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/availability.json
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/availability.json
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.png
+    referenced_by: docs/fragments/conservation_report.html, docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.png
+    referenced_by: docs/fragments/conservation_report.html, docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.png
+    referenced_by: docs/fragments/conservation_report.html, docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_summary.json
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_summary.json
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_timeseries.csv
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_timeseries.csv
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/conservation/alpha_0.05/manifest.json
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/manifest.json
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.csv
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.csv
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.txt
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/error/alpha_0.05/TC2_error_norms.txt
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/error/alpha_0.05/manifest.json
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/error/alpha_0.05/manifest.json
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/manifest.json
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/postprocessing/alpha_0.05/manifest.json
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_energies.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_energies.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_mass.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_mass.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_values.csv
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_values.csv
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_vorticity_pv.png
+    docs_asset: docs/assets/williamson/TestCase2/Diagnosis/postprocessing/alpha_0.05/postprocessing_vorticity_pv.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_03.00_iter_0000025920.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_03.00_iter_0000025920.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_06.00_iter_0000051840.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_06.00_iter_0000051840.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_09.00_iter_0000077760.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_09.00_iter_0000077760.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_10.00_iter_0000086400.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_10.00_iter_0000086400.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_12.00_iter_0000103680.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/eta/tc2_eta_day_12.00_iter_0000103680.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_03.00_iter_0000025920.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_03.00_iter_0000025920.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_06.00_iter_0000051840.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_06.00_iter_0000051840.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_09.00_iter_0000077760.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_09.00_iter_0000077760.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_10.00_iter_0000086400.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/etan/tc2_etan_day_10.00_iter_0000086400.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_03.00_iter_0000025920.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_03.00_iter_0000025920.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_06.00_iter_0000051840.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_06.00_iter_0000051840.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_09.00_iter_0000077760.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_09.00_iter_0000077760.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_10.00_iter_0000086400.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/phi/tc2_phi_day_10.00_iter_0000086400.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_03.00_iter_0000025920.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_03.00_iter_0000025920.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_06.00_iter_0000051840.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_06.00_iter_0000051840.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_09.00_iter_0000077760.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_09.00_iter_0000077760.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_10.00_iter_0000086400.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/psi/tc2_psi_day_10.00_iter_0000086400.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_03.00_iter_0000025920.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_03.00_iter_0000025920.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_06.00_iter_0000051840.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_06.00_iter_0000051840.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_09.00_iter_0000077760.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_09.00_iter_0000077760.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_10.00_iter_0000086400.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_10.00_iter_0000086400.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+  output: Sandbox/output/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_12.00_iter_0000103680.png
+    docs_asset: docs/assets/williamson/TestCase2/Snapshots/alpha_0.05/velocity_magnitude/tc2_velocity_magnitude_day_12.00_iter_0000103680.png
+    referenced_by: docs/fragments/testcase2.html, docs/index.html
+
+Run directory file manifest
+  DRC.data bytes=16 (16 B) mtime_utc=2026-06-17T06:45:30+00:00
+  DRC.meta bytes=149 (149 B) mtime_utc=2026-06-17T06:45:30+00:00
+  DRF.data bytes=8 (8 B) mtime_utc=2026-06-17T06:45:30+00:00
+  DRF.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  DXC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DXC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DXF.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DXF.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DXG.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DXG.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DXV.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DXV.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DYC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DYC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DYF.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DYF.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DYG.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DYG.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  DYU.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:29+00:00
+  DYU.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  Depth.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  Depth.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  Eta.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:31+00:00
+  Eta.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:31+00:00
+  Eta.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:23+00:00
+  Eta.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  Eta.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:09+00:00
+  Eta.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:09+00:00
+  Eta.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  Eta.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  Eta.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  Eta.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  Eta.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  Eta.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  Eta.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:03+00:00
+  Eta.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  Eta.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:39+00:00
+  Eta.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:39+00:00
+  Eta.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  Eta.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:18+00:00
+  Eta.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:58+00:00
+  Eta.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  Eta.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:19+00:00
+  Eta.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  Eta.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:18+00:00
+  Eta.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  Eta.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  Eta.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  PH.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:23+00:00
+  PH.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  PH.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:09+00:00
+  PH.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:09+00:00
+  PH.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  PH.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  PH.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  PH.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  PH.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  PH.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  PH.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:03+00:00
+  PH.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  PH.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:39+00:00
+  PH.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:39+00:00
+  PH.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:19+00:00
+  PH.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:19+00:00
+  PH.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:58+00:00
+  PH.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  PH.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:19+00:00
+  PH.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  PH.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:18+00:00
+  PH.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  PH.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  PH.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  PHL.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:23+00:00
+  PHL.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  PHL.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:09+00:00
+  PHL.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:09+00:00
+  PHL.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  PHL.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  PHL.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  PHL.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  PHL.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  PHL.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  PHL.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:03+00:00
+  PHL.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  PHL.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:39+00:00
+  PHL.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:39+00:00
+  PHL.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:19+00:00
+  PHL.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:19+00:00
+  PHL.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:58+00:00
+  PHL.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  PHL.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:19+00:00
+  PHL.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  PHL.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:18+00:00
+  PHL.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  PHL.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  PHL.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  PHrefC.data bytes=8 (8 B) mtime_utc=2026-06-17T06:45:30+00:00
+  PHrefC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  PHrefF.data bytes=16 (16 B) mtime_utc=2026-06-17T06:45:30+00:00
+  PHrefF.meta bytes=149 (149 B) mtime_utc=2026-06-17T06:45:30+00:00
+  RAC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  RAC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  RAS.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  RAS.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  RAW.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  RAW.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  RAZ.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  RAZ.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:29+00:00
+  RC.data bytes=8 (8 B) mtime_utc=2026-06-17T06:45:30+00:00
+  RC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  RF.data bytes=16 (16 B) mtime_utc=2026-06-17T06:45:30+00:00
+  RF.meta bytes=149 (149 B) mtime_utc=2026-06-17T06:45:30+00:00
+  RhoRef.data bytes=8 (8 B) mtime_utc=2026-06-17T06:45:27+00:00
+  RhoRef.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:27+00:00
+  S.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:31+00:00
+  S.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:31+00:00
+  S.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:23+00:00
+  S.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  S.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:08+00:00
+  S.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:09+00:00
+  S.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  S.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  S.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  S.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  S.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  S.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  S.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:03+00:00
+  S.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  S.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:38+00:00
+  S.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:38+00:00
+  S.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  S.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:18+00:00
+  S.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:58+00:00
+  S.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  S.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:19+00:00
+  S.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  S.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:18+00:00
+  S.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  S.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  S.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  STDERR.0000 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0001 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0002 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0003 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0004 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0005 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0006 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0007 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0008 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0009 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0010 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0011 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0012 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0013 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0014 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDERR.0015 bytes=0 (0 B) mtime_utc=2026-06-17T06:45:27+00:00
+  STDOUT.0000 bytes=7427430 (7.1 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0001 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0002 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0003 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0004 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0005 bytes=7373954 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0006 bytes=7373959 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0007 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0008 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0009 bytes=7373865 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0010 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0011 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0012 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0013 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0014 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  STDOUT.0015 bytes=7373870 (7.0 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  T.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  T.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:31+00:00
+  T.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:22+00:00
+  T.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  T.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:08+00:00
+  T.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:08+00:00
+  T.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  T.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  T.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  T.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  T.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  T.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  T.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:02+00:00
+  T.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  T.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:38+00:00
+  T.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:38+00:00
+  T.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  T.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:18+00:00
+  T.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:57+00:00
+  T.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  T.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:18+00:00
+  T.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  T.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:17+00:00
+  T.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  T.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  T.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  U.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  U.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:30+00:00
+  U.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:22+00:00
+  U.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:22+00:00
+  U.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:08+00:00
+  U.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:08+00:00
+  U.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:42+00:00
+  U.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:42+00:00
+  U.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:08+00:00
+  U.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:08+00:00
+  U.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  U.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  U.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:02+00:00
+  U.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:02+00:00
+  U.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:38+00:00
+  U.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:38+00:00
+  U.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  U.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:18+00:00
+  U.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:57+00:00
+  U.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:57+00:00
+  U.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:18+00:00
+  U.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:18+00:00
+  U.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:17+00:00
+  U.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:17+00:00
+  U.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:34+00:00
+  U.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  V.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  V.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:30+00:00
+  V.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:22+00:00
+  V.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:22+00:00
+  V.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:08+00:00
+  V.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:08+00:00
+  V.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:42+00:00
+  V.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  V.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:08+00:00
+  V.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  V.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  V.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  V.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:02+00:00
+  V.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:02+00:00
+  V.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:38+00:00
+  V.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:38+00:00
+  V.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  V.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:18+00:00
+  V.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:57+00:00
+  V.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:57+00:00
+  V.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:18+00:00
+  V.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:18+00:00
+  V.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:17+00:00
+  V.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:17+00:00
+  V.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  V.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  W.0000000000.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:31+00:00
+  W.0000000000.meta bytes=163 (163 B) mtime_utc=2026-06-17T06:45:31+00:00
+  W.0000008640.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T07:53:23+00:00
+  W.0000008640.meta bytes=163 (163 B) mtime_utc=2026-06-17T07:53:23+00:00
+  W.0000017280.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T08:35:09+00:00
+  W.0000017280.meta bytes=163 (163 B) mtime_utc=2026-06-17T08:35:09+00:00
+  W.0000025920.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:12:43+00:00
+  W.0000025920.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:12:43+00:00
+  W.0000034560.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T09:51:09+00:00
+  W.0000034560.meta bytes=163 (163 B) mtime_utc=2026-06-17T09:51:09+00:00
+  W.0000043200.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T10:50:27+00:00
+  W.0000043200.meta bytes=163 (163 B) mtime_utc=2026-06-17T10:50:27+00:00
+  W.0000051840.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T11:47:03+00:00
+  W.0000051840.meta bytes=163 (163 B) mtime_utc=2026-06-17T11:47:03+00:00
+  W.0000060480.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T12:42:39+00:00
+  W.0000060480.meta bytes=163 (163 B) mtime_utc=2026-06-17T12:42:39+00:00
+  W.0000069120.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T13:40:18+00:00
+  W.0000069120.meta bytes=163 (163 B) mtime_utc=2026-06-17T13:40:19+00:00
+  W.0000077760.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T15:50:58+00:00
+  W.0000077760.meta bytes=163 (163 B) mtime_utc=2026-06-17T15:50:58+00:00
+  W.0000086400.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T17:10:19+00:00
+  W.0000086400.meta bytes=163 (163 B) mtime_utc=2026-06-17T17:10:19+00:00
+  W.0000095040.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T18:12:18+00:00
+  W.0000095040.meta bytes=163 (163 B) mtime_utc=2026-06-17T18:12:18+00:00
+  W.0000103680.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T19:10:35+00:00
+  W.0000103680.meta bytes=163 (163 B) mtime_utc=2026-06-17T19:10:35+00:00
+  XC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  XC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  XG.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  XG.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  YC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  YC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  YG.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:28+00:00
+  YG.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:28+00:00
+  available_diagnostics.log bytes=18604 (18.2 KiB) mtime_utc=2026-06-17T06:45:27+00:00
+  bathymetry_flat4000.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:23+00:00
+  data bytes=1725 (1.7 KiB) mtime_utc=2026-06-17T06:45:22+00:00
+  data.diagnostics bytes=2878 (2.8 KiB) mtime_utc=2026-06-17T06:45:21+00:00
+  data.pkg bytes=49 (49 B) mtime_utc=2026-06-17T06:45:21+00:00
+  dynDiag.0000000000.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T06:45:39+00:00
+  dynDiag.0000000000.meta bytes=339 (339 B) mtime_utc=2026-06-17T06:45:49+00:00
+  dynDiag.0000008640.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T07:53:25+00:00
+  dynDiag.0000008640.meta bytes=339 (339 B) mtime_utc=2026-06-17T07:53:35+00:00
+  dynDiag.0000017280.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T08:35:12+00:00
+  dynDiag.0000017280.meta bytes=339 (339 B) mtime_utc=2026-06-17T08:35:22+00:00
+  dynDiag.0000025920.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T09:12:49+00:00
+  dynDiag.0000025920.meta bytes=339 (339 B) mtime_utc=2026-06-17T09:12:59+00:00
+  dynDiag.0000034560.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T09:51:14+00:00
+  dynDiag.0000034560.meta bytes=339 (339 B) mtime_utc=2026-06-17T09:51:23+00:00
+  dynDiag.0000043200.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T10:50:32+00:00
+  dynDiag.0000043200.meta bytes=339 (339 B) mtime_utc=2026-06-17T10:50:42+00:00
+  dynDiag.0000051840.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T11:47:08+00:00
+  dynDiag.0000051840.meta bytes=339 (339 B) mtime_utc=2026-06-17T11:47:18+00:00
+  dynDiag.0000060480.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T12:42:44+00:00
+  dynDiag.0000060480.meta bytes=339 (339 B) mtime_utc=2026-06-17T12:42:53+00:00
+  dynDiag.0000069120.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T13:40:25+00:00
+  dynDiag.0000069120.meta bytes=339 (339 B) mtime_utc=2026-06-17T13:40:35+00:00
+  dynDiag.0000077760.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T15:51:03+00:00
+  dynDiag.0000077760.meta bytes=339 (339 B) mtime_utc=2026-06-17T15:51:13+00:00
+  dynDiag.0000086400.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T17:10:24+00:00
+  dynDiag.0000086400.meta bytes=339 (339 B) mtime_utc=2026-06-17T17:10:34+00:00
+  dynDiag.0000095040.data bytes=41472000 (39.6 MiB) mtime_utc=2026-06-17T18:12:24+00:00
+  dynDiag.0000095040.meta bytes=339 (339 B) mtime_utc=2026-06-17T18:12:33+00:00
+  dynStDiag.0000000000.txt bytes=10264 (10.0 KiB) mtime_utc=2026-06-17T19:10:26+00:00
+  dyn_Aux.0000000000.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T06:45:38+00:00
+  dyn_Aux.0000000000.meta bytes=317 (317 B) mtime_utc=2026-06-17T06:45:48+00:00
+  dyn_Aux.0000008640.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T07:53:24+00:00
+  dyn_Aux.0000008640.meta bytes=317 (317 B) mtime_utc=2026-06-17T07:53:34+00:00
+  dyn_Aux.0000017280.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T08:35:12+00:00
+  dyn_Aux.0000017280.meta bytes=317 (317 B) mtime_utc=2026-06-17T08:35:21+00:00
+  dyn_Aux.0000025920.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T09:12:49+00:00
+  dyn_Aux.0000025920.meta bytes=317 (317 B) mtime_utc=2026-06-17T09:12:58+00:00
+  dyn_Aux.0000034560.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T09:51:13+00:00
+  dyn_Aux.0000034560.meta bytes=317 (317 B) mtime_utc=2026-06-17T09:51:23+00:00
+  dyn_Aux.0000043200.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T10:50:32+00:00
+  dyn_Aux.0000043200.meta bytes=317 (317 B) mtime_utc=2026-06-17T10:50:41+00:00
+  dyn_Aux.0000051840.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T11:47:07+00:00
+  dyn_Aux.0000051840.meta bytes=317 (317 B) mtime_utc=2026-06-17T11:47:17+00:00
+  dyn_Aux.0000060480.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T12:42:43+00:00
+  dyn_Aux.0000060480.meta bytes=317 (317 B) mtime_utc=2026-06-17T12:42:53+00:00
+  dyn_Aux.0000069120.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T13:40:24+00:00
+  dyn_Aux.0000069120.meta bytes=317 (317 B) mtime_utc=2026-06-17T13:40:34+00:00
+  dyn_Aux.0000077760.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T15:51:03+00:00
+  dyn_Aux.0000077760.meta bytes=317 (317 B) mtime_utc=2026-06-17T15:51:13+00:00
+  dyn_Aux.0000086400.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T17:10:24+00:00
+  dyn_Aux.0000086400.meta bytes=317 (317 B) mtime_utc=2026-06-17T17:10:33+00:00
+  dyn_Aux.0000095040.data bytes=24883200 (23.7 MiB) mtime_utc=2026-06-17T18:12:23+00:00
+  dyn_Aux.0000095040.meta bytes=317 (317 B) mtime_utc=2026-06-17T18:12:33+00:00
+  eedata bytes=254 (254 B) mtime_utc=2026-06-17T06:45:21+00:00
+  eedata.mth bytes=275 (275 B) mtime_utc=2026-06-17T06:45:21+00:00
+  eta_init.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:24+00:00
+  fCorCs.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:23+00:00
+  fCoriC.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:23+00:00
+  fCoriG.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:23+00:00
+  gendata_c2.py bytes=159 (159 B) mtime_utc=2026-06-15T23:28:11+00:00
+  gendata_ref.py bytes=5172 (5.1 KiB) mtime_utc=2026-06-17T06:45:21+00:00
+  hFacC.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  hFacC.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  hFacS.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  hFacS.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  hFacW.data bytes=8294400 (7.9 MiB) mtime_utc=2026-06-17T06:45:30+00:00
+  hFacW.meta bytes=129 (129 B) mtime_utc=2026-06-17T06:45:30+00:00
+  mitgcmuv bytes=1782472 (1.7 MiB) mtime_utc=2026-06-17T06:45:21+00:00
+  pickup.ckptA.data bytes=74649600 (71.2 MiB) mtime_utc=2026-06-17T19:10:27+00:00
+  pickup.ckptA.meta bytes=340 (340 B) mtime_utc=2026-06-17T19:10:36+00:00
+  u_init.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:24+00:00
+  v_init.bin bytes=4147200 (4.0 MiB) mtime_utc=2026-06-17T06:45:24+00:00
