@@ -23,7 +23,7 @@ TC3_LAT1 = np.pi / 2.0
 TC3_LAT_GRID = np.linspace(-0.5 * np.pi, 0.5 * np.pi, 20001)
 
 TC5_U0 = 20.0
-TC5_H0 = 5960.0
+TC5_H0 = 5400.0
 TC5_MOUNTAIN_HEIGHT = 2000.0
 TC5_MOUNTAIN_RADIUS = np.pi / 9.0
 TC5_MOUNTAIN_LON = 1.5 * np.pi
@@ -35,6 +35,8 @@ TC6_WAVE_OMEGA = 7.848e-6
 TC6_H0 = 8000.0
 
 TC7_REFERENCE_DEPTH = 8000.0
+TC7_LONGITUDE_WAVENUMBER_CUTOFF = 42
+TC7_SHAPIRO_SMOOTHING_PASSES = 8
 
 
 def add_scripts_path(anchor: Path) -> None:
@@ -361,6 +363,46 @@ def tc6_eta(lon_rad: np.ndarray, lat_rad: np.ndarray) -> np.ndarray:
 
 def flat_bathymetry(depth: float, nx: int = NX, ny: int = NY) -> np.ndarray:
     return np.full((ny, nx), -float(depth), dtype=np.float64)
+
+
+def longitude_spectral_filter(field: np.ndarray, max_wavenumber: int) -> np.ndarray:
+    field = np.asarray(field, dtype=np.float64)
+    coeffs = np.fft.rfft(field, axis=1)
+    cutoff = max(0, int(max_wavenumber))
+    if cutoff + 1 < coeffs.shape[1]:
+        coeffs[:, cutoff + 1 :] = 0.0
+    return np.fft.irfft(coeffs, n=field.shape[1], axis=1)
+
+
+def shapiro_smooth(field: np.ndarray, passes: int) -> np.ndarray:
+    out = np.asarray(field, dtype=np.float64).copy()
+    for _ in range(max(0, int(passes))):
+        x_smooth = 0.25 * np.roll(out, 1, axis=1) + 0.5 * out + 0.25 * np.roll(out, -1, axis=1)
+        padded = np.pad(x_smooth, ((1, 1), (0, 0)), mode="edge")
+        out = 0.25 * padded[:-2, :] + 0.5 * x_smooth + 0.25 * padded[2:, :]
+    return out
+
+
+def preprocess_tc7_analysis_fields(
+    eta: np.ndarray,
+    u: np.ndarray,
+    v: np.ndarray,
+    *,
+    max_wavenumber: int = TC7_LONGITUDE_WAVENUMBER_CUTOFF,
+    smoothing_passes: int = TC7_SHAPIRO_SMOOTHING_PASSES,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Apply the large-scale TC7 preprocessing used by the local MITgcm setup."""
+    eta_mean = float(np.mean(eta))
+    eta_f = longitude_spectral_filter(eta - eta_mean, max_wavenumber) + eta_mean
+    u_f = longitude_spectral_filter(u, max_wavenumber)
+    v_f = longitude_spectral_filter(v, max_wavenumber)
+    if smoothing_passes:
+        eta_f = shapiro_smooth(eta_f, smoothing_passes)
+        u_f = shapiro_smooth(u_f, smoothing_passes)
+        v_f = shapiro_smooth(v_f, smoothing_passes)
+    v_f[0, :] = 0.0
+    v_f[-1, :] = 0.0
+    return eta_f, u_f, v_f
 
 
 def resolve_tc7_raw_file(base_dir: Path) -> Path:

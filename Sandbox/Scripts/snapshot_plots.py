@@ -44,6 +44,24 @@ class SnapshotSpec:
     center_zero: bool = False
 
 
+@dataclass
+class SnapshotResult:
+    folder: str
+    field: str
+    display: str
+    iterations: list[int]
+    saved_iterations: list[int]
+    skipped_nonfinite_iterations: list[int]
+
+    @property
+    def wrote_any(self) -> bool:
+        return bool(self.saved_iterations)
+
+    @property
+    def invalid(self) -> bool:
+        return bool(self.skipped_nonfinite_iterations)
+
+
 def plot_snapshot(
     field: np.ndarray,
     xc: np.ndarray,
@@ -101,20 +119,22 @@ def save_scalar_series(
     delta_t: float,
     *,
     dpi: int = 220,
-) -> bool:
+) -> SnapshotResult:
     iterations = discover_iterations(run_dir, spec.field)
     if not iterations:
         print(f"skip {spec.display}: no {spec.field} files")
-        return False
+        return SnapshotResult(spec.folder, spec.field, spec.display, [], [], [])
 
     xc, yc = lon_lat(run_dir)
     case = case_code.lower()
-    wrote_any = False
+    saved_iterations: list[int] = []
+    skipped_nonfinite_iterations: list[int] = []
     for iteration in iterations:
         field = to_2d(read_mds_field(run_dir, spec.field, iteration))
         value_range = finite_min_max(field)
         if value_range is None:
             print(f"skip {spec.display} iteration {iteration}: no finite values")
+            skipped_nonfinite_iterations.append(iteration)
             continue
         missing = int(field.size - np.count_nonzero(np.isfinite(field)))
         if missing:
@@ -138,12 +158,19 @@ def save_scalar_series(
             center_zero=spec.center_zero,
             dpi=dpi,
         )
-        wrote_any = True
-    if wrote_any:
+        saved_iterations.append(iteration)
+    if saved_iterations:
         print(f"wrote {spec.display}: {output_root / spec.folder}")
     else:
         print(f"skip {spec.display}: no finite snapshots")
-    return wrote_any
+    return SnapshotResult(
+        spec.folder,
+        spec.field,
+        spec.display,
+        [int(value) for value in iterations],
+        saved_iterations,
+        skipped_nonfinite_iterations,
+    )
 
 
 def save_velocity_magnitude(
@@ -155,21 +182,22 @@ def save_velocity_magnitude(
     u_candidates: tuple[str, ...] = ("U", "UVEL", "UVELMASS"),
     v_candidates: tuple[str, ...] = ("V", "VVEL", "VVELMASS"),
     dpi: int = 220,
-) -> bool:
+) -> SnapshotResult:
     u_name = first_existing_field(run_dir, u_candidates)
     v_name = first_existing_field(run_dir, v_candidates)
     if u_name is None or v_name is None:
         print("skip velocity magnitude: no U/V files")
-        return False
+        return SnapshotResult("velocity_magnitude", "velocity_magnitude", "velocity magnitude", [], [], [])
 
     iterations = sorted(set(discover_iterations(run_dir, u_name)) & set(discover_iterations(run_dir, v_name)))
     if not iterations:
         print("skip velocity magnitude: U/V iterations do not match")
-        return False
+        return SnapshotResult("velocity_magnitude", "velocity_magnitude", "velocity magnitude", [], [], [])
 
     xc, yc = lon_lat(run_dir)
     case = case_code.lower()
-    wrote_any = False
+    saved_iterations: list[int] = []
+    skipped_nonfinite_iterations: list[int] = []
     for iteration in iterations:
         u = center_to_shape(read_mds_field(run_dir, u_name, iteration), xc.shape)
         v = center_to_shape(read_mds_field(run_dir, v_name, iteration), xc.shape)
@@ -177,6 +205,7 @@ def save_velocity_magnitude(
         value_range = finite_min_max(speed)
         if value_range is None:
             print(f"skip velocity magnitude iteration {iteration}: no finite values")
+            skipped_nonfinite_iterations.append(iteration)
             continue
         missing = int(speed.size - np.count_nonzero(np.isfinite(speed)))
         if missing:
@@ -189,12 +218,19 @@ def save_velocity_magnitude(
         )
         out = output_root / "velocity_magnitude" / f"{case}_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
         plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
-        wrote_any = True
-    if wrote_any:
+        saved_iterations.append(iteration)
+    if saved_iterations:
         print(f"wrote velocity magnitude: {output_root / 'velocity_magnitude'}")
     else:
         print("skip velocity magnitude: no finite snapshots")
-    return wrote_any
+    return SnapshotResult(
+        "velocity_magnitude",
+        "velocity_magnitude",
+        "velocity magnitude",
+        [int(value) for value in iterations],
+        saved_iterations,
+        skipped_nonfinite_iterations,
+    )
 
 
 def run_snapshots(
@@ -204,6 +240,7 @@ def run_snapshots(
     *,
     save_velocity: bool = True,
     dpi: int = 220,
+    fail_on_invalid: bool = True,
 ) -> Path:
     run_dir = run_dir.expanduser().resolve()
     if not run_dir.exists():
@@ -215,15 +252,33 @@ def run_snapshots(
     output_root.mkdir(parents=True, exist_ok=True)
 
     saved = []
+    results: list[SnapshotResult] = []
     for spec in specs:
         clear_generated_snapshot_images(output_root, spec.folder)
-        if save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi):
+        result = save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi)
+        results.append(result)
+        if result.wrote_any:
             saved.append(spec.folder)
     if save_velocity:
         clear_generated_snapshot_images(output_root, "velocity_magnitude")
-        if save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi):
+        result = save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi)
+        results.append(result)
+        if result.wrote_any:
             saved.append("velocity_magnitude")
 
+    invalid = [result for result in results if result.invalid]
+    field_results = {
+        result.folder: {
+            "field": result.field,
+            "display": result.display,
+            "iterations": [int(value) for value in result.iterations],
+            "saved_iterations": [int(value) for value in result.saved_iterations],
+            "skipped_nonfinite_iterations": [
+                int(value) for value in result.skipped_nonfinite_iterations
+            ],
+        }
+        for result in results
+    }
     write_manifest(
         output_root,
         {
@@ -232,7 +287,15 @@ def run_snapshots(
             "product": "snapshots",
             "saved": saved,
             "source_run": str(run_dir),
+            "valid": not invalid,
+            "field_results": field_results,
         },
     )
     print(f"outputs written to: {output_root}")
+    if fail_on_invalid and invalid:
+        details = "; ".join(
+            f"{result.display}: {len(result.skipped_nonfinite_iterations)} non-finite iteration(s)"
+            for result in invalid
+        )
+        raise RuntimeError(f"{case_code} snapshots are invalid: {details}")
     return output_root

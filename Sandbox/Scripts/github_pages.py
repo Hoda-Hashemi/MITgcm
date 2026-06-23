@@ -155,7 +155,7 @@ SECTIONS = [
     {
         "slug": "testcase5",
         "title": "Williamson TC5: Zonal Flow Over an Isolated Mountain",
-        "summary": "The previous 60 s output became non-finite; a corrected 30 s rerun is active on onode16 and will replace these assets after it finishes cleanly.",
+        "summary": "The archived output becomes non-finite before the required day-10/day-15 checks; the corrected setup uses H0=5400 m, 15 s steps, and viscosity before rerun.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC5",
         "key_days": (0.0, 3.0, 6.0, 9.0, 10.0, 12.0, 15.0),
         "snapshot_fields": [
@@ -185,7 +185,7 @@ SECTIONS = [
     {
         "slug": "testcase7",
         "title": "Williamson TC7: Analyzed 500 mb Initial State",
-        "summary": "Analyzed-height and wind input is present; the corrected 50 s, polar-tapered rerun passes preflight and is queued on onode16.",
+        "summary": "Analyzed-height and wind input is present; the corrected setup uses 25 s steps, large-scale filtering, polar tapering, and viscosity before rerun.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC7",
         "snapshot_fields": [
             ("eta", "Eta"),
@@ -654,7 +654,7 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "title": "Parameters",
             "body": (
                 "<ul>"
-                "<li><code>U0=20 m s^-1</code>, <code>H0=5960 m</code>.</li>"
+                "<li><code>U0=20 m s^-1</code>, <code>H0=5400 m</code>.</li>"
                 "<li>Mountain height <code>h_s0=2000 m</code>, radius <code>R=&pi;/9</code>.</li>"
                 "<li>Mountain center <code>(&lambda;c,&theta;c)=(3&pi;/2,&pi;/6)</code>.</li>"
                 "</ul>"
@@ -737,7 +737,9 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "body": (
                 f"{COMMON_EQUATION_HTML}"
                 "<p>The paper uses analyzed atmospheric states truncated to T42 spectral resolution, "
-                "with optional nonlinear normal-mode initialization. This repository has "
+                "with optional nonlinear normal-mode initialization. This repository applies "
+                "a large-scale filter to its local analysis file before staging MITgcm input. "
+                "It has "
                 "<code>input/raw/tc7_initial_conditions.npz</code> and generated binary "
                 "height/wind fields staged for the submitted run.</p>"
             ),
@@ -748,7 +750,7 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<ul>"
                 "<li>Local reference depth <code>H0=8000 m</code>.</li>"
                 "<li>Paper states include 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979 examples.</li>"
-                "<li>Local grid: <code>1440 x 720</code> at <code>0.25 deg</code>; the submitted rerun uses a 50 s step and a polar velocity taper so the initial CFL stays below the 0.5 validation margin.</li>"
+                "<li>Local grid: <code>1440 x 720</code> at <code>0.25 deg</code>; the submitted rerun uses a 25 s step, large-scale filtering, polar velocity tapering, and <code>viscAh=1e5 m2 s^-1</code>.</li>"
                 "</ul>"
             ),
         },
@@ -2016,7 +2018,7 @@ def render_conservation_audit_section() -> str:
         "<section class='description-block detail-expected'>"
         "<h3>Decision Rule</h3>"
         "<div class='description-copy'>"
-        "<p>Use these conservation values only when the health column reports finite state fields. The old TC5 60 s output is invalid because it becomes non-finite after day 0; the corrected 30 s rerun is still in progress. TC2 and TC3 rotated runs must be regenerated after the Coriolis-map fix before their conservation rows can be final.</p>"
+        "<p>Use these conservation values only when the health column reports finite state fields. TC5 and TC7 outputs that become non-finite are invalid even when files exist; the corrected reruns use smaller steps, viscosity, and stricter postprocessing health checks. TC2 and TC3 rotated runs must be regenerated after the Coriolis-map fix before their conservation rows can be final.</p>"
         "</div>"
         "</section>"
         "</article>"

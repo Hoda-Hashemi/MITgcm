@@ -43,6 +43,8 @@ V_NAMES = ("V", "VVEL", "VVELMASS")
 CSV_COLUMNS = (
     "iteration",
     "day",
+    "state_finite_fraction",
+    "nonfinite_state_values",
     "volume_m3",
     "mass_kg",
     "conserved_scalar_integral",
@@ -76,6 +78,7 @@ class PostprocessingSpec:
     compute_kinetic_energy_if_missing: bool = True
     compute_vorticity_if_missing: bool = True
     compute_potential_vorticity_if_missing: bool = True
+    fail_on_nonfinite: bool = True
 
 
 def default_postprocessing_spec(case_code: str) -> PostprocessingSpec:
@@ -130,6 +133,14 @@ def finite_max(values: np.ndarray) -> float:
     finite = np.asarray(values, dtype=np.float64)
     finite = finite[np.isfinite(finite)]
     return float(np.max(finite)) if finite.size else float("nan")
+
+
+def finite_state_summary(fields: tuple[np.ndarray, ...]) -> tuple[float, int]:
+    total = sum(field.size for field in fields)
+    if total == 0:
+        return float("nan"), 0
+    finite = sum(int(np.count_nonzero(np.isfinite(field))) for field in fields)
+    return float(finite / total), int(total - finite)
 
 
 def load_pyplot():
@@ -257,6 +268,7 @@ def row_for_iteration(
 ) -> dict[str, float]:
     eta_name, u_name, v_name, conserved_name, kinetic_name, vorticity_name = fields
     eta = center_to_shape(read_mds_field(run_dir, eta_name, iteration), area.shape)
+    state_fields: list[np.ndarray] = [eta]
 
     h = h0 + eta
     potential_energy = 0.5 * rho0 * gravity * finite_sum(eta * eta * area)
@@ -271,6 +283,7 @@ def row_for_iteration(
             raise FileNotFoundError("need U and V output fields to compute missing KE/vorticity")
         u = center_to_shape(read_mds_field(run_dir, u_name, iteration), area.shape)
         v = center_to_shape(read_mds_field(run_dir, v_name, iteration), area.shape)
+        state_fields.extend((u, v))
 
     if kinetic_name is not None:
         ke_specific = center_to_shape(read_mds_field(run_dir, kinetic_name, iteration), area.shape)
@@ -301,11 +314,15 @@ def row_for_iteration(
     if conserved_name is not None:
         conserved = center_to_shape(read_mds_field(run_dir, conserved_name, iteration), area.shape)
         conserved_integral = finite_sum(conserved * area)
+        state_fields.append(conserved)
 
     volume = finite_sum(h * area)
+    state_finite_fraction, nonfinite_state_values = finite_state_summary(tuple(state_fields))
     return {
         "iteration": int(iteration),
         "day": float(iteration * delta_t / DAY),
+        "state_finite_fraction": state_finite_fraction,
+        "nonfinite_state_values": nonfinite_state_values,
         "volume_m3": volume,
         "mass_kg": rho0 * volume,
         "conserved_scalar_integral": conserved_integral,
@@ -588,6 +605,13 @@ def analyze_run(
         plots = plot_timeseries(output_dir, rows, spec, dpi)
         saved.extend(path.name for path in plots)
 
+    bad_rows = [row for row in rows if row["nonfinite_state_values"] > 0]
+    validity = {
+        "valid": not bad_rows,
+        "min_state_finite_fraction": min(row["state_finite_fraction"] for row in rows),
+        "nonfinite_iterations": [int(row["iteration"]) for row in bad_rows],
+        "first_bad_day": bad_rows[0]["day"] if bad_rows else None,
+    }
     write_manifest(
         output_dir,
         {
@@ -604,6 +628,7 @@ def analyze_run(
                 "vorticity": vorticity_name or "computed_from_velocity",
             },
             "iterations": [int(value) for value in iterations],
+            "validity": validity,
             "saved": saved,
         },
     )
@@ -619,6 +644,12 @@ def analyze_run(
             f"relative_change={rows[-1]['conserved_scalar_rel_change']:.6e}"
         )
     print(f"  wrote {output_dir}")
+    if spec.fail_on_nonfinite and bad_rows:
+        raise RuntimeError(
+            f"{case_code} postprocessing invalid: "
+            f"{len(bad_rows)} iteration(s) contain non-finite state fields; "
+            f"first bad day {bad_rows[0]['day']:.2f}"
+        )
     return output_dir
 
 

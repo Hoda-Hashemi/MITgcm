@@ -933,8 +933,8 @@ def default_unavailable_reason(case_code: str) -> str:
         )
     if case_code == "TC7":
         return (
-            "pending validation: TC7 analyzed input is staged, but no completed MDS "
-            "output is archived yet"
+            "pending validation: rerun TC7 with the filtered 25 s setup and require "
+            "finite MDS output through day 5"
         )
     return "no run directory with MDS metadata was found"
 

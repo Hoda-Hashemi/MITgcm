@@ -530,23 +530,22 @@ def markdown(rows):
     lines.append("")
     lines.append(
         "TC5 does not look like a simple CFL failure: the initial advective CFL "
-        "is 0.043, but archived fields become non-finite after iteration 1440 "
+        "is small, but archived fields become non-finite before the required late-day checks "
         "and the CG residuals later print NaN. Treat TC5 as needing a run-health "
-        "fix or a targeted shorter-deltaT rerun before using later-day plots."
+        "rerun with the corrected H0, smaller timestep, and explicit viscosity "
+        "before using later-day plots."
     )
     lines.append("")
     lines.append(
         "TC4 and TC7 should be read from the job schedule, not from their template "
-        "`nTimeSteps`: both submitted jobs target 5 days at 60 s, i.e. 7200 steps. "
-        "TC4 now has completed `run_u0_20` output and its saved advective CFL can "
-        "be read from archived U/V fields, while TC7 has input data staged but needs "
-        "a smaller deltaT before a final rerun."
+        "`nTimeSteps`. TC4 now has completed `run_u0_20` output and its saved "
+        "advective CFL can be read from archived U/V fields, while TC7 needs a "
+        "finite rerun with the filtered 25 s setup before saved-output CFL can be reported."
     )
     lines.append("")
     lines.append(
-        "TC7 cannot be fully audited yet because completed `run_analysis` output is not "
-        "archived. The staged analyzed input is present, and the preflight advective CFL "
-        "indicates the current 60 s job schedule is too large for final validation."
+        "TC7 cannot be accepted from the current archived `run_analysis` output because "
+        "the saved fields become non-finite after initialization; rerun the filtered 25 s setup."
     )
     lines.append("")
     lines.append("### Check commands")
@@ -633,8 +632,8 @@ def html_fragment(rows):
       <section class='description-block detail-expected'>
         <h3>Decision</h3>
         <div class='description-copy'>
-          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 becomes non-finite after iteration 1440 despite an initial advective CFL of 0.043, so that case needs a run-health investigation rather than a CFL-only explanation.</p>
-          <p>TC4 has completed <code>run_u0_20</code> output, so its saved advective CFL is read from archived U/V fields. TC7 has staged analyzed input, but the preflight audit flags <code>deltaT=60 s</code> as too large before a final rerun.</p>
+          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 becomes non-finite despite a small initial advective CFL, so the corrected rerun uses the standard depth, a smaller timestep, and explicit viscosity rather than treating it as CFL-only.</p>
+          <p>TC4 has completed <code>run_u0_20</code> output, so its saved advective CFL is read from archived U/V fields. TC7 needs the filtered 25 s rerun before saved-output CFL can be accepted.</p>
         </div>
       </section>
     </article>
