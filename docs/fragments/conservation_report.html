@@ -50,9 +50,9 @@
 <tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
 <tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> small drift </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> small drift </td><td> noticeable drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC5 </td><td> Issues </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid output </td><td> invalid; first bad day 1 </td></tr>
+<tr><td> TC5 </td><td> Rerun in progress </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> arza job 816795 running; previous output invalid after day 1 </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
+<tr><td> TC7 </td><td> Rerun in progress </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> arza job 816794 running; no completed corrected MDS output archived yet </td></tr>
         </tbody></table></div>
       </div>
     </div>
@@ -96,9 +96,9 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_mass.png'>Mass/free surface drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_energy.png'>Energy proxy drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha run_u0_20)</a></div>
 </details>
-<details class='details-panel case-block status-issues'>
-<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-issues'>Issues</span></summary>
-<p>Output health is invalid because at least one Eta/U/V/scalar state contains non-finite values (minimum finite fraction 0). The first bad saved record is day 1. Do not use the conservation verdict as final until the run is regenerated with finite state fields.</p>
+<details class='details-panel case-block status-pending'>
+<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-pending'>Rerun in progress</span></summary>
+<p>The archived output is invalid after day 1, and the corrected 30 s, viscAh=1e1 arza rerun is currently running as job 816795. Do not use the conservation verdict as final until the corrected run finishes with finite state fields.</p>
 <ul>
 <li><code>alpha=0</code>: invalid output; 15 non-finite saved records, first bad day 1</li>
 </ul>
@@ -113,10 +113,10 @@
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
-<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Pending output</span></summary>
-<p>Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</p>
+<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Rerun in progress</span></summary>
+<p>The analyzed input is staged and the corrected 25 s, viscAh=1e1 arza rerun is currently running as job 816794. No completed corrected MDS output is archived yet.</p>
 <ul>
-<li><code>alpha=unavailable</code>: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</li>
+<li><code>alpha=0</code>: awaiting corrected run output from job 816794</li>
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>

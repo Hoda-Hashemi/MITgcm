@@ -22,9 +22,9 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
 | TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
 | TC4 | Verified | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
-| TC5 | Issues | invalid output | invalid output | invalid output | invalid output | invalid; first bad day 1 |
+| TC5 | Rerun in progress | awaiting rerun output | awaiting rerun output | awaiting rerun output | awaiting rerun output | arza job 816795 running; previous output invalid after day 1 |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
-| TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
+| TC7 | Rerun in progress | awaiting rerun output | awaiting rerun output | awaiting rerun output | awaiting rerun output | arza job 816794 running; no completed corrected MDS output archived yet |
 
 ### Required output fields
 
@@ -67,7 +67,7 @@ Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically
 
 #### TC5
 
-Output health is invalid because at least one Eta/U/V/scalar state contains non-finite values (minimum finite fraction 0). The first bad saved record is day 1. Do not use the conservation verdict as final until the run is regenerated with finite state fields.
+The archived output is invalid after day 1, and the corrected 30 s, `viscAh=1e1` arza rerun is currently running as job `816795`. Do not use the conservation verdict as final until the corrected run finishes with finite state fields.
 
 - alpha `0`: invalid output; 15 non-finite saved records, first bad day 1
 
@@ -79,6 +79,6 @@ Mass is preserved to roundoff (max |rel| 8.433e-16). The mechanical-energy proxy
 
 #### TC7
 
-Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
+The analyzed input is staged and the corrected 25 s, `viscAh=1e1` arza rerun is currently running as job `816794`. No completed corrected MDS output is archived yet.
 
-- alpha `unavailable`: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
+- alpha `0`: awaiting corrected run output from job `816794`

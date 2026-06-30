@@ -19,19 +19,19 @@ TC1 has the most visible discrepancy: its legacy `tools/check_cfl_tc1.py` prints
 | TC3 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 2997 | 171 | 0.124 | n/a | 38.6 | 170 | no advective deltaT change indicated |
 | TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | 0.75 | 576000 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
 | TC4 | run_u0_20 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | n/a | n/a | n/a | 313 | cannot verify advective CFL until inputs/run output exist |
-| TC5 | standard | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5960 | 242 | 0.022 | 0.022 | 20.0 | 120 | no advective deltaT change indicated |
+| TC5 | standard | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5400 | 230 | 0.022 | pending | 20.0 | 114 | arza rerun in progress; await finite saved output |
 | TC6 | standard | 0 | 30.0 | 30.0 | 30.0 | 40320 | 8000 | 280 | 0.126 | n/a | 100.0 | 139 | no advective deltaT change indicated |
-| TC7 | analysis | 0 | 50.0 | 50.0 | 60.0 | 8640 | 8000 | 280 | 0.476 | 21.2 | 56.4 | 231 | investigate non-finite run; not explained by initial advective CFL |
+| TC7 | analysis | 0 | 25.0 | 25.0 | 25.0 | 17280 | 8000 | 280 | 0.236 | pending | 48.7 | 116 | arza rerun in progress; await finite saved output |
 
 ### Decisions
 
 No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 reaches about 0.56 in the saved fields, above the conservative 0.5 margin; deltaT <= 8.93 s would keep the saved-output maximum under 0.5.
 
-TC5 does not look like a simple CFL failure: the initial advective CFL is 0.043, but archived fields become non-finite after iteration 1440 and the CG residuals later print NaN. Treat TC5 as needing a run-health fix or a targeted shorter-deltaT rerun before using later-day plots.
+TC5 previously became non-finite after the first saved day. The active arza rerun uses `deltaT=30 s` and `viscAh=1e1`, so final validation is waiting on completed corrected output.
 
-TC4 and TC7 should be read from the job schedule, not from their template `nTimeSteps`: both submitted jobs target 5 days at 60 s, i.e. 7200 steps. TC4 now has completed `run_u0_20` output and its saved advective CFL can be read from archived U/V fields, while TC7 has input data staged but needs a smaller deltaT before a final rerun.
+TC4 should be read from the job schedule, not only from template `nTimeSteps`. TC4 now has completed `run_u0_20` output and its saved advective CFL can be read from archived U/V fields.
 
-TC7 cannot be fully audited yet because completed `run_analysis` output is not archived. The staged analyzed input is present, and the preflight advective CFL indicates the current 60 s job schedule is too large for final validation.
+TC7 cannot be fully audited yet because completed corrected `run_analysis` output is not archived. The staged analyzed input is present, and the active arza rerun uses `deltaT=25 s` and `viscAh=1e1`.
 
 ### Check commands
 
