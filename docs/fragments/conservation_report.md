@@ -19,8 +19,8 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | Case | Status | Mass | Target quantity | Energy proxy | PV/enstrophy | Output health |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
-| TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
+| TC2 | Issues | preserved to roundoff | not preserved | not preserved | not preserved | finite fields, but alpha 1.57 setup preflight fails |
+| TC3 | Validated with caveat | preserved to roundoff | not preserved for rotated alpha | not preserved for rotated alpha | not preserved for rotated alpha | finite saved state fields |
 | TC4 | Verified | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
 | TC5 | Rerun in progress | awaiting rerun output | awaiting rerun output | awaiting rerun output | awaiting rerun output | arza job 816795 running; previous output invalid after day 1 |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
@@ -46,7 +46,7 @@ Mass is preserved to roundoff (max |rel| 7.709e-16). The TC1 tracer amount is we
 
 #### TC2
 
-Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy is not preserved (max |rel| 0.147859). Derived potential enstrophy is not preserved (max |rel| 0.0220451).
+Mass is preserved to roundoff (max |rel| 8.499e-16), but the published alpha `1.57` setup fails preflight because the rotated Coriolis files are missing. The mechanical-energy proxy is not preserved (max |rel| 0.147859), and derived potential enstrophy is not preserved (max |rel| 0.0220451).
 
 - alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
 - alpha `0.05`: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved
@@ -55,9 +55,10 @@ Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy
 
 #### TC3
 
-Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).
+Both published setups pass preflight and remain finite. Alpha `0` is clean, but alpha `1.0472` has larger steady-state drift and nontrivial energy/PV drift, so TC3 is validated with caveat rather than marked as a perfect pass.
 
 - alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
+- alpha `1.0472`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
 
 #### TC4
 

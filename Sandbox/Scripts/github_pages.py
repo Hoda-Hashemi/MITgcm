@@ -155,7 +155,7 @@ SECTIONS = [
     {
         "slug": "testcase5",
         "title": "Williamson TC5: Zonal Flow Over an Isolated Mountain",
-        "summary": "The archived output becomes non-finite before the required day-10/day-15 checks; the corrected setup uses H0=5400 m, 15 s steps, and viscosity before rerun.",
+        "summary": "Previous TC5 output became non-finite; a corrected 30 s, viscAh=1e1 rerun is active on arza job 816795 (anode[12-14]).",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC5",
         "key_days": (0.0, 3.0, 6.0, 9.0, 10.0, 12.0, 15.0),
         "snapshot_fields": [
@@ -185,7 +185,7 @@ SECTIONS = [
     {
         "slug": "testcase7",
         "title": "Williamson TC7: Analyzed 500 mb Initial State",
-        "summary": "Analyzed-height and wind input is present; the corrected setup uses 25 s steps, large-scale filtering, polar tapering, and viscosity before rerun.",
+        "summary": "Analyzed-height and wind input is present; the corrected 25 s, polar-tapered, viscAh=1e1 rerun is active on arza job 816794 (anode[09-11]).",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC7",
         "snapshot_fields": [
             ("eta", "Eta"),
@@ -288,11 +288,11 @@ AUDIT_SECTIONS = (
 STATUS_META = {
     "testcase1": ("Verified", "verified"),
     "testcase2": ("Issues", "issues"),
-    "testcase3": ("Issues", "issues"),
+    "testcase3": ("Validated with caveat", "pending"),
     "testcase4": ("Verified", "verified"),
     "testcase5": ("Rerun in progress", "pending"),
     "testcase6": ("Pending validation", "pending"),
-    "testcase7": ("Submitted / preflight pass", "pending"),
+    "testcase7": ("Rerun in progress", "pending"),
     "case1_constant_bathymetry": ("Verified", "verified"),
     "case2_real_bathymetry": ("Verified", "verified"),
     "case3_geostrophic_adjustment": ("Verified", "verified"),
@@ -525,6 +525,20 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "Mesh refinement should reduce the 5-day error norms cleanly.</p>"
             ),
         },
+        {
+            "title": "Validation Result",
+            "body": (
+                "<p>Validation is mixed. Alpha <code>0</code>, <code>0.05</code>, and <code>1.52</code> "
+                "pass setup preflight and keep finite saved fields with mass preserved to roundoff. "
+                "The published alpha <code>1.57</code> run fails setup preflight because "
+                "<code>fCoriC.bin</code> is missing, so its rotated Coriolis field does not match "
+                "the rotated initial state. Its day-12 error table has order-one drift "
+                "(<code>L2_eta=7.93e-1</code>, <code>L2_u=2.13</code>, "
+                "<code>L2_v=46.5 m s^-1</code>). Keep TC2 flagged as an issue until alpha "
+                "<code>1.57</code> is regenerated with <code>selectCoriMap=3</code> and the rotated "
+                "<code>fCoriC/fCoriG/fCorCs</code> files.</p>"
+            ),
+        },
     ],
     "testcase3": [
         {
@@ -572,6 +586,19 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<p>The compact jet and free-surface anomaly should stay steady. Errors should be "
                 "localized near the jet edges if they appear at all, and conservation diagnostics "
                 "should show little long-term drift.</p>"
+            ),
+        },
+        {
+            "title": "Validation Result",
+            "body": (
+                "<p>Validated with caveat. Both published TC3 setups pass preflight and saved fields "
+                "stay finite. Alpha <code>0</code> is clean through day 5 "
+                "(<code>L2_eta=8.14e-6</code>, <code>L2_u=1.39e-5</code>, "
+                "<code>L2_v=1.00e-4 m s^-1</code>). The rotated alpha <code>1.0472</code> run is "
+                "finite and correctly staged, but it shows larger steady-state drift "
+                "(day-5 <code>L2_eta=2.65e-4</code>, <code>L2_u=3.38e-3</code>, "
+                "<code>L2_v=9.29e-2 m s^-1</code>) and nontrivial energy/PV drift, so it should "
+                "not be described as a perfect verification pass.</p>"
             ),
         },
     ],
@@ -750,7 +777,7 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<ul>"
                 "<li>Local reference depth <code>H0=8000 m</code>.</li>"
                 "<li>Paper states include 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979 examples.</li>"
-                "<li>Local grid: <code>1440 x 720</code> at <code>0.25 deg</code>; the submitted rerun uses a 25 s step, large-scale filtering, polar velocity tapering, and <code>viscAh=1e5 m2 s^-1</code>.</li>"
+                "<li>Local grid: <code>1440 x 720</code> at <code>0.25 deg</code>; the submitted rerun uses a 25 s step, large-scale filtering, polar velocity tapering, and <code>viscAh=1e1</code>.</li>"
                 "</ul>"
             ),
         },
