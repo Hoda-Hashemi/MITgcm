@@ -300,6 +300,10 @@ main {
   min-width: 0;
 }
 
+main > section[hidden] {
+  display: none !important;
+}
+
 .side-nav {
   position: sticky;
   top: 14px;

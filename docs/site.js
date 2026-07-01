@@ -4,14 +4,79 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 const navToggle = document.querySelector("[data-nav-toggle]");
 const navClose = document.querySelector("[data-nav-close]");
 const navBackdrop = document.querySelector("[data-nav-backdrop]");
-const navLinks = Array.from(document.querySelectorAll(".side-nav a[href^='#']"));
-const sections = navLinks
-  .map((link) => document.querySelector(link.getAttribute("href")))
-  .filter(Boolean);
+let navLinks = Array.from(document.querySelectorAll(".side-nav a[href^='#']"));
+let pageSections = Array.from(document.querySelectorAll("main > section[id]"));
+let sections = [];
 
 function firstText(root, selector) {
   const node = root.querySelector(selector);
   return node ? node.textContent.trim() : "";
+}
+
+function queryHashTarget(hash) {
+  if (!hash || hash === "#") {
+    return null;
+  }
+
+  try {
+    return document.querySelector(hash);
+  } catch (_error) {
+    return null;
+  }
+}
+
+function refreshNavigationCollections() {
+  navLinks = Array.from(document.querySelectorAll(".side-nav a[href^='#']"));
+  pageSections = Array.from(document.querySelectorAll("main > section[id]"));
+  sections = navLinks
+    .map((link) => queryHashTarget(link.getAttribute("href")))
+    .filter(Boolean);
+}
+
+function sectionTitle(section) {
+  return firstText(section, "h2") || section.id.replace(/[-_]+/g, " ");
+}
+
+function ensureSidebarCoverage() {
+  const nav = document.querySelector("[data-nav-drawer]");
+  if (!nav) {
+    return;
+  }
+
+  refreshNavigationCollections();
+  const knownIds = new Set(
+    navLinks
+      .map((link) => link.getAttribute("href"))
+      .filter((href) => href && href.startsWith("#"))
+      .map((href) => href.slice(1))
+  );
+  const missingSections = pageSections.filter((section) => !knownIds.has(section.id));
+  if (!missingSections.length) {
+    return;
+  }
+
+  const group = document.createElement("details");
+  group.className = "nav-group";
+  group.open = true;
+  group.dataset.generatedNavGroup = "";
+
+  const summary = document.createElement("summary");
+  summary.textContent = "Additional sections";
+
+  const links = document.createElement("div");
+  links.className = "nav-group-links";
+
+  missingSections.forEach((section) => {
+    const link = document.createElement("a");
+    link.className = "nav-link";
+    link.href = `#${section.id}`;
+    link.textContent = sectionTitle(section);
+    links.append(link);
+  });
+
+  group.append(summary, links);
+  nav.append(group);
+  refreshNavigationCollections();
 }
 
 function typesetMath(root) {
@@ -183,20 +248,62 @@ function setActiveNav(hash) {
   }
 }
 
-function scrollToSection(hash) {
-  const target = document.querySelector(hash);
+function topLevelSectionForHash(hash) {
+  const home = document.getElementById("home") || pageSections[0] || null;
+  const target = queryHashTarget(hash);
   if (!target) {
+    return home;
+  }
+
+  return target.matches("main > section[id]") ? target : target.closest("main > section[id]") || home;
+}
+
+function revealSection(hash, options = {}) {
+  refreshNavigationCollections();
+  const section = topLevelSectionForHash(hash);
+  if (!section) {
     return;
   }
-  target.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
-  window.history.replaceState(null, "", hash);
-  setActiveNav(hash);
+
+  pageSections.forEach((candidate) => {
+    const active = candidate === section;
+    candidate.hidden = !active;
+    candidate.classList.toggle("is-active-section", active);
+  });
+
+  const sectionHash = `#${section.id}`;
+  const originalTarget = queryHashTarget(hash);
+  const scrollTarget = originalTarget && section.contains(originalTarget) ? originalTarget : section;
+  if (originalTarget instanceof HTMLDetailsElement) {
+    originalTarget.open = true;
+  }
+
+  if (options.replace !== false) {
+    window.history.replaceState(null, "", sectionHash);
+  }
+  setActiveNav(sectionHash);
+  typesetMath(section);
+
+  if (options.scroll) {
+    scrollTarget.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+  }
+}
+
+function scrollToSection(hash) {
+  revealSection(hash, { scroll: true });
 }
 
 decoratePage();
+ensureSidebarCoverage();
+revealSection(window.location.hash || "#home", {
+  replace: Boolean(window.location.hash),
+  scroll: false,
+});
+
 window.addEventListener("load", () => {
-  typesetMath(document.body);
-  window.setTimeout(() => typesetMath(document.body), 250);
+  const activeSection = pageSections.find((section) => !section.hidden) || document.body;
+  typesetMath(activeSection);
+  window.setTimeout(() => typesetMath(activeSection), 250);
 });
 
 if (navToggle) {
@@ -218,6 +325,7 @@ navLinks.forEach((link) => {
       return;
     }
     event.preventDefault();
+    event.stopPropagation();
     scrollToSection(hash);
     setNavOpen(false);
   });
@@ -248,9 +356,7 @@ function requestActiveUpdate() {
 }
 
 if (sections.length) {
-  updateActiveFromScroll();
-  window.addEventListener("scroll", requestActiveUpdate, { passive: true });
-  window.addEventListener("resize", requestActiveUpdate);
+  setActiveNav(`#${(pageSections.find((section) => !section.hidden) || pageSections[0]).id}`);
 }
 
 function closeModal(modal) {
@@ -302,10 +408,21 @@ document.addEventListener("click", (event) => {
 
   const detailLink = event.target.closest("a[href^='#']");
   if (detailLink) {
-    const target = document.querySelector(detailLink.getAttribute("href"));
-    if (target instanceof HTMLDetailsElement) {
-      target.open = true;
-      typesetMath(target);
+    const hash = detailLink.getAttribute("href");
+    const target = queryHashTarget(hash);
+    if (target) {
+      const parentSection = target.closest("main > section[id]");
+      if (parentSection) {
+        event.preventDefault();
+        revealSection(hash, { scroll: true });
+        setNavOpen(false);
+        return;
+      }
+
+      if (target instanceof HTMLDetailsElement) {
+        target.open = true;
+        typesetMath(target);
+      }
     }
   }
 
