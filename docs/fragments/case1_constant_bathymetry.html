@@ -1,1 +1,53 @@
-<section id='case1_constant_bathymetry' class='section-card experiment-section status-verified'><header class='experiment-top'><div><span class='section-label'>Experiment</span><h2>Gaussian Patch Free Surface Initialization with Constant Bathymetry <span class='status-chip status-verified'>Verified</span></h2></div><div class='metric-grid'><div class='metric-card'><span>Main Panels</span><strong>2</strong></div><div class='metric-card'><span>Diagnosis Assets</span><strong>0</strong></div><div class='metric-card'><span>Equations</span><strong>Shown</strong></div><div class='metric-card'><span>Expected Output</span><strong>Included</strong></div></div></header><div class='experiment-body'><article class='experiment-description' aria-label='Experiment details'><section class='description-block detail-definition'><h3>Definition</h3><div class='description-copy'><p>A Gaussian free-surface perturbation is initialized over constant bathymetry. The prognostic and diagnostic runs show how the same initial height anomaly adjusts under the MITgcm free-surface dynamics.</p></div></section><section class='description-block detail-expected'><h3>Expected Output</h3><div class='description-copy'><p>The Gaussian patch should radiate a clean gravity-wave adjustment pattern. The diagnostic initialization should look smoother, with less fast initial noise than the direct prognostic start.</p></div></section><section class='description-block detail-equations'><h3>MITgcm Equations</h3><div class='description-copy'><p>The active Williamson cases are run as one-layer rotating shallow-water problems. The MITgcm fields reduce to horizontal velocity <code>u=(u,v)</code> and free surface <code>&eta;</code> over depth <code>H</code>.</p><div class='equation-box'><div class='math-line'>\[\frac{D\mathbf{u}}{Dt}+f\hat{k}\times\mathbf{u}=-g\nabla_s\eta+\mathcal{D}_{\mathbf{u}}+\mathbf{F}\]</div><div class='math-line'>\[\frac{\partial \eta}{\partial t}+\nabla_s\cdot[(H+\eta)\mathbf{u}]=S_{\eta}\]</div><div class='math-line'>\[\frac{Dq}{Dt}=\mathcal{D}_{q}+S_q \quad \text{when passive tracers are enabled}\]</div></div><p>Each testcase changes the analytic initial state, forcing, bathymetry, or expected diagnostic behavior of this same system.</p><div class='equation-box'><div class='math-line'>\[H(x,y)=4000\,\mathrm{m}\]</div><div class='math-line'>\[\eta(x,y,0)=\eta_0\exp\left[-\frac{r^2}{2\sigma^2}\right]\]</div></div></div></section></article><div class='settings-stack'></div><div class='diagnostics-stack'><div class='main-panels'><div class='media-card'><h4>Prognostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/prognostic.webm' type='video/webm'></video></div><div class='media-card'><h4>Diagnostic</h4><video controls preload='metadata'><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/diagnostic.webm' type='video/webm'></video></div></div></div></div></section>
+<section id='case1_constant_bathymetry' class='section-card experiment-section status-verified'>
+  <header class='experiment-top'>
+    <div>
+      <span class='section-label'>Experiment</span>
+      <h2>Gaussian Patch Free Surface Initialization with Constant Bathymetry <span class='status-chip status-verified'>Verified</span></h2>
+    </div>
+    <div class='metric-grid'>
+      <div class='metric-card'><span>Videos</span><strong>2</strong></div>
+      <div class='metric-card'><span>Split Plots</span><strong>4</strong></div>
+      <div class='metric-card'><span>Equations</span><strong>Shown</strong></div>
+      <div class='metric-card'><span>Expected Output</span><strong>Included</strong></div>
+    </div>
+  </header>
+  <div class='experiment-body'>
+    <article class='experiment-description' aria-label='Experiment details'>
+      <section class='description-block detail-definition'>
+        <h3>Definition</h3>
+        <div class='description-copy'><p>A Gaussian free-surface perturbation is initialized over constant bathymetry. The prognostic and diagnostic runs show how the same initial height anomaly adjusts under the MITgcm free-surface dynamics.</p></div>
+      </section>
+      <section class='description-block detail-expected'>
+        <h3>Expected Output</h3>
+        <div class='description-copy'><p>The Gaussian patch should radiate a clean gravity-wave adjustment pattern. The diagnostic initialization should look smoother, with less fast initial noise than the direct prognostic start.</p></div>
+      </section>
+      <section class='description-block detail-equations'>
+        <h3>MITgcm Equations</h3>
+        <div class='description-copy'><p>The active Williamson cases are run as one-layer rotating shallow-water problems. The MITgcm fields reduce to horizontal velocity <code>u=(u,v)</code> and free surface <code>&eta;</code> over depth <code>H</code>.</p><div class='equation-box'><div class='math-line'>\[\frac{D\mathbf{u}}{Dt}+f\hat{k}\times\mathbf{u}=-g\nabla_s\eta+\mathcal{D}_{\mathbf{u}}+\mathbf{F}\]</div><div class='math-line'>\[\frac{\partial \eta}{\partial t}+\nabla_s\cdot[(H+\eta)\mathbf{u}]=S_{\eta}\]</div><div class='math-line'>\[\frac{Dq}{Dt}=\mathcal{D}_{q}+S_q \quad \text{when passive tracers are enabled}\]</div></div><p>Each testcase changes the analytic initial state, forcing, bathymetry, or expected diagnostic behavior of this same system.</p><div class='equation-box'><div class='math-line'>\[H(x,y)=4000\,\mathrm{m}\]</div><div class='math-line'>\[\eta(x,y,0)=\eta_0\exp\left[-\frac{r^2}{2\sigma^2}\right]\]</div></div></div>
+      </section>
+    </article>
+    <div class='settings-stack'></div>
+    <div class='diagnostics-stack'>
+      <div class='main-panels reference-video-stack' aria-label='Experiment animations'>
+        <div class='media-card reference-video-card'>
+          <h4>Prognostic animation</h4>
+          <video controls preload='metadata' playsinline><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/prognostic.webm' type='video/webm'></video>
+        </div>
+        <div class='media-card reference-video-card'>
+          <h4>Diagnostic animation</h4>
+          <video controls preload='metadata' playsinline><source src='videos/Gaussian_Free-Surface_Patch_with_Constant_Bathymetry_d_-4000_m/diagnostic.webm' type='video/webm'></video>
+        </div>
+      </div>
+      <div class='media-section animation-split-section'>
+        <h3>Animation split frames</h3>
+        <p class='section-note'>Representative Day 10 panels and heatmaps used to build the animation sequence.</p>
+        <div class='animation-split-grid'>
+          <figure class='subfigure split-figure-wide'><button class='plot-open' type='button' data-modal-src='assets/reference/animation_split/constant_prognostic_day10.png' data-modal-caption='Constant bathymetry: prognostic variables, Day 10'><img src='assets/reference/animation_split/constant_prognostic_day10.png' alt='Constant bathymetry prognostic variables at Day 10' loading='lazy' /></button><figcaption>Prognostic variables, Day 10</figcaption></figure>
+          <figure class='subfigure split-figure-wide'><button class='plot-open' type='button' data-modal-src='assets/reference/animation_split/constant_diagnostic_day10.png' data-modal-caption='Constant bathymetry: diagnostic variables, Day 10'><img src='assets/reference/animation_split/constant_diagnostic_day10.png' alt='Constant bathymetry diagnostic variables at Day 10' loading='lazy' /></button><figcaption>Diagnostic variables, Day 10</figcaption></figure>
+          <figure class='subfigure'><button class='plot-open' type='button' data-modal-src='assets/reference/animation_split/constant_eta_day10.png' data-modal-caption='Constant bathymetry: free surface, Day 10'><img src='assets/reference/animation_split/constant_eta_day10.png' alt='Constant bathymetry free surface heatmap at Day 10' loading='lazy' /></button><figcaption>Free surface, Day 10</figcaption></figure>
+          <figure class='subfigure'><button class='plot-open' type='button' data-modal-src='assets/reference/animation_split/constant_speed_day10.png' data-modal-caption='Constant bathymetry: velocity magnitude, Day 10'><img src='assets/reference/animation_split/constant_speed_day10.png' alt='Constant bathymetry velocity magnitude heatmap at Day 10' loading='lazy' /></button><figcaption>Velocity magnitude, Day 10</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
