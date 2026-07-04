@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """Generate the GitHub Pages homepage under docs/index.html."""
+import ast
 import html
 import csv
+import importlib.util
 import math
 import re
 import shutil
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Union
+
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    np = None
 
 REPO_DIR = Path(__file__).resolve().parents[2]
 SANDBOX_DIR = REPO_DIR / "Sandbox"
@@ -14,11 +22,21 @@ DOCS_DIR = REPO_DIR / "docs"
 ASSET_ROOT = DOCS_DIR / "assets" / "williamson"
 FRAGMENT_DIR = DOCS_DIR / "fragments"
 SANDBOX_OUTPUT_ROOT = SANDBOX_DIR / "output"
+ADVECT_CS_OUTPUT_ROOT = (
+    SANDBOX_OUTPUT_ROOT
+    / "existingTutorials"
+    / "test1"
+    / "MITGCM_Williamson_TC1"
+    / "advect_cs"
+)
+ADVECT_CS_SETUP_ROOT = SANDBOX_DIR / "MITgcm_Williamson_TC1" / "existingTutorials" / "advect_cs"
 HTML_TITLE = "MITgcm Verification"
 SITE_TITLE = "WILLIAMSON TESTS"
 SITE_SUBTITLE = (
     "MITgcm shallow-water verification pages for the Williamson standard spherical test suite."
 )
+CFL_WARN = 0.5
+CFL_FAIL = 1.0
 AUTHOR_NAME = "Hoda Hashemi"
 REPO_MAIN_URL = "https://github.com/Hoda-Hashemi/MITgcm/tree/main"
 FAVICON_HREF = (
@@ -253,14 +271,17 @@ CASE_OUTPUT_NAMES = {
 }
 SNAPSHOT_FIELD_LABELS = {
     "tracer": "Passive Tracer",
+    "tracer_error": "Tracer Error",
     "eta": "Eta",
     "etan": "ETAN",
     "psi": "PsiVEL",
     "phi": "PhiVEL",
+    "theta": "Temperature Tracer",
     "velocity_magnitude": "Velocity Magnitude",
 }
 SNAPSHOT_FIELD_UNITS = {
     "tracer": "psu",
+    "tracer_error": "psu",
     "eta": "m",
     "etan": "m",
     "psi": "m<sup>3</sup> s<sup>-1</sup>",
@@ -278,6 +299,20 @@ FIELD_TAB_ORDER = (
     ("psi", "PsiVEL"),
     ("phi", "PhiVEL"),
     ("velocity_magnitude", "Velocity Magnitude"),
+)
+ADVECT_CS_KEY_DAYS = (0.0, 6.0, 12.0)
+ADVECT_CS_FIELD_TAB_ORDER = (
+    ("tracer", "Tracer"),
+    ("tracer_error", "Tracer Error"),
+    ("velocity_magnitude", "Velocity Magnitude"),
+    ("eta", "Eta"),
+    ("theta", "Temperature Tracer"),
+)
+ADVECT_CS_ERROR_FILES = (
+    ("advect_cs_error_metrics.png", "error norms"),
+    ("advect_cs_final_tracer_model.png", "final model tracer"),
+    ("advect_cs_final_tracer_exact.png", "final exact tracer"),
+    ("advect_cs_final_tracer_error.png", "final tracer error"),
 )
 
 AUDIT_SECTIONS = (
@@ -810,6 +845,210 @@ def parse_data_file(path: Path) -> Dict[str, str]:
         values[key] = match.group(1).strip() if match else "—"
     return values
 
+def parse_assignment_file(path: Path) -> Dict[str, str]:
+    values: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        clean = line.split("#", 1)[0].strip()
+        if not clean or "=" not in clean:
+            continue
+        key, raw = clean.split("=", 1)
+        values[key.strip()] = raw.strip().rstrip(",")
+    return values
+
+def safe_eval_number(expr: str) -> Optional[float]:
+    expr = expr.strip().rstrip(",").replace("D", "E").replace("d", "e")
+    if not expr or expr == "—":
+        return None
+    try:
+        tree = ast.parse(expr, mode="eval")
+    except SyntaxError:
+        return None
+
+    def eval_node(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return eval_node(node.body)
+        if isinstance(node, ast.Num):
+            return float(node.n)
+        if hasattr(ast, "Constant") and isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            value = eval_node(node.operand)
+            return value if isinstance(node.op, ast.UAdd) else -value
+        if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)):
+            left = eval_node(node.left)
+            right = eval_node(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            return left / right
+        raise ValueError
+
+    try:
+        return eval_node(tree)
+    except (ValueError, ZeroDivisionError):
+        return None
+
+def assignment_number(values: Dict[str, str], key: str) -> Optional[float]:
+    raw = values.get(key)
+    return safe_eval_number(raw) if raw is not None else None
+
+def parse_repeat_grid(value: str) -> Optional[Tuple[int, float]]:
+    match = re.fullmatch(
+        r"(\d+)\s*\*\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[EeDd][+-]?\d+)?)",
+        value.strip().rstrip(","),
+    )
+    if not match:
+        return None
+    spacing = safe_eval_number(match.group(2))
+    if spacing is None:
+        return None
+    return int(match.group(1)), spacing
+
+def compact_number(value: object, digits: int = 6) -> str:
+    if value is None:
+        return "—"
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    if math.isnan(number) or math.isinf(number):
+        return "—"
+    if abs(number - round(number)) < 1.0e-10:
+        return str(int(round(number)))
+    if abs(number) >= 1.0e4 or (0.0 < abs(number) < 1.0e-3):
+        return f"{number:.3e}"
+    return f"{number:.{digits}g}"
+
+def alpha_float(label: str) -> Optional[float]:
+    if label in ("base", "standard"):
+        return 0.0
+    match = re.search(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)", label)
+    return safe_eval_number(match.group(0)) if match else None
+
+def cfl_status(max_cfl: Optional[float]) -> str:
+    if max_cfl is None:
+        return "—"
+    if max_cfl > CFL_FAIL:
+        return "reduce dt"
+    if max_cfl > CFL_WARN:
+        return "check"
+    return "OK"
+
+def load_case_gendata(case_path: Path):
+    gendata = case_path / "input" / "gendata_ref.py"
+    if np is None or not gendata.exists():
+        return None
+    module_name = f"website_{case_path.name.lower()}_gendata"
+    spec = importlib.util.spec_from_file_location(module_name, gendata)
+    if spec is None or spec.loader is None:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    added_paths = [str(gendata.parent), str(SANDBOX_DIR / "Scripts")]
+    old_sys_path = list(sys.path)
+    try:
+        for path in reversed(added_paths):
+            if path not in sys.path:
+                sys.path.insert(0, path)
+        spec.loader.exec_module(module)
+    except Exception:
+        return None
+    finally:
+        sys.path = old_sys_path
+    return module
+
+def initial_velocity_fields(case_path: Path, label: str):
+    module = load_case_gendata(case_path)
+    alpha = alpha_float(label)
+    if module is None or alpha is None:
+        return None
+    case_name = case_path.name
+    try:
+        if case_name.endswith("TC1") and hasattr(module, "make_tc1_fields"):
+            _tracer, u, v = module.make_tc1_fields(alpha_rad=alpha)
+            return u, v
+        if case_name.endswith("TC2") and hasattr(module, "make_tc2_u") and hasattr(module, "make_tc2_v"):
+            return module.make_tc2_u(alpha_rad=alpha), module.make_tc2_v(alpha_rad=alpha)
+        if hasattr(module, "make_velocity_fields"):
+            return module.make_velocity_fields(alpha_rad=alpha)
+    except Exception:
+        return None
+    return None
+
+def initial_cfl_max(case_path: Path, label: str, data_values: Dict[str, str]) -> Optional[float]:
+    if np is None:
+        return None
+    delta_t = assignment_number(data_values, "deltaT")
+    r_sphere = assignment_number(data_values, "rSphere")
+    delx = data_values.get("delX")
+    dely = data_values.get("delY")
+    if delta_t is None or r_sphere is None or delx is None or dely is None:
+        return None
+    x_grid = parse_repeat_grid(delx)
+    y_grid = parse_repeat_grid(dely)
+    if x_grid is None or y_grid is None:
+        return None
+    nx, dlon_deg = x_grid
+    ny, dlat_deg = y_grid
+    velocity = initial_velocity_fields(case_path, label)
+    if velocity is None:
+        return None
+    u, v = velocity
+    try:
+        u = np.asarray(u, dtype=np.float64)
+        v = np.asarray(v, dtype=np.float64)
+    except Exception:
+        return None
+    if u.shape != (ny, nx) or v.shape != (ny, nx):
+        return None
+    lat = -90.0 + (np.arange(ny, dtype=np.float64) + 0.5) * dlat_deg
+    dx = r_sphere * np.cos(np.deg2rad(lat)) * math.radians(dlon_deg)
+    dy = r_sphere * math.radians(dlat_deg)
+    finite = np.isfinite(u) & np.isfinite(v) & (dx[:, None] > 0.0)
+    if not np.any(finite):
+        return None
+    cfl = np.full_like(u, np.nan, dtype=np.float64)
+    cfl[finite] = delta_t * (
+        np.abs(u[finite]) / np.broadcast_to(dx[:, None], u.shape)[finite]
+        + np.abs(v[finite]) / dy
+    )
+    return float(np.nanmax(cfl))
+
+def data_source_label(data_path: Path) -> str:
+    if data_path.parent.name.startswith("run_"):
+        return "run-local data"
+    if data_path.parent.name == "input":
+        return "input/data"
+    return data_path.parent.name
+
+def render_time_cfl_table(label: str, data_path: Path, case_path: Path) -> str:
+    data_values = parse_assignment_file(data_path)
+    delta_t = assignment_number(data_values, "deltaT")
+    n_steps_float = assignment_number(data_values, "nTimeSteps")
+    n_steps = int(round(n_steps_float)) if n_steps_float is not None else None
+    total_time = delta_t * n_steps if delta_t is not None and n_steps is not None else assignment_number(data_values, "endTime")
+    max_cfl = initial_cfl_max(case_path, label, data_values)
+    headers = ("alpha", "nTimeSteps", "deltaT [s]", "total [s]", "max initial CFL", "status", "source")
+    cells = (
+        label if label != "base" else "—",
+        compact_number(n_steps),
+        compact_number(delta_t),
+        compact_number(total_time),
+        compact_number(max_cfl, digits=3),
+        cfl_status(max_cfl),
+        data_source_label(data_path),
+    )
+    return (
+        "<div class='table-block data-panel'><h3>Time Step And CFL</h3>"
+        "<div class='table-scroll'><table><thead><tr>"
+        f"{''.join(f'<th>{html.escape(header)}</th>' for header in headers)}"
+        "</tr></thead><tbody><tr>"
+        f"{''.join(f'<td>{html.escape(str(cell))}</td>' for cell in cells)}"
+        "</tr></tbody></table></div></div>"
+    )
+
 def parse_size_file(path: Path) -> Dict[str, str]:
     text = path.read_text(encoding="utf-8", errors="ignore")
     values: dict[str, int] = {}
@@ -861,7 +1100,14 @@ def sync_ready_output_assets() -> None:
     if not SANDBOX_OUTPUT_ROOT.exists():
         return
 
-    for source in sorted(SANDBOX_OUTPUT_ROOT.glob("TestCase*/**/*"), key=lambda path: path.as_posix()):
+    ready_roots = [SANDBOX_OUTPUT_ROOT.glob("TestCase*/**/*")]
+    if ADVECT_CS_OUTPUT_ROOT.exists():
+        ready_roots.append(ADVECT_CS_OUTPUT_ROOT.glob("**/*"))
+
+    for source in sorted(
+        (path for root in ready_roots for path in root),
+        key=lambda path: path.as_posix(),
+    ):
         if not source.is_file() or source.suffix.lower() not in READY_ASSET_EXTENSIONS:
             continue
         if "Diagnosis" not in source.parts and "Snapshots" not in source.parts:
@@ -896,6 +1142,12 @@ def alpha_from_name(name: str) -> str:
     if name.startswith("run_alpha_"):
         return name[len("run_alpha_"):]
     return name
+
+def alpha_from_path(path: Path) -> str:
+    for part in reversed(path.parts):
+        if part.startswith("alpha_") or part.startswith("run_alpha_"):
+            return alpha_from_name(part)
+    return "unknown"
 
 def label_from_token(token: str) -> str:
     return SNAPSHOT_FIELD_LABELS.get(token, token.replace("_", " ").title())
@@ -1308,6 +1560,51 @@ def tc1_error_contour_items() -> List[Dict[str, object]]:
         )
     return items
 
+def advect_cs_snapshot_items(alpha_dir: Path, folder: str, field_label: str) -> List[Dict[str, object]]:
+    items = case_alpha_snapshot_items(
+        ADVECT_CS_OUTPUT_ROOT / "Snapshots",
+        alpha_dir,
+        folder,
+        field_label,
+        ADVECT_CS_KEY_DAYS,
+    )
+    for item in items:
+        item["caption"] = f"advect_cs {item['caption']}"
+    return items
+
+def advect_cs_error_items() -> List[Dict[str, object]]:
+    error_root = ADVECT_CS_OUTPUT_ROOT / "Diagnosis" / "error"
+    if not error_root.exists():
+        return []
+
+    items: list[dict[str, object]] = []
+    for alpha_dir in sorted(error_root.glob("alpha_*"), key=lambda path: natural_key(path.name)):
+        if not alpha_dir.is_dir():
+            continue
+        alpha = alpha_from_name(alpha_dir.name)
+        for filename, label in ADVECT_CS_ERROR_FILES:
+            path = alpha_dir / filename
+            if path.exists():
+                items.append(
+                    {
+                        "source": path,
+                        "caption": f"advect_cs alpha {alpha}, {label}",
+                    }
+                )
+    return items
+
+def advect_cs_data_paths() -> List[Path]:
+    if not ADVECT_CS_OUTPUT_ROOT.exists():
+        return []
+    return sorted(
+        [
+            path
+            for path in ADVECT_CS_OUTPUT_ROOT.rglob("*")
+            if path.is_file() and path.suffix.lower() in DIAGNOSIS_DATA_EXTENSIONS
+        ],
+        key=path_sort_key,
+    )
+
 def final_day_from_tc2_table(error_dir: Path) -> Optional[float]:
     table = error_dir / "TC2_error_norms.csv"
     if not table.exists():
@@ -1438,19 +1735,59 @@ def render_table(
         f"<tbody><tr>{row}</tr></tbody></table></div></div>"
     )
 
+def case_setting_sources(case_path: Path) -> List[Tuple[str, Path, Path]]:
+    size_path = case_path / "code" / "SIZE.h"
+    run_dirs = [
+        path
+        for path in case_path.iterdir()
+        if path.is_dir() and path.name.startswith("run_") and (path / "data").exists()
+    ]
+    sources: list[tuple[str, Path, Path]] = []
+    for run_dir in sorted(run_dirs, key=lambda path: natural_key(path.name)):
+        label = alpha_from_name(run_dir.name)
+        if label == run_dir.name and run_dir.name.startswith("run_"):
+            label = run_dir.name[len("run_"):]
+        sources.append((label, run_dir / "data", size_path))
+
+    if sources:
+        return sources
+
+    data_path = case_path / "input" / "data"
+    if data_path.exists():
+        return [("base", data_path, size_path)]
+    return []
+
+def render_numerical_settings_panels(sources: List[Tuple[str, Path, Path]], case_path: Path) -> str:
+    panels: list[str] = []
+    for index, (label, data_path, size_path) in enumerate(sources):
+        if not data_path.exists() or not size_path.exists():
+            continue
+        data_values = parse_data_file(data_path)
+        size_values = parse_size_file(size_path)
+        summary = f"&alpha;={html.escape(label)}" if label not in ("base", "standard") else html.escape(label.title())
+        panels.append(
+            f"<details class='alpha-panel' {'open' if index == 0 else ''}>"
+            f"<summary>{summary}</summary>"
+            "<div class='tables'>"
+            f"{render_time_cfl_table(label, data_path, case_path)}"
+            f"{render_table('Numerical Settings', DATA_COLUMNS, data_values, DATA_COLUMN_META)}"
+            f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values, SIZE_COLUMN_META)}"
+            "</div>"
+            "</details>"
+        )
+    return "".join(panels)
+
 def render_case_tables(case: Dict[str, object], show_label: bool) -> str:
     case_dir = case.get("case_dir")
     if case_dir is None:
         return ""
 
     case_path = Path(case_dir)
-    data_path = case_path / "input" / "data"
-    size_path = case_path / "code" / "SIZE.h"
-    if not data_path.exists() or not size_path.exists():
+    sources = case_setting_sources(case_path)
+    panels = render_numerical_settings_panels(sources, case_path)
+    if not panels:
         return ""
 
-    data_values = parse_data_file(data_path)
-    size_values = parse_size_file(size_path)
     heading = (
         f"<h3 class='case-heading'>{html.escape(case_display_label(case))}</h3>"
         if show_label
@@ -1460,10 +1797,7 @@ def render_case_tables(case: Dict[str, object], show_label: bool) -> str:
         "<details class='details-panel case-block'>"
         "<summary>Numerical settings</summary>"
         f"{heading}"
-        "<div class='tables'>"
-        f"{render_table('Numerical Settings', DATA_COLUMNS, data_values, DATA_COLUMN_META)}"
-        f"{render_table('Grid And MPI Layout', SIZE_COLUMNS, size_values, SIZE_COLUMN_META)}"
-        "</div>"
+        f"{panels}"
         "</details>"
     )
 
@@ -1661,6 +1995,48 @@ def render_subfigure_gallery(title: str, items: List[Dict[str, object]], slug: s
         "</details>"
     )
 
+def render_alpha_grouped_gallery(
+    title: str,
+    items: List[Dict[str, object]],
+    slug: str,
+    panel_id: str,
+    note: str = "",
+) -> str:
+    grouped: dict[str, list[dict[str, object]]] = {}
+    for item in items:
+        source = Path(item["source"])
+        grouped.setdefault(alpha_from_path(source), []).append(item)
+
+    alpha_blocks: list[str] = []
+    for index, alpha in enumerate(sorted(grouped, key=natural_key)):
+        figures = []
+        for item in grouped[alpha]:
+            figure = render_plot_figure(item, slug, "subfigure comparison-figure")
+            if figure:
+                figures.append(figure)
+        if not figures:
+            continue
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if index == 0 else ''}>"
+            f"<summary>&alpha;={html.escape(alpha)}</summary>"
+            "<div class='results-grid comparison-grid'>"
+            f"{''.join(figures)}"
+            "</div>"
+            "</details>"
+        )
+
+    if not alpha_blocks:
+        return ""
+
+    note_html = f"<p class='section-note'>{html.escape(note)}</p>" if note else ""
+    return (
+        f"<details id='{html.escape(panel_id)}' class='media-section results-section error-block error-details'>"
+        f"<summary>{html.escape(title)}</summary>"
+        f"{note_html}"
+        f"{''.join(alpha_blocks)}"
+        "</details>"
+    )
+
 def render_error_comparison_block(title: str, items: List[Dict[str, object]], slug: str) -> str:
     figures = []
     for item in items:
@@ -1681,20 +2057,32 @@ def render_error_comparison_block(title: str, items: List[Dict[str, object]], sl
 def render_dynamic_gallery(section: Dict[str, object], slug: str) -> str:
     gallery = section.get("dynamic_gallery")
     if gallery == "tc1":
-        return render_error_comparison_block("Results: signed-error contours", tc1_error_contour_items(), slug)
+        return render_alpha_grouped_gallery(
+            "Results: signed-error contours",
+            tc1_error_contour_items(),
+            slug,
+            f"{slug}-errors",
+        )
     if gallery == "tc2":
-        return "".join(
-            [
-                render_subfigure_gallery("Results: steady-state error norms", tc2_error_norm_items(), slug),
-            ]
+        return render_alpha_grouped_gallery(
+            "Results: steady-state error norms",
+            tc2_error_norm_items(),
+            slug,
+            f"{slug}-errors",
         )
     if gallery == "tc3":
-        return render_subfigure_gallery("Results: steady-state drift norms", tc3_error_norm_items(), slug)
+        return render_alpha_grouped_gallery(
+            "Results: steady-state drift norms",
+            tc3_error_norm_items(),
+            slug,
+            f"{slug}-errors",
+        )
     if gallery == "tc6":
-        return render_subfigure_gallery(
+        return render_alpha_grouped_gallery(
             "Results: vorticity, Q, energy, and mass diagnostics",
             tc6_postprocessing_items(),
             slug,
+            f"{slug}-errors",
         )
     return ""
 
@@ -1733,34 +2121,192 @@ def render_case_diagnosis_assets(case: Dict[str, object], slug: str) -> str:
 
     label = case_display_label(case)
     panel_id = f"{slug}-{slug_token(label)}-diagnosis-assets"
-    figures = "".join(
-        render_plot_figure(
-            {
-                "source": path,
-                "caption": f"{label}: {diagnosis_asset_label(path, root)}",
-            },
-            slug,
-            "subfigure diagnosis-figure",
+    grouped: dict[str, dict[str, list[Path]]] = {}
+    for path in images:
+        grouped.setdefault(alpha_from_path(path), {"images": [], "data": []})["images"].append(path)
+    for path in data_paths:
+        grouped.setdefault(alpha_from_path(path), {"images": [], "data": []})["data"].append(path)
+
+    def alpha_group_key(alpha: str) -> Tuple[int, List[str]]:
+        return (1 if alpha == "unknown" else 0, natural_key(alpha))
+
+    alpha_blocks: list[str] = []
+    for index, alpha in enumerate(sorted(grouped, key=alpha_group_key)):
+        group_images = grouped[alpha]["images"]
+        group_data = grouped[alpha]["data"]
+        figures = "".join(
+            render_plot_figure(
+                {
+                    "source": path,
+                    "caption": f"{label}: {diagnosis_asset_label(path, root)}",
+                },
+                slug,
+                "subfigure diagnosis-figure",
+            )
+            for path in group_images
         )
-        for path in images
-    )
-    figures_html = (
-        "<div class='results-grid subfigure-grid diagnosis-grid'>"
-        f"{figures}"
-        "</div>"
-        if figures
-        else ""
-    )
-    data_html = render_diagnosis_data_links(data_paths, root, slug)
+        figures_html = (
+            "<div class='results-grid subfigure-grid diagnosis-grid'>"
+            f"{figures}"
+            "</div>"
+            if figures
+            else ""
+        )
+        data_html = render_diagnosis_data_links(group_data, root, slug)
+        summary = "General" if alpha == "unknown" else f"&alpha;={html.escape(alpha)}"
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if index == 0 else ''}>"
+            f"<summary>{summary}</summary>"
+            f"{figures_html}"
+            f"{data_html}"
+            "</details>"
+        )
     counts = f"{len(images)} plot assets, {len(data_paths)} data files"
 
     return (
         f"<details id='{html.escape(panel_id)}' class='media-section results-section diagnosis-assets' open>"
         f"<summary>{html.escape(label)}: diagnosis assets and ready data</summary>"
         f"<p class='section-note'>{html.escape(counts)} mirrored into the published assets.</p>"
-        f"{figures_html}"
-        f"{data_html}"
+        f"{''.join(alpha_blocks)}"
         "</details>"
+    )
+
+def render_advect_cs_numerical_settings() -> str:
+    data_path = ADVECT_CS_SETUP_ROOT / "input" / "data"
+    size_path = ADVECT_CS_SETUP_ROOT / "code" / "SIZE.h"
+    if not data_path.exists() or not size_path.exists():
+        return ""
+
+    alpha_dirs = [
+        alpha_dir
+        for alpha_dir in sorted((ADVECT_CS_OUTPUT_ROOT).glob("alpha_*"), key=lambda path: natural_key(path.name))
+        if alpha_dir.is_dir()
+    ]
+    if not alpha_dirs:
+        alpha_dirs = [
+            alpha_dir
+            for alpha_dir in sorted((ADVECT_CS_OUTPUT_ROOT / "Snapshots").glob("alpha_*"), key=lambda path: natural_key(path.name))
+            if alpha_dir.is_dir()
+        ]
+
+    sources: list[tuple[str, Path, Path]] = []
+    for alpha_dir in alpha_dirs:
+        alpha = alpha_from_name(alpha_dir.name)
+        run_data = alpha_dir / f"run_alpha_{alpha}" / "data"
+        if not run_data.exists():
+            run_data_candidates = sorted(alpha_dir.glob("run_*/data"), key=lambda path: natural_key(str(path)))
+            run_data = run_data_candidates[0] if run_data_candidates else data_path
+        sources.append((alpha, run_data, size_path))
+    if not sources:
+        sources = [("base", data_path, size_path)]
+    panels = render_numerical_settings_panels(sources, ADVECT_CS_SETUP_ROOT)
+    if not panels:
+        return ""
+
+    return (
+        "<details class='details-panel case-block'>"
+        "<summary>Numerical settings by alpha</summary>"
+        f"{panels}"
+        "</details>"
+    )
+
+def render_advect_cs_tutorial_block(slug: str) -> str:
+    snapshot_root = ADVECT_CS_OUTPUT_ROOT / "Snapshots"
+    if not snapshot_root.exists():
+        return ""
+
+    alpha_dirs = [
+        alpha_dir
+        for alpha_dir in sorted(snapshot_root.glob("alpha_*"), key=lambda path: natural_key(path.name))
+        if alpha_dir.is_dir()
+    ]
+    if not alpha_dirs:
+        return ""
+
+    alpha_blocks: list[str] = []
+    for alpha_index, alpha_dir in enumerate(alpha_dirs):
+        alpha = alpha_from_name(alpha_dir.name)
+        tab_base = f"{slug}-advect-cs-{alpha_dir.name.replace('.', '_')}"
+        buttons: list[str] = []
+        panels: list[str] = []
+        first_panel = True
+
+        for folder, button_label in ADVECT_CS_FIELD_TAB_ORDER:
+            items = advect_cs_snapshot_items(alpha_dir, folder, label_from_token(folder))
+            if not items:
+                continue
+            tab_id = f"{tab_base}-{folder}"
+            active_class = " is-active" if first_panel else ""
+            selected = "true" if first_panel else "false"
+            hidden = "" if first_panel else " hidden"
+            button_label_html = label_with_unit(button_label, unit_from_token(folder))
+            buttons.append(
+                "<button class='field-tab"
+                f"{active_class}' type='button' data-tab-target='{html.escape(tab_id)}' "
+                f"aria-selected='{selected}'>{button_label_html}</button>"
+            )
+            panels.append(
+                f"<div class='tab-panel{active_class}' data-tab-panel='{html.escape(tab_id)}'{hidden}>"
+                f"{render_snapshot_grid(items, slug)}"
+                "</div>"
+            )
+            first_panel = False
+
+        if not panels:
+            continue
+
+        buttons.append(
+            f"<a class='field-tab field-tab-link' href='#{html.escape(slug)}-advect-cs-errors'>Error</a>"
+        )
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if alpha_index == 0 else ''}>"
+            f"<summary>&alpha;={html.escape(alpha)}</summary>"
+            "<div class='field-tabs'>"
+            f"<div class='tab-list'>{''.join(buttons)}</div>"
+            f"{''.join(panels)}"
+            "</div>"
+            "</details>"
+        )
+
+    if not alpha_blocks:
+        return ""
+
+    days = ", ".join(format_number(day) for day in ADVECT_CS_KEY_DAYS)
+    errors_html = render_alpha_grouped_gallery(
+        "Existing tutorial errors",
+        advect_cs_error_items(),
+        slug,
+        f"{slug}-advect-cs-errors",
+        "Errors are model passive tracer minus the advected analytic bell.",
+    )
+    data_html = render_diagnosis_data_links(advect_cs_data_paths(), ADVECT_CS_OUTPUT_ROOT, slug)
+    settings_html = render_advect_cs_numerical_settings()
+    return (
+        f"<div id='{html.escape(slug)}-advect-cs' class='media-section snapshot-browser existing-tutorial-block'>"
+        "<h3>Existing MITgcm tutorial: advect_cs</h3>"
+        "<article class='experiment-description' aria-label='Existing MITgcm tutorial details'>"
+        "<section class='description-block detail-definition'>"
+        "<h3>Definition</h3>"
+        "<div class='description-copy'>"
+        "<p><code>verification/advect_cs</code> is a cubed-sphere passive-tracer advection tutorial. "
+        "Here it is staged as a Williamson TC1 analogue: prescribed 12-day solid-body velocity, "
+        "four rotation angles, and no momentum stepping.</p>"
+        "</div>"
+        "</section>"
+        "<section class='description-block detail-expected'>"
+        "<h3>Expected Output</h3>"
+        "<div class='description-copy'>"
+        "<p>The tracer should return close to its initial bell after one revolution. "
+        "<code>Eta</code> is not the target field; this existing tutorial tests transport, not free-surface dynamics.</p>"
+        "</div>"
+        "</section>"
+        "</article>"
+        f"{settings_html}"
+        f"<p class='section-note'>Rendered days: {html.escape(days)}. Cubed-sphere panels are shown as an unfolded cube.</p>"
+        f"{''.join(alpha_blocks)}"
+        "</div>"
+        f"{errors_html}"
+        f"{data_html}"
     )
 
 def render_section(section: Dict[str, object]) -> str:
@@ -1791,6 +2337,10 @@ def render_section(section: Dict[str, object]) -> str:
     dynamic_html = render_dynamic_gallery(section, slug)
     if dynamic_html:
         media_blocks.append(dynamic_html)
+    if slug == "testcase1":
+        advect_html = render_advect_cs_tutorial_block(slug)
+        if advect_html:
+            media_blocks.append(advect_html)
     for case in case_configs:
         diagnosis_html = render_case_diagnosis_assets(case, slug)
         if diagnosis_html:

@@ -1,0 +1,11 @@
+experiment_name: MITGCM_Williamson_TC1
+source_verification: verification/advect_cs
+williamson_case: TC1
+rotation_angle_label: 0
+alpha: 0.0
+tutorial_name: advect_cs
+job_id: 817473
+node: onode13
+mpi_tasks: 6
+status: completed
+elapsed_seconds: 273

@@ -1,0 +1,40 @@
+{
+  "runs": [
+    {
+      "alpha": "0",
+      "cleaned_run_products": 1690,
+      "error_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/error/alpha_0",
+      "files": 42,
+      "iterations": 13,
+      "postprocessing_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/postprocessing/alpha_0",
+      "snapshot_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Snapshots/alpha_0"
+    },
+    {
+      "alpha": "0.05",
+      "cleaned_run_products": 1690,
+      "error_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/error/alpha_0.05",
+      "files": 42,
+      "iterations": 13,
+      "postprocessing_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/postprocessing/alpha_0.05",
+      "snapshot_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Snapshots/alpha_0.05"
+    },
+    {
+      "alpha": "1.52",
+      "cleaned_run_products": 1690,
+      "error_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/error/alpha_1.52",
+      "files": 42,
+      "iterations": 13,
+      "postprocessing_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/postprocessing/alpha_1.52",
+      "snapshot_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Snapshots/alpha_1.52"
+    },
+    {
+      "alpha": "1.57",
+      "cleaned_run_products": 1690,
+      "error_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/error/alpha_1.57",
+      "files": 42,
+      "iterations": 13,
+      "postprocessing_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Diagnosis/postprocessing/alpha_1.57",
+      "snapshot_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs/Snapshots/alpha_1.57"
+    }
+  ]
+}
