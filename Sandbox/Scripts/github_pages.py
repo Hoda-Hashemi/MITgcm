@@ -259,6 +259,7 @@ READY_ASSET_EXTENSIONS = {
 }
 DIAGNOSIS_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".svg", ".webp"}
 DIAGNOSIS_DATA_EXTENSIONS = {".csv", ".json", ".md", ".txt"}
+ADVECT_CS_DATA_EXTENSIONS = DIAGNOSIS_DATA_EXTENSIONS | {".pdf"}
 CASE_OUTPUT_NAMES = {
     "TC1_prime": "TestCase1Prime",
     "TC1": "TestCase1",
@@ -1108,7 +1109,11 @@ def sync_ready_output_assets() -> None:
         (path for root in ready_roots for path in root),
         key=lambda path: path.as_posix(),
     ):
-        if not source.is_file() or source.suffix.lower() not in READY_ASSET_EXTENSIONS:
+        if not source.is_file():
+            continue
+        suffix = source.suffix.lower()
+        is_advect_pdf = suffix == ".pdf" and ADVECT_CS_OUTPUT_ROOT in source.parents
+        if suffix not in READY_ASSET_EXTENSIONS and not is_advect_pdf:
             continue
         if "Diagnosis" not in source.parts and "Snapshots" not in source.parts:
             continue
@@ -1600,7 +1605,7 @@ def advect_cs_data_paths() -> List[Path]:
         [
             path
             for path in ADVECT_CS_OUTPUT_ROOT.rglob("*")
-            if path.is_file() and path.suffix.lower() in DIAGNOSIS_DATA_EXTENSIONS
+            if path.is_file() and path.suffix.lower() in ADVECT_CS_DATA_EXTENSIONS
         ],
         key=path_sort_key,
     )
@@ -2190,7 +2195,7 @@ def render_case_diagnosis_assets(case: Dict[str, object], slug: str) -> str:
 
     return (
         f"<details id='{html.escape(panel_id)}' class='media-section results-section diagnosis-assets' open>"
-        f"<summary>Results: {html.escape(label)} - Diagnosis assets</summary>"
+        f"<summary>Results: {html.escape(label)} - Error analysis and diagnosis assets</summary>"
         f"<p class='section-note'>{html.escape(counts)} mirrored into the published assets.</p>"
         f"{''.join(alpha_blocks)}"
         "</details>"
@@ -2302,7 +2307,7 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         ADVECT_CS_KEY_DAYS,
     )
     errors_html = render_alpha_grouped_gallery(
-        "Existing tutorial errors",
+        "Results: existing MITgcm tutorial advect_cs - Error analysis and diagnosis assets",
         advect_cs_error_items(),
         slug,
         f"{slug}-advect-cs-errors",

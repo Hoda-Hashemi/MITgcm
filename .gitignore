@@ -145,6 +145,9 @@ verification/vortexSphere_mitgcm_referenceCase/Scripts/animation_split/Geostroph
 
 #! test cases williamson:
 Sandbox/*/build/
+Sandbox/MITgcm_Williamson_TC1/existingTutorials/advect_cs/build/
+Sandbox/MITgcm_Williamson_TC1/existingTutorials/advect_cs/results/
+Sandbox/MITgcm_Williamson_TC1/tools/__pycache__/
 Sandbox/vortexSphere_Williamson_TC1/build
 Sandbox/vortexSphere_Williamson_TC1/old_run_less_diagnosis
 

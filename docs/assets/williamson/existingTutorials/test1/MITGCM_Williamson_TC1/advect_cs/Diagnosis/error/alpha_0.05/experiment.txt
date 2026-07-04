@@ -1,11 +1,10 @@
-experiment_name: MITGCM_Williamson_TC1
+experiment: MITGCM_Williamson_TC1/existingTutorials/advect_cs
 source_verification: verification/advect_cs
-williamson_case: TC1
-rotation_angle_label: 0.05
+test_case: Williamson TC1 passive tracer analogue
 alpha: 0.05
+alpha_label: 0.05
 tutorial_name: advect_cs
-job_id: 817474
-node: onode13
-mpi_tasks: 6
-status: completed
-elapsed_seconds: 258
+logic: passive tracer S is advected by the TC1 solid-body velocity; momentum is not stepped.
+requested_snapshot_days: 0, 3, 6, 9, 10, 12
+snapshot_iterations: 0, 96, 192, 288, 320, 384
+plot_style: unfolded cubed-sphere net with seismic colormap
