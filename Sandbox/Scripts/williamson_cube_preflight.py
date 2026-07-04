@@ -34,7 +34,10 @@ def read_compact(run_dir: Path, name: str) -> np.ndarray:
     expected = 6 * CS32_NC * CS32_NC
     if raw.size != expected:
         raise ValueError(f"{name} has {raw.size} values, expected {expected}")
-    field = raw.reshape((CS32_NC, 6, CS32_NC), order="F").transpose(1, 0, 2).astype(np.float64)
+    compact = raw.reshape((6 * CS32_NC, CS32_NC)).astype(np.float64)
+    field = np.stack(
+        [compact[face * CS32_NC : (face + 1) * CS32_NC, :].T for face in range(6)]
+    )
     if not np.isfinite(field).all():
         raise ValueError(f"{name} contains non-finite values")
     return field
@@ -108,8 +111,28 @@ def check_case(run_dir: Path, case: str) -> list[str]:
             if not np.isfinite(raw).all():
                 raise ValueError(f"{path.name} contains non-finite values")
 
+    if case == "TC5":
+        expected_bathy = wf.tc5_bathymetry(grid.lon_c, grid.lat_c)
+        bathy_error = float(np.nanmax(np.abs(bathy - expected_bathy)))
+        if bathy_error > 1.0e-2:
+            raise ValueError(f"TC5 bathymetry packing mismatch: max abs error {bathy_error:.6g} m")
+        mountain = wf.TC5_H0 + bathy
+        peak = np.unravel_index(np.nanargmax(mountain), mountain.shape)
+        peak_lon = float(grid.xc[peak])
+        peak_lat = float(grid.yc[peak])
+        lon_error = abs(((peak_lon - 270.0 + 180.0) % 360.0) - 180.0)
+        lat_error = abs(peak_lat - 30.0)
+        if lon_error > 5.0 or lat_error > 5.0:
+            raise ValueError(
+                "TC5 mountain peak is misplaced: "
+                f"lon={peak_lon:.3f}, lat={peak_lat:.3f}, "
+                f"errors=({lon_error:.3f}, {lat_error:.3f}) deg"
+            )
+
     notes.append(f"CS{CS32_NC} cube inputs finite; depth {np.nanmin(depth):.3f}..{np.nanmax(depth):.3f} m")
     notes.append(f"initial max speed {np.nanmax(np.hypot(u, v)):.6g} m/s; CFL {max_cfl:.6g}")
+    if case == "TC5":
+        notes.append(f"TC5 mountain peak checked near 270E, 30N")
     return notes
 
 

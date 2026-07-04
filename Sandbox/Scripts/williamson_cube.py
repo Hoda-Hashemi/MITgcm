@@ -138,8 +138,8 @@ def write_compact(base_dir: Path, name: str, faces: np.ndarray, dtype: str = ">f
     faces = np.asarray(faces, dtype=np.float64)
     if faces.shape != (6, CS32_NC, CS32_NC):
         raise ValueError(f"{name}: expected shape {(6, CS32_NC, CS32_NC)}, got {faces.shape}")
-    compact = np.transpose(faces, (1, 0, 2))
-    np.asfortranarray(compact).astype(dtype).tofile(base_dir / name)
+    compact = np.vstack([faces[face].T for face in range(6)])
+    compact.astype(dtype).tofile(base_dir / name)
     print(
         f"Wrote {name}: cube=CS{CS32_NC}, shape={faces.shape}, "
         f"min={np.nanmin(faces):.6e}, max={np.nanmax(faces):.6e}"

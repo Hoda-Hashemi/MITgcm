@@ -13,7 +13,7 @@ from postprocessing_Quantities import PostprocessingSpec, analyze_run
 from run_log import write_run_log
 from mitgcm_io import lon_lat, read_data_value, read_mds_field
 from shared import infer_alpha_label, snapshot_output_dir
-from snapshot_plots import SnapshotSpec, plot_cube_net_snapshot, run_snapshots
+from snapshot_plots import SnapshotSpec, plot_cube_latlon_snapshot, plot_cube_net_snapshot, run_snapshots
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CASE_CODE = "TC5"
@@ -48,11 +48,6 @@ SNAPSHOT_FIELDS = (
 
 def save_mountain_plot(run_dir: Path) -> None:
     alpha = infer_alpha_label(run_dir, CASE_CODE)
-    output_dir = snapshot_output_dir(CASE_CODE, alpha) / "mountain"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    for path in output_dir.glob("*.png"):
-        path.unlink()
-
     xc, yc = lon_lat(run_dir)
     depth = read_mds_field(run_dir, "Depth")
     h0 = read_data_value(run_dir, "delR", 5960.0)
@@ -61,8 +56,16 @@ def save_mountain_plot(run_dir: Path) -> None:
         "TC5 isolated mountain | static bathymetry | "
         f"peak {float(mountain.max()):.1f} m at 270E, 30N"
     )
-    out = output_dir / "tc5_mountain_day_00.00_iter_0000000000.pdf"
-    plot_cube_net_snapshot(mountain, xc, yc, title, "m", out, vmin=0.0, vmax=2000.0)
+    for variant, plotter in (
+        ("latlon", plot_cube_latlon_snapshot),
+        ("cube", plot_cube_net_snapshot),
+    ):
+        output_dir = snapshot_output_dir(CASE_CODE, alpha, variant=variant) / "mountain"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        for path in output_dir.glob("*.png"):
+            path.unlink()
+        out = output_dir / "tc5_mountain_day_00.00_iter_0000000000.pdf"
+        plotter(mountain, xc, yc, title, "m", out, vmin=0.0, vmax=2000.0)
 
 
 def main() -> None:

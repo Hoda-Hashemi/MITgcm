@@ -133,8 +133,9 @@ def compact_to_faces(field: np.ndarray) -> np.ndarray:
             [arr[:, index * CS_FACE_SIZE : (index + 1) * CS_FACE_SIZE] for index in range(6)]
         )
     if arr.shape == (CS_FACE_SIZE * 6, CS_FACE_SIZE):
-        compact = arr.reshape((CS_FACE_SIZE, 6, CS_FACE_SIZE))
-        return np.moveaxis(compact, 1, 0)
+        return np.asarray(
+            [arr[index * CS_FACE_SIZE : (index + 1) * CS_FACE_SIZE, :].T for index in range(6)]
+        )
     raise ValueError(f"cannot convert cubed-sphere field with shape {arr.shape} to six faces")
 
 
@@ -227,6 +228,97 @@ def plot_cube_net_snapshot(
     plt.close(fig)
 
 
+def cube_to_latlon(
+    field: np.ndarray,
+    xc: np.ndarray,
+    yc: np.ndarray,
+    *,
+    lon_step: float = 1.0,
+    lat_step: float = 1.0,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    from scipy.interpolate import griddata
+
+    raw_field = np.squeeze(np.asarray(field, dtype=np.float64))
+    raw_xc = np.squeeze(np.asarray(xc, dtype=np.float64))
+    raw_yc = np.squeeze(np.asarray(yc, dtype=np.float64))
+    if raw_field.shape == raw_xc.shape == raw_yc.shape:
+        lon = raw_xc.ravel()
+        lat = raw_yc.ravel()
+        values = raw_field.ravel()
+    else:
+        faces = compact_to_faces(raw_field)
+        lon_faces = compact_to_faces(raw_xc)
+        lat_faces = compact_to_faces(raw_yc)
+        lon = lon_faces.ravel()
+        lat = lat_faces.ravel()
+        values = faces.ravel()
+    lon = ((lon + 180.0) % 360.0) - 180.0
+    valid = np.isfinite(lon) & np.isfinite(lat) & np.isfinite(values)
+
+    lon_grid = np.arange(-180.0, 180.0 + lon_step, lon_step)
+    lat_grid = np.arange(-90.0, 90.0 + lat_step, lat_step)
+    lon2, lat2 = np.meshgrid(lon_grid, lat_grid)
+    if not np.any(valid):
+        return lon2, lat2, np.full_like(lon2, np.nan, dtype=np.float64)
+
+    points = np.column_stack((lon[valid], lat[valid]))
+    values = values[valid]
+    wrapped_points = np.vstack(
+        (
+            points,
+            np.column_stack((points[:, 0] - 360.0, points[:, 1])),
+            np.column_stack((points[:, 0] + 360.0, points[:, 1])),
+        )
+    )
+    wrapped_values = np.tile(values, 3)
+    interpolated = griddata(wrapped_points, wrapped_values, (lon2, lat2), method="linear")
+    missing = ~np.isfinite(interpolated)
+    if np.any(missing):
+        nearest = griddata(wrapped_points, wrapped_values, (lon2, lat2), method="nearest")
+        interpolated[missing] = nearest[missing]
+    return lon2, lat2, interpolated
+
+
+def plot_cube_latlon_snapshot(
+    field: np.ndarray,
+    xc: np.ndarray,
+    yc: np.ndarray,
+    title: str,
+    units: str,
+    out_path: Path,
+    *,
+    vmin: float | None = None,
+    vmax: float | None = None,
+    center_zero: bool = False,
+    dpi: int = 220,
+) -> None:
+    _lon2, _lat2, latlon = cube_to_latlon(field, xc, yc)
+    vmin, vmax = resolve_color_limits(latlon, vmin, vmax, symmetric=center_zero)
+    norm = TwoSlopeNorm(vmin=vmin, vcenter=0.0, vmax=vmax) if center_zero else None
+
+    fig, ax = plt.subplots(figsize=(9.0, 5.8), constrained_layout=True)
+    image = ax.imshow(
+        latlon,
+        origin="lower",
+        extent=(-180.0, 180.0, -90.0, 90.0),
+        interpolation="bilinear",
+        aspect="auto",
+        cmap="seismic",
+        norm=norm,
+        vmin=None if norm else vmin,
+        vmax=None if norm else vmax,
+    )
+    ax.set_title(title, pad=18)
+    ax.set_xlabel(r"longitude $\lambda$ [deg]")
+    ax.set_ylabel(r"latitude $\theta$ [deg]")
+    ax.set_xticks(np.arange(-180, 181, 60))
+    ax.set_yticks(np.arange(-90, 91, 30))
+    cbar = fig.colorbar(image, ax=ax, orientation="horizontal", pad=0.10)
+    cbar.set_label(units)
+    save_figure_variants(fig, out_path, dpi=dpi, formats=("png",))
+    plt.close(fig)
+
+
 def clear_generated_snapshot_images(output_root: Path, folder: str) -> None:
     field_dir = output_root / folder
     if not field_dir.exists():
@@ -244,6 +336,7 @@ def save_scalar_series(
     delta_t: float,
     *,
     dpi: int = 220,
+    plot_mode: str = "auto",
 ) -> SnapshotResult:
     iterations = discover_iterations(run_dir, spec.field)
     if not iterations:
@@ -272,7 +365,20 @@ def save_scalar_series(
             f"min {field_min:.3e} | max {field_max:.3e}"
         )
         out = output_root / spec.folder / f"{case}_{spec.folder}_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
-        if cube_plot and is_cs_compact(field):
+        if cube_plot and is_cs_compact(field) and plot_mode == "latlon":
+            plot_cube_latlon_snapshot(
+                field,
+                xc,
+                yc,
+                title,
+                spec.units,
+                out,
+                vmin=spec.vmin,
+                vmax=spec.vmax,
+                center_zero=spec.center_zero,
+                dpi=dpi,
+            )
+        elif cube_plot and is_cs_compact(field):
             plot_cube_net_snapshot(
                 field,
                 xc,
@@ -322,6 +428,7 @@ def save_velocity_magnitude(
     u_candidates: tuple[str, ...] = ("U", "UVEL", "UVELMASS"),
     v_candidates: tuple[str, ...] = ("V", "VVEL", "VVELMASS"),
     dpi: int = 220,
+    plot_mode: str = "auto",
 ) -> SnapshotResult:
     u_name = first_existing_field(run_dir, u_candidates)
     v_name = first_existing_field(run_dir, v_candidates)
@@ -358,7 +465,9 @@ def save_velocity_magnitude(
             f"min {speed_min:.3e} | max {speed_max:.3e}"
         )
         out = output_root / "velocity_magnitude" / f"{case}_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
-        if cube_plot and is_cs_compact(speed):
+        if cube_plot and is_cs_compact(speed) and plot_mode == "latlon":
+            plot_cube_latlon_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
+        elif cube_plot and is_cs_compact(speed):
             plot_cube_net_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
         else:
             plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
@@ -392,54 +501,84 @@ def run_snapshots(
 
     delta_t = read_delta_t(run_dir)
     alpha = infer_alpha_label(run_dir, case_code)
-    output_root = snapshot_output_dir(case_code, alpha)
-    output_root.mkdir(parents=True, exist_ok=True)
+    xc, yc = lon_lat(run_dir)
+    if is_cs_compact(xc) and is_cs_compact(yc):
+        output_variants = [
+            ("latlon", snapshot_output_dir(case_code, alpha, variant="latlon")),
+            ("cube", snapshot_output_dir(case_code, alpha, variant="cube")),
+        ]
+    else:
+        output_variants = [("native", snapshot_output_dir(case_code, alpha))]
 
-    saved = []
-    results: list[SnapshotResult] = []
-    for spec in specs:
-        clear_generated_snapshot_images(output_root, spec.folder)
-        result = save_scalar_series(case_code, run_dir, output_root, spec, delta_t, dpi=dpi)
-        results.append(result)
-        if result.wrote_any:
-            saved.append(spec.folder)
-    if save_velocity:
-        clear_generated_snapshot_images(output_root, "velocity_magnitude")
-        result = save_velocity_magnitude(case_code, run_dir, output_root, delta_t, dpi=dpi)
-        results.append(result)
-        if result.wrote_any:
-            saved.append("velocity_magnitude")
+    primary_root = output_variants[0][1]
+    primary_results: list[SnapshotResult] = []
+    for plot_mode, output_root in output_variants:
+        output_root.mkdir(parents=True, exist_ok=True)
+        saved = []
+        results: list[SnapshotResult] = []
+        for spec in specs:
+            clear_generated_snapshot_images(output_root, spec.folder)
+            result = save_scalar_series(
+                case_code,
+                run_dir,
+                output_root,
+                spec,
+                delta_t,
+                dpi=dpi,
+                plot_mode=plot_mode,
+            )
+            results.append(result)
+            if result.wrote_any:
+                saved.append(spec.folder)
+        if save_velocity:
+            clear_generated_snapshot_images(output_root, "velocity_magnitude")
+            result = save_velocity_magnitude(
+                case_code,
+                run_dir,
+                output_root,
+                delta_t,
+                dpi=dpi,
+                plot_mode=plot_mode,
+            )
+            results.append(result)
+            if result.wrote_any:
+                saved.append("velocity_magnitude")
 
-    invalid = [result for result in results if result.invalid]
-    field_results = {
-        result.folder: {
-            "field": result.field,
-            "display": result.display,
-            "iterations": [int(value) for value in result.iterations],
-            "saved_iterations": [int(value) for value in result.saved_iterations],
-            "skipped_nonfinite_iterations": [
-                int(value) for value in result.skipped_nonfinite_iterations
-            ],
+        invalid = [result for result in results if result.invalid]
+        field_results = {
+            result.folder: {
+                "field": result.field,
+                "display": result.display,
+                "iterations": [int(value) for value in result.iterations],
+                "saved_iterations": [int(value) for value in result.saved_iterations],
+                "skipped_nonfinite_iterations": [
+                    int(value) for value in result.skipped_nonfinite_iterations
+                ],
+            }
+            for result in results
         }
-        for result in results
-    }
-    write_manifest(
-        output_root,
-        {
-            "alpha": alpha,
-            "case": case_code,
-            "product": "snapshots",
-            "saved": saved,
-            "source_run": str(run_dir),
-            "valid": not invalid,
-            "field_results": field_results,
-        },
-    )
-    print(f"outputs written to: {output_root}")
+        write_manifest(
+            output_root,
+            {
+                "alpha": alpha,
+                "case": case_code,
+                "product": "snapshots",
+                "plot_mode": plot_mode,
+                "saved": saved,
+                "source_run": str(run_dir),
+                "valid": not invalid,
+                "field_results": field_results,
+            },
+        )
+        if output_root == primary_root:
+            primary_results = results
+        print(f"outputs written to: {output_root}")
+
+    invalid = [result for result in primary_results if result.invalid]
     if fail_on_invalid and invalid:
         details = "; ".join(
             f"{result.display}: {len(result.skipped_nonfinite_iterations)} non-finite iteration(s)"
             for result in invalid
         )
         raise RuntimeError(f"{case_code} snapshots are invalid: {details}")
-    return output_root
+    return primary_root
