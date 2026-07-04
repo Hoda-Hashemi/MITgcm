@@ -86,6 +86,7 @@ class Job:
 class Schedule:
     delta_t: float | None
     n_steps: int | None
+    end_time: float | None = None
 
 
 @dataclass
@@ -204,11 +205,16 @@ def parse_schedule(path):
     values = parse_assignments(path)
     delta_t = None
     n_steps = None
+    end_time = None
     if "deltaT" in values:
         delta_t = safe_eval_number(values["deltaT"])
     if "nTimeSteps" in values:
         n_steps = int(round(safe_eval_number(values["nTimeSteps"])))
-    return Schedule(delta_t=delta_t, n_steps=n_steps)
+    if "endTime" in values:
+        end_time = safe_eval_number(values["endTime"])
+    if n_steps is None and delta_t and end_time:
+        n_steps = int(round(end_time / delta_t))
+    return Schedule(delta_t=delta_t, n_steps=n_steps, end_time=end_time)
 
 
 def parse_export(text, name):
@@ -264,14 +270,23 @@ def load_module(path, name):
     return module
 
 
-def initial_velocity(case_id, module, alpha):
+def initial_velocity(case_id, module, job):
+    alpha = job.alpha
     if case_id == "TC1":
         _tracer, u, v = module.make_tc1_fields(alpha_rad=alpha)
         return u, v
     if case_id == "TC2":
         return module.make_tc2_u(alpha_rad=alpha), module.make_tc2_v(alpha_rad=alpha)
     if hasattr(module, "make_velocity_fields"):
-        return module.make_velocity_fields(alpha_rad=alpha)
+        try:
+            return module.make_velocity_fields(alpha_rad=alpha)
+        except TypeError as exc:
+            if "alpha_rad" not in str(exc):
+                raise
+            u0_value = parse_export(job.path.read_text(encoding="utf-8", errors="ignore"), "TC4_U0_VALUE")
+            if u0_value is not None and hasattr(module, "U0"):
+                module.U0 = safe_eval_number(u0_value)
+            return module.make_velocity_fields()
     raise ValueError("{} gendata_ref.py has no known velocity function".format(case_id))
 
 
@@ -302,6 +317,60 @@ def cfl_from_uv(grid, delta_t, u, v, iteration=-1):
         lat=float(grid.lat_centers[idx[0]]),
         max_speed=float(np.nanmax(speed)),
         iteration=iteration,
+    )
+
+
+def read_cube_compact_field(path):
+    if not path.exists():
+        return None
+    raw = np.fromfile(path, dtype=">f4")
+    expected = 6 * 32 * 32
+    if raw.size != expected:
+        return None
+    field = raw.reshape((32, 6, 32), order="F").transpose(1, 0, 2).astype(np.float64)
+    if not np.isfinite(field).all():
+        return None
+    return field
+
+
+def cube_metric_min(run_dir):
+    dx_values = []
+    dy_values = []
+    for face in range(1, 7):
+        path = run_dir / "tile{:03d}.mitgrid".format(face)
+        if not path.exists():
+            return None
+        raw = np.fromfile(path, dtype=">f8")
+        expected = 33 * 33 * 16
+        if raw.size != expected:
+            return None
+        data = raw.reshape((33, 33, 16), order="F")
+        dx_values.extend((float(np.min(data[:32, :32, 2])), float(np.min(data[:32, :32, 10]))))
+        dy_values.extend((float(np.min(data[:32, :32, 3])), float(np.min(data[:32, :32, 11]))))
+    dx_min = min(dx_values)
+    dy_min = min(dy_values)
+    if dx_min <= 0.0 or dy_min <= 0.0:
+        return None
+    return dx_min, dy_min
+
+
+def cube_initial_cfl(run_dir, delta_t):
+    metrics = cube_metric_min(run_dir)
+    u = read_cube_compact_field(run_dir / "u_init.bin")
+    v = read_cube_compact_field(run_dir / "v_init.bin")
+    if metrics is None or u is None or v is None:
+        return None
+    dx_min, dy_min = metrics
+    cfl_x = float(np.max(np.abs(u))) * delta_t / dx_min
+    cfl_y = float(np.max(np.abs(v))) * delta_t / dy_min
+    return CflStats(
+        max_x=cfl_x,
+        max_y=cfl_y,
+        max_total=max(cfl_x, cfl_y),
+        lon=math.nan,
+        lat=math.nan,
+        max_speed=float(np.nanmax(np.hypot(u, v))),
+        iteration=-1,
     )
 
 
@@ -369,11 +438,15 @@ def audit(repo_root):
             cg_y = grid.c_gravity * job.delta_t / grid.dy
             initial = None
             notes = []
-            try:
-                u, v = initial_velocity(case_id, module, job.alpha)
-                initial = cfl_from_uv(grid, job.delta_t, u, v)
-            except Exception as exc:
-                notes.append("initial velocity unavailable: {}".format(exc))
+            initial = cube_initial_cfl(job.run_dir, job.delta_t)
+            if initial is not None:
+                notes.append("cubed-sphere initial CFL from compact run inputs.")
+            else:
+                try:
+                    u, v = initial_velocity(case_id, module, job)
+                    initial = cfl_from_uv(grid, job.delta_t, u, v)
+                except Exception as exc:
+                    notes.append("initial velocity unavailable: {}".format(exc))
             observed, run_status = scan_run_output(grid, job, observed_delta_t)
             n_steps = int(round(job.total_seconds / job.delta_t))
             if (
@@ -429,6 +502,110 @@ def audit(repo_root):
             )
             row.recommendation = recommendation(row)
             rows.append(row)
+    rows.extend(discover_tc1_cubed_rows(repo_root))
+    return rows
+
+
+def tc1_cubed_alpha_value(label):
+    if label == "1.52":
+        return math.pi / 2.0 - 0.05
+    if label == "1.57":
+        return math.pi / 2.0
+    return safe_eval_number(label)
+
+
+def monitor_advcfl(run_dir):
+    pattern = re.compile(r"%MON\s+advcfl_(?:uvel|vvel|wvel)_max\s*=\s*([+-]?\d+(?:\.\d*)?(?:[EeDd][+-]?\d+)?)")
+    values = []
+    for path in sorted(run_dir.glob("STDOUT.*")):
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        values.extend(safe_eval_number(match.group(1)) for match in pattern.finditer(text))
+    if not values:
+        return None
+    return max(values)
+
+
+def discover_tc1_cubed_rows(repo_root):
+    rows = []
+    output_root = (
+        repo_root
+        / "Sandbox"
+        / "output"
+        / "existingTutorials"
+        / "test1"
+        / "MITGCM_Williamson_TC1"
+        / "advect_cs"
+    )
+    setup_data = (
+        repo_root
+        / "Sandbox"
+        / "MITgcm_Williamson_TC1"
+        / "existingTutorials"
+        / "advect_cs"
+        / "input"
+        / "data"
+    )
+    template_schedule = parse_schedule(setup_data)
+    order = {"0": 0, "0.05": 1, "1.52": 2, "1.57": 3}
+    run_dirs = sorted(
+        output_root.glob("alpha_*/run_alpha_*"),
+        key=lambda path: order.get(path.parent.name.removeprefix("alpha_"), 99),
+    )
+    for run_dir in run_dirs:
+        alpha_label = run_dir.parent.name.removeprefix("alpha_")
+        alpha = tc1_cubed_alpha_value(alpha_label)
+        run_schedule = parse_schedule(run_dir / "data")
+        delta_t = run_schedule.delta_t or template_schedule.delta_t
+        if delta_t is None:
+            continue
+        n_steps = run_schedule.n_steps or template_schedule.n_steps
+        total_seconds = run_schedule.end_time
+        if total_seconds is None and n_steps is not None:
+            total_seconds = n_steps * delta_t
+        if total_seconds is None:
+            total_seconds = 1036800.0
+        if n_steps is None:
+            n_steps = int(round(total_seconds / delta_t))
+        monitor_cfl = monitor_advcfl(run_dir)
+        observed = None
+        run_status = "MITgcm monitor advcfl scan"
+        if monitor_cfl is None:
+            run_status = "no MITgcm monitor advcfl values"
+        else:
+            observed = CflStats(
+                max_x=monitor_cfl,
+                max_y=monitor_cfl,
+                max_total=monitor_cfl,
+                lon=math.nan,
+                lat=math.nan,
+                max_speed=math.nan,
+                iteration=-1,
+            )
+        row = AuditRow(
+            case_id="TC1 cubed",
+            label="advect_cs alpha={}".format(alpha_label),
+            job_name="MITGCM_Williamson_TC1_advect_cs",
+            alpha=alpha,
+            template_delta_t=template_schedule.delta_t,
+            template_n_steps=template_schedule.n_steps,
+            delta_t=delta_t,
+            n_steps=n_steps,
+            run_delta_t=run_schedule.delta_t,
+            run_n_steps=run_schedule.n_steps,
+            observed_delta_t=delta_t,
+            depth=100000.0,
+            wave_speed=math.nan,
+            cg_x=math.nan,
+            cg_y=math.nan,
+            initial=None,
+            observed=observed,
+            run_status=run_status,
+            recommendation="",
+            command="cd Sandbox/MITgcm_Williamson_TC1\n/home/hmh85/scratch/MITgcm/.venv/bin/python tools/postprocess_advect_cs.py --check-only",
+            notes="cubed-sphere advect_cs row; CFL is MITgcm monitor max(advcfl_uvel, advcfl_vvel, advcfl_wvel), not spherical-polar recomputation.",
+        )
+        row.recommendation = recommendation(row)
+        rows.append(row)
     return rows
 
 
@@ -490,6 +667,9 @@ def compact_row_cells(row):
         status = "reduce dt"
     elif status == "cannot verify advective CFL until inputs/run output exist":
         status = "n/a"
+    elif status.startswith("above 0.5 margin"):
+        match = re.search(r"<= ([0-9.]+) s", status)
+        status = "OK<1; 0.5 margin dt<={} s".format(match.group(1)) if match else "OK<1; above 0.5"
     return [
         row.case_id,
         row.label,
@@ -500,6 +680,11 @@ def compact_row_cells(row):
         fmt(max_cfl, 3),
         status,
     ]
+
+
+def case_class(case_id):
+    slug = re.sub(r"[^a-z0-9]+", "-", case_id.lower()).strip("-")
+    return "cfl-row cfl-row-{}".format(slug)
 
 
 def markdown(rows):
@@ -545,17 +730,16 @@ def markdown(rows):
     lines.append("")
     lines.append(
         "The template `input/data` files define the grid and default schedule, but "
-        "submitted jobs are controlled by `jobs/large/job_*.slurm`: each job exports "
+        "vortexSphere submitted jobs are controlled by `jobs/large/job_*.slurm`: each job exports "
         "`DELTA_T`, computes `nTimeSteps=round(TOTAL_SECONDS/DELTA_T)`, copies the "
         "template input directory, and rewrites the run-local `data`. The table "
         "therefore separates template, submitted job, and archived run deltaT."
     )
     lines.append("")
     lines.append(
-        "TC1 has the most visible discrepancy: its legacy `tools/check_cfl_tc1.py` "
-        "prints the template `deltaT=1 s`, while the submitted jobs use 60 s, 10 s, "
-        "or 0.75 s and the archived run-local `data` files confirm those values. "
-        "Use this audit table for submitted-run CFL decisions."
+        "TC1 has two entries here: vortexSphere TC1 uses the submitted lat-lon jobs, "
+        "while `TC1 cubed` is the MITgcm `advect_cs` tutorial and keeps the tutorial "
+        "`deltaT=2700 s`. The cubed CFL values come from MITgcm monitor output."
     )
     lines.append("")
     lines.append("| " + " | ".join(headers) + " |")
@@ -576,19 +760,21 @@ def markdown(rows):
         "is small, but archived fields become non-finite before the required late-day checks "
         "and the CG residuals later print NaN. Treat TC5 as needing a run-health "
         "rerun with the corrected H0, smaller timestep, and explicit viscosity "
-        "before using later-day plots."
+        "before using later-day plots. TC7 uses cubed-sphere compact initial fields "
+        "for the submitted three-date suite."
     )
     lines.append("")
     lines.append(
-        "TC4 and TC7 should be read from the job schedule, not from their template "
-        "`nTimeSteps`. TC4 now has completed `run_u0_20` output and its saved "
-        "advective CFL can be read from archived U/V fields, while TC7 needs a "
-        "finite rerun with the filtered 25 s setup before saved-output CFL can be reported."
+        "`n/a` means the audit could not read a finite CFL source for that column: "
+        "missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere "
+        "row where the spherical-polar gravity-wave metric is not used. TC4 now includes "
+        "both `run_u0_20` and completed `run_u0_40` output."
     )
     lines.append("")
     lines.append(
-        "TC7 cannot be accepted from the current archived `run_analysis` output because "
-        "the saved fields become non-finite after initialization; rerun the filtered 25 s setup."
+        "TC7 has three completed analyzed-state rows: 21 Dec 1978, 16 Jan 1979, "
+        "and 9 Jan 1979. The table values are CS32 compact-input CFL checks for "
+        "the completed 25 s, 48-rank runs."
     )
     lines.append("")
     lines.append("### Check commands")
@@ -622,7 +808,12 @@ def html_table(rows):
     out.append("<thead><tr>{}</tr></thead>".format("".join("<th>{}</th>".format(html.escape(h)) for h in headers)))
     out.append("<tbody>")
     for row in rows:
-        out.append("<tr>{}</tr>".format("".join("<td>{}</td>".format(html.escape(c)) for c in compact_row_cells(row))))
+        out.append(
+            "<tr class='{}'>{}</tr>".format(
+                html.escape(case_class(row.case_id)),
+                "".join("<td>{}</td>".format(html.escape(c)) for c in compact_row_cells(row)),
+            )
+        )
     out.append("</tbody></table></div>")
     return "".join(out)
 
@@ -704,16 +895,16 @@ def html_fragment(rows):
       <section class='description-block detail-measure'>
         <h3>How deltaT Was Chosen</h3>
         <div class='description-copy'>
-          <p>The template <code>input/data</code> files provide the grid and default schedule, but the submitted Slurm files are the source of truth for runs. Each job exports <code>DELTA_T</code>, computes <code>nTimeSteps=round(TOTAL_SECONDS/DELTA_T)</code>, copies the input directory, then rewrites the run-local <code>data</code> file. The table keeps template, job, and archived-run <code>deltaT</code> separate.</p>
-          <p>TC1 has the most visible discrepancy: its legacy <code>tools/check_cfl_tc1.py</code> prints the template <code>deltaT=1 s</code>, while the submitted jobs use <code>60 s</code>, <code>10 s</code>, or <code>0.75 s</code>. Use this audit table for submitted-run CFL decisions.</p>
+          <p>The template <code>input/data</code> files provide the grid and default schedule, but the submitted Slurm files are the source of truth for vortexSphere runs. Each job exports <code>DELTA_T</code>, computes <code>nTimeSteps=round(TOTAL_SECONDS/DELTA_T)</code>, copies the input directory, then rewrites the run-local <code>data</code> file. The table keeps template, job, and archived-run <code>deltaT</code> separate.</p>
+          <p>TC1 has two entries here: the vortexSphere TC1 rows use the submitted lat-lon jobs, while <code>TC1 cubed</code> rows are MITgcm <code>advect_cs</code> runs and keep the tutorial timestep <code>deltaT=2700 s</code>. The cubed CFL values come from MITgcm monitor output.</p>
           <p>The small near-polar/tilted cases use <code>0.75 s</code>, the mildly tilted cases use <code>10 s</code>, standard zonal cases use <code>60 s</code>, and TC6 uses <code>30 s</code>.</p>
         </div>
       </section>
       <section class='description-block detail-expected'>
         <h3>Decision</h3>
         <div class='description-copy'>
-          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 becomes non-finite despite a small initial advective CFL, so the corrected rerun uses the standard depth, a smaller timestep, and explicit viscosity rather than treating it as CFL-only.</p>
-          <p>TC4 has completed <code>run_u0_20</code> output, so its saved advective CFL is read from archived U/V fields. TC7 needs the filtered 25 s rerun before saved-output CFL can be accepted.</p>
+          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 becomes non-finite despite a small initial advective CFL, so the corrected rerun uses the standard depth, a smaller timestep, and explicit viscosity rather than treating it as CFL-only. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.</p>
+          <p><code>n/a</code> means the audit could not read a finite CFL source for that column: missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere row where the spherical-polar gravity-wave metric is not used. TC4 now includes both <code>run_u0_20</code> and completed <code>run_u0_40</code> output.</p>
         </div>
       </section>
     </article>

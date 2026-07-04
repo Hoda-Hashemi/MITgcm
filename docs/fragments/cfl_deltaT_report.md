@@ -6,9 +6,9 @@ For each submitted Williamson job, the audited Courant numbers are `C_adv = |u| 
 
 The gravity-wave column is an explicit-wave diagnostic only. All active runs set `implicitFreeSurface=.TRUE.`, so the external gravity wave is handled by the implicit free-surface solve rather than by the explicit advective CFL limit.
 
-The template `input/data` files define the grid and default schedule, but submitted jobs are controlled by `jobs/large/job_*.slurm`: each job exports `DELTA_T`, computes `nTimeSteps=round(TOTAL_SECONDS/DELTA_T)`, copies the template input directory, and rewrites the run-local `data`. The table therefore separates template, submitted job, and archived run deltaT.
+The template `input/data` files define the grid and default schedule, but vortexSphere submitted jobs are controlled by `jobs/large/job_*.slurm`: each job exports `DELTA_T`, computes `nTimeSteps=round(TOTAL_SECONDS/DELTA_T)`, copies the template input directory, and rewrites the run-local `data`. The table therefore separates template, submitted job, and archived run deltaT.
 
-TC1 has the most visible discrepancy: its legacy `tools/check_cfl_tc1.py` prints the template `deltaT=1 s`, while the submitted jobs use 60 s, 10 s, or 0.75 s and the archived run-local `data` files confirm those values. Use this audit table for submitted-run CFL decisions.
+TC1 has two entries here: vortexSphere TC1 uses the submitted lat-lon jobs, while `TC1 cubed` is the MITgcm `advect_cs` tutorial and keeps the tutorial `deltaT=2700 s`. The cubed CFL values come from MITgcm monitor output.
 
 | case | run | alpha(rad) | template dt(s) | job dt(s) | run dt(s) | steps | H(m) | sqrt(gH) | init adv CFL | saved adv CFL | max speed | explicit Cg,x | decision |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -19,23 +19,30 @@ TC1 has the most visible discrepancy: its legacy `tools/check_cfl_tc1.py` prints
 | TC2 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.083 | n/a | 38.6 | 170 | no advective deltaT change indicated |
 | TC2 | alpha=0.05 | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | n/a | 38.6 | 28.3 | no advective deltaT change indicated |
 | TC2 | alpha=1.52 | 1.5208 | 60.0 | 0.75 | 0.75 | 1382400 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
-| TC2 | alpha=1.57_cs32 | 1.5708 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 38.2 | n/a | 38.7 | 170 | reduce deltaT before rerun |
+| TC2 | alpha=1.57_cs32 | 1.5708 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.021 | n/a | 54.6 | 170 | no advective deltaT change indicated |
 | TC3 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 2997 | 171 | 0.124 | n/a | 38.6 | 170 | no advective deltaT change indicated |
 | TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | 0.75 | 576000 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
-| TC4 | run_u0_20 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | n/a | n/a | n/a | 313 | cannot verify advective CFL until inputs/run output exist |
-| TC5 | run_standard_cs32 | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5960 | 242 | 0.022 | n/a | 20.0 | 120 | no advective deltaT change indicated |
+| TC4 | run_u0_20 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.139 | n/a | 40.0 | 313 | no advective deltaT change indicated |
+| TC4 | run_u0_40 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.192 | 0.193 | 56.4 | 313 | no advective deltaT change indicated |
+| TC5 | run_standard_cs32 | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5960 | 242 | 0.005 | n/a | 28.3 | 120 | no advective deltaT change indicated |
 | TC6 | standard | 0 | 30.0 | 30.0 | 30.0 | 40320 | 8000 | 280 | 0.126 | n/a | 100.0 | 139 | no advective deltaT change indicated |
-| TC7 | run_analysis_cs32 | 0 | 25.0 | 25.0 | 25.0 | 17280 | 8000 | 280 | 0.237 | n/a | 55.4 | 115 | no advective deltaT change indicated |
+| TC7 | run_c1_19781221_0000 | 0 | 25.0 | 25.0 | 25.0 | 17280 | 8000 | 280 | 0.009 | n/a | 56.6 | 115 | no advective deltaT change indicated |
+| TC7 | run_c2_19790116_0000 | 0 | 25.0 | 25.0 | 25.0 | 17280 | 8000 | 280 | 0.012 | n/a | 73.3 | 115 | no advective deltaT change indicated |
+| TC7 | run_c3_19790109_0000 | 0 | 25.0 | 25.0 | 25.0 | 17280 | 8000 | 280 | 0.011 | n/a | 70.0 | 115 | no advective deltaT change indicated |
+| TC1 cubed | advect_cs alpha=0 | 0 | 2700 | 2700 | 2700 | 384 | 100000 | n/a | n/a | 0.768 | n/a | n/a | above 0.5 margin; use deltaT <= 1757.71 s for margin |
+| TC1 cubed | advect_cs alpha=0.05 | 0.05 | 2700 | 2700 | 2700 | 384 | 100000 | n/a | n/a | 0.786 | n/a | n/a | above 0.5 margin; use deltaT <= 1717.65 s for margin |
+| TC1 cubed | advect_cs alpha=1.52 | 1.5208 | 2700 | 2700 | 2700 | 384 | 100000 | n/a | n/a | 0.786 | n/a | n/a | above 0.5 margin; use deltaT <= 1717.65 s for margin |
+| TC1 cubed | advect_cs alpha=1.57 | 1.5708 | 2700 | 2700 | 2700 | 384 | 100000 | n/a | n/a | 0.768 | n/a | n/a | above 0.5 margin; use deltaT <= 1757.71 s for margin |
 
 ### Decisions
 
 No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 reaches about 0.56 in the saved fields, above the conservative 0.5 margin; deltaT <= 8.93 s would keep the saved-output maximum under 0.5.
 
-TC5 does not look like a simple CFL failure: the initial advective CFL is small, but archived fields become non-finite before the required late-day checks and the CG residuals later print NaN. Treat TC5 as needing a run-health rerun with the corrected H0, smaller timestep, and explicit viscosity before using later-day plots.
+TC5 does not look like a simple CFL failure: the initial advective CFL is small, but archived fields become non-finite before the required late-day checks and the CG residuals later print NaN. Treat TC5 as needing a run-health rerun with the corrected H0, smaller timestep, and explicit viscosity before using later-day plots. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.
 
-TC4 and TC7 should be read from the job schedule, not from their template `nTimeSteps`. TC4 now has completed `run_u0_20` output and its saved advective CFL can be read from archived U/V fields, while TC7 needs a finite rerun with the filtered 25 s setup before saved-output CFL can be reported.
+`n/a` means the audit could not read a finite CFL source for that column: missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere row where the spherical-polar gravity-wave metric is not used. TC4 now includes both `run_u0_20` and completed `run_u0_40` output.
 
-TC7 cannot be accepted from the current archived `run_analysis` output because the saved fields become non-finite after initialization; rerun the filtered 25 s setup.
+TC7 has three completed analyzed-state rows: 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979. The table values are CS32 compact-input CFL checks for the completed 25 s, 48-rank runs.
 
 ### Check commands
 
@@ -45,6 +52,9 @@ cd /home/hmh85/scratch/MITgcm
 ```
 
 ```bash
+cd Sandbox/MITgcm_Williamson_TC1
+/home/hmh85/scratch/MITgcm/.venv/bin/python tools/postprocess_advect_cs.py --check-only
+
 cd Sandbox/vortexSphere_Williamson_TC1
 /home/hmh85/scratch/MITgcm/.venv/bin/python tools/check_cfl_tc1.py --all
 

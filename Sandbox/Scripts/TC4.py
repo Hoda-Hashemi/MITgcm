@@ -9,6 +9,7 @@ import matplotlib
 matplotlib.use("Agg")
 
 from github_pages import build_site
+from postprocessing_Quantities import PostprocessingSpec, analyze_run
 from run_log import write_run_log
 from snapshot_plots import SnapshotSpec, run_snapshots
 
@@ -21,6 +22,19 @@ RUN_DIRS = [
     for item in os.environ.get("TC4_RUN_DIRS", "").split(os.pathsep)
     if item
 ] or [CASE_DIR / "run_alpha_0"]
+MAKE_POSTPROCESSING = True
+
+POSTPROCESSING_SPEC = PostprocessingSpec(
+    case_code=CASE_CODE,
+    eta_candidates=("Eta", "ETAN"),
+    u_candidates=("U", "UVEL", "UVELMASS"),
+    v_candidates=("V", "VVEL", "VVELMASS"),
+    kinetic_energy_candidates=(),
+    vorticity_candidates=(),
+    compute_kinetic_energy_if_missing=True,
+    compute_vorticity_if_missing=True,
+    compute_potential_vorticity_if_missing=True,
+)
 
 SNAPSHOT_FIELDS = (
     SnapshotSpec("Eta", "eta", "eta", "m", center_zero=True),
@@ -33,6 +47,8 @@ SNAPSHOT_FIELDS = (
 def main() -> None:
     for run_dir in RUN_DIRS:
         run_snapshots(CASE_CODE, run_dir, SNAPSHOT_FIELDS)
+        if MAKE_POSTPROCESSING:
+            analyze_run(run_dir, spec=POSTPROCESSING_SPEC)
     build_site(["testcase4"])
     for run_dir in RUN_DIRS:
         write_run_log(run_dir, case_code=CASE_CODE)

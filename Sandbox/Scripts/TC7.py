@@ -20,7 +20,11 @@ RUN_DIRS = [
     Path(item).expanduser()
     for item in os.environ.get("TC7_RUN_DIRS", "").split(os.pathsep)
     if item
-] or [CASE_DIR / "run_analysis"]
+] or [
+    CASE_DIR / "run_c1_19781221_0000",
+    CASE_DIR / "run_c2_19790116_0000",
+    CASE_DIR / "run_c3_19790109_0000",
+]
 
 SNAPSHOT_FIELDS = (
     SnapshotSpec("Eta", "eta", "eta", "m", center_zero=True),

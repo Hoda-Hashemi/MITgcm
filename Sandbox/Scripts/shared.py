@@ -68,6 +68,11 @@ def alpha_from_run_name(run_dir: Path, case_code: str) -> str | None:
     if direct_match:
         return direct_match.group(1)
 
+    if case_code == "TC7":
+        tc7_match = re.fullmatch(r"run_(c\d+_\d{8}_\d{4})", run_name)
+        if tc7_match:
+            return tc7_match.group(1)
+
     case_match = re.search(r"alpha_(c\d+)", run_name)
     if case_match:
         return RUN_LABELS.get(case_code, {}).get(case_match.group(1))

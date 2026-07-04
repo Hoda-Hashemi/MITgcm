@@ -16,7 +16,7 @@
   ],
   "runs": [
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "availability": {
         "configured_diagnostics": [
           "UVEL",
@@ -113,28 +113,28 @@
       "case": "TC4",
       "coriolis_source": "2*omega*sin(latitude)",
       "energy_verdict": "noticeable drift",
-      "enstrophy_verdict": "small drift",
+      "enstrophy_verdict": "noticeable drift",
       "fields": "eta:Eta,u:U,v:V,kinetic:momKE",
       "first_bad_day": null,
       "health_verdict": "finite state fields",
       "iterations": 6,
       "last_day": 5.0,
       "last_values": {
-        "mass_rel_change": -1.910089706630463e-16,
-        "mechanical_energy_rel_change": 0.00010797083575433942,
-        "potential_enstrophy_rel_change": 4.616588140188974e-06,
+        "mass_rel_change": -5.554505754935894e-16,
+        "mechanical_energy_rel_change": 0.00010170142804373687,
+        "potential_enstrophy_rel_change": 4.800059775658823e-07,
         "tracer_mass_rel_change": null
       },
       "mass_verdict": "preserved to roundoff",
-      "max_abs_mass_rel_change": 7.640358826521852e-16,
-      "max_abs_mechanical_energy_rel_change": 0.00010797083575433942,
-      "max_abs_potential_enstrophy_rel_change": 4.616588140188974e-06,
+      "max_abs_mass_rel_change": 7.406007673247858e-16,
+      "max_abs_mechanical_energy_rel_change": 0.00015110389444936766,
+      "max_abs_potential_enstrophy_rel_change": 1.3601292472701901e-05,
       "max_abs_tracer_mass_rel_change": null,
       "min_state_finite_fraction": 1.0,
       "nonfinite_state_records": 0,
-      "output_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase4/Diagnosis/conservation/alpha_run_u0_20",
-      "quantity_verdict": "small drift",
-      "run_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC4/run_u0_20",
+      "output_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/output/TestCase4/Diagnosis/conservation/alpha_run_u0_40",
+      "quantity_verdict": "noticeable drift",
+      "run_dir": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC4/run_u0_40",
       "saved": [
         "conservation_timeseries.csv",
         "conservation_mass.pdf",

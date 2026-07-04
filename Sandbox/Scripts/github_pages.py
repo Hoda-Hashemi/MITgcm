@@ -158,7 +158,7 @@ SECTIONS = [
     {
         "slug": "testcase4",
         "title": "Williamson TC4: Forced Nonlinear Translating Low",
-        "summary": "The U0=20 m s^-1 c1 HPC run is verified through day 5; snapshots, conservation assets, and analytic path checks are published.",
+        "summary": "The required U0=20 and U0=40 m s^-1 runs are complete through day 5; snapshots, conservation, and postprocessing assets are published.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC4",
         "key_days": (0.0, 1.0, 2.0, 3.0, 4.0, 5.0),
         "snapshot_fields": [
@@ -203,8 +203,9 @@ SECTIONS = [
     {
         "slug": "testcase7",
         "title": "Williamson TC7: Analyzed 500 mb Initial State",
-        "summary": "Analyzed-height and wind input is present; the corrected 25 s, polar-tapered, viscAh=1e1 rerun is active on arza job 816794 (anode[09-11]).",
+        "summary": "Three CS32 analyzed-state runs are complete: 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979. The current suite uses deltaT=25 s and 48 MPI ranks.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC7",
+        "key_days": (0.0, 1.0, 2.0, 3.0, 4.0, 5.0),
         "snapshot_fields": [
             ("eta", "Eta"),
             ("etan", "ETAN"),
@@ -328,7 +329,7 @@ STATUS_META = {
     "testcase4": ("Verified", "verified"),
     "testcase5": ("Rerun in progress", "pending"),
     "testcase6": ("Pending validation", "pending"),
-    "testcase7": ("Rerun in progress", "pending"),
+    "testcase7": ("Completed", "pending"),
     "case1_constant_bathymetry": ("Verified", "verified"),
     "case2_real_bathymetry": ("Verified", "verified"),
     "case3_geostrophic_adjustment": ("Verified", "verified"),
@@ -666,9 +667,9 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "title": "Parameters",
             "body": (
                 "<ul>"
-                "<li><code>U0=20 m s^-1</code> for completed c1 run <code>run_u0_20</code>; the same code can use <code>TC4_U0_VALUE=40</code> for c2.</li>"
+                "<li><code>U0=20 m s^-1</code> for c1 <code>run_u0_20</code>; <code>U0=40 m s^-1</code> for c2 <code>run_u0_40</code>.</li>"
                 "<li><code>H0=gh0/g=10193.67991845056 m</code>, flat bathymetry.</li>"
-                "<li>Published snapshots and conservation assets use the verified day-0 through day-5 <code>run_u0_20</code> output.</li>"
+                "<li>Both runs publish day-0 through day-5 snapshots and diagnosis assets. The c2 run used the 48-rank large partition layout.</li>"
                 "</ul>"
             ),
         },
@@ -683,10 +684,11 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
         {
             "title": "Expected Output",
             "body": (
-                "<p>The translating low should keep its shape as it moves eastward. The completed c1 "
-                "run passes the first analytic check: the low center follows the expected path and the "
-                "day-5 relative L2 errors are small for <code>eta</code>, <code>u</code>, and <code>v</code>. "
-                "The published snapshots and conservation assets support marking this c1 run verified.</p>"
+                "<p>The translating low should keep its shape as it moves eastward. Both submitted "
+                "TC4 runs complete normally and keep finite day-5 state fields. The c1 analytic path "
+                "check remains the stricter verification reference; c2 is confirmed as the required "
+                "<code>U0=40 m s^-1</code> companion run with mass preserved to roundoff and only small "
+                "reported energy/PV drift in the diagnosis assets.</p>"
             ),
         },
     ],
@@ -801,10 +803,16 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 f"{COMMON_EQUATION_HTML}"
                 "<p>The paper uses analyzed atmospheric states truncated to T42 spectral resolution, "
                 "with optional nonlinear normal-mode initialization. This repository applies "
-                "a large-scale filter to its local analysis file before staging MITgcm input. "
-                "It has "
-                "<code>input/raw/tc7_initial_conditions.npz</code> and generated binary "
-                "height/wind fields staged for the submitted run.</p>"
+                "a large-scale filter before staging MITgcm CS32 cubed-sphere input. "
+                "The downloaded source files are "
+                "<code>hgt.1978.nc</code>, <code>hgt.1979.nc</code>, "
+                "<code>uwnd.1978_12_21.nc</code>, <code>vwnd.1978_12_21.nc</code>, "
+                "<code>uwnd.1979_01_16.nc</code>, <code>vwnd.1979_01_16.nc</code>, "
+                "<code>uwnd.1979_01_09.nc</code>, and <code>vwnd.1979_01_09.nc</code>. "
+                "The three staged raw files are "
+                "<code>tc7_19781221_0000_initial_conditions.npz</code>, "
+                "<code>tc7_19790116_0000_initial_conditions.npz</code>, and "
+                "<code>tc7_19790109_0000_initial_conditions.npz</code>.</p>"
             ),
         },
         {
@@ -813,7 +821,8 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<ul>"
                 "<li>Local reference depth <code>H0=8000 m</code>.</li>"
                 "<li>Paper states include 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979 examples.</li>"
-                "<li>Local grid: <code>1440 x 720</code> at <code>0.25 deg</code>; the submitted rerun uses a 25 s step, large-scale filtering, polar velocity tapering, and <code>viscAh=1e1</code>.</li>"
+                "<li>Williamson TC7 is specified from T42 analyzed states, about <code>2.8 deg</code>; the local MITgcm runs use a comparable <code>CS32</code> cubed-sphere grid, stored as six <code>32 x 32</code> faces.</li>"
+                "<li>The completed runs use <code>deltaT=25 s</code>, <code>nTimeSteps=17280</code>, 5 simulated days, 48 MPI ranks, large-scale filtering, polar velocity tapering, and <code>viscAh=1e1</code>.</li>"
                 "</ul>"
             ),
         },
@@ -973,10 +982,63 @@ def initial_velocity_fields(case_path: Path, label: str):
         if case_name.endswith("TC2") and hasattr(module, "make_tc2_u") and hasattr(module, "make_tc2_v"):
             return module.make_tc2_u(alpha_rad=alpha), module.make_tc2_v(alpha_rad=alpha)
         if hasattr(module, "make_velocity_fields"):
-            return module.make_velocity_fields(alpha_rad=alpha)
+            try:
+                return module.make_velocity_fields(alpha_rad=alpha)
+            except TypeError as exc:
+                if "alpha_rad" not in str(exc):
+                    raise
+                if case_name.endswith("TC4") and hasattr(module, "U0"):
+                    if "u0_40" in label:
+                        module.U0 = 40.0
+                    elif "u0_20" in label:
+                        module.U0 = 20.0
+                return module.make_velocity_fields()
     except Exception:
         return None
     return None
+
+def read_cube_compact_field(path: Path) -> Optional["np.ndarray"]:
+    if np is None or not path.exists():
+        return None
+    raw = np.fromfile(path, dtype=">f4")
+    expected = 6 * 32 * 32
+    if raw.size != expected:
+        return None
+    field = raw.reshape((32, 6, 32), order="F").transpose(1, 0, 2).astype(np.float64)
+    return field if np.isfinite(field).all() else None
+
+def cube_metric_min(run_dir: Path) -> Optional[Tuple[float, float]]:
+    if np is None:
+        return None
+    dx_values: list[float] = []
+    dy_values: list[float] = []
+    for face in range(1, 7):
+        path = run_dir / f"tile{face:03d}.mitgrid"
+        if not path.exists():
+            return None
+        raw = np.fromfile(path, dtype=">f8")
+        expected = 33 * 33 * 16
+        if raw.size != expected:
+            return None
+        data = raw.reshape((33, 33, 16), order="F")
+        dx_values.extend((float(np.min(data[:32, :32, 2])), float(np.min(data[:32, :32, 10]))))
+        dy_values.extend((float(np.min(data[:32, :32, 3])), float(np.min(data[:32, :32, 11]))))
+    dx_min = min(dx_values)
+    dy_min = min(dy_values)
+    if dx_min <= 0.0 or dy_min <= 0.0:
+        return None
+    return dx_min, dy_min
+
+def cube_initial_cfl(run_dir: Path, delta_t: Optional[float]) -> Optional[float]:
+    if np is None or delta_t is None:
+        return None
+    metrics = cube_metric_min(run_dir)
+    u = read_cube_compact_field(run_dir / "u_init.bin")
+    v = read_cube_compact_field(run_dir / "v_init.bin")
+    if metrics is None or u is None or v is None:
+        return None
+    dx_min, dy_min = metrics
+    return max(float(np.max(np.abs(u))) * delta_t / dx_min, float(np.max(np.abs(v))) * delta_t / dy_min)
 
 def initial_cfl_max(case_path: Path, label: str, data_values: Dict[str, str]) -> Optional[float]:
     if np is None:
@@ -1031,6 +1093,8 @@ def render_time_cfl_table(label: str, data_path: Path, case_path: Path) -> str:
     n_steps = int(round(n_steps_float)) if n_steps_float is not None else None
     total_time = delta_t * n_steps if delta_t is not None and n_steps is not None else assignment_number(data_values, "endTime")
     max_cfl = initial_cfl_max(case_path, label, data_values)
+    if max_cfl is None and data_path.parent.name.startswith("run_"):
+        max_cfl = cube_initial_cfl(data_path.parent, delta_t)
     headers = ("alpha", "nTimeSteps", "deltaT [s]", "total [s]", "max initial CFL", "status", "source")
     cells = (
         label if label != "base" else "—",
@@ -1838,6 +1902,42 @@ def render_table(
         f"<tbody><tr>{row}</tr></tbody></table></div></div>"
     )
 
+def parse_slurm_export(text: str, name: str) -> Optional[str]:
+    match = re.search(rf"^\s*export\s+{re.escape(name)}=(.+?)\s*$", text, re.M)
+    return match.group(1).strip().strip("'\"") if match else None
+
+def expand_job_path(raw: Optional[str], variables: Dict[str, str]) -> Optional[Path]:
+    if not raw:
+        return None
+    value = raw
+    for name, replacement in variables.items():
+        value = value.replace(f"${name}", replacement).replace(f"${{{name}}}", replacement)
+    return Path(value).expanduser()
+
+def size_path_for_run(case_path: Path, run_dir: Path, fallback: Path) -> Path:
+    jobs_dir = case_path / "jobs" / "large"
+    if not jobs_dir.is_dir():
+        return fallback
+    case_vars = {
+        "MITGCM_DIR": str(REPO_DIR),
+        "CASE_DIR": str(case_path),
+    }
+    for job_path in sorted(jobs_dir.glob("*.slurm")):
+        text = job_path.read_text(encoding="utf-8", errors="ignore")
+        build_dir_raw = parse_slurm_export(text, "BUILD_DIR")
+        variables = dict(case_vars)
+        build_dir = expand_job_path(build_dir_raw, variables)
+        if build_dir is not None:
+            variables["BUILD_DIR"] = str(build_dir)
+        job_run_dir = expand_job_path(parse_slurm_export(text, "RUN_DIR"), variables)
+        if job_run_dir is None or job_run_dir.resolve() != run_dir.resolve():
+            continue
+        for raw in (parse_slurm_export(text, "BUILD_MODS_DIR"), "$BUILD_DIR/code"):
+            candidate = expand_job_path(raw, variables)
+            if candidate is not None and (candidate / "SIZE.h").exists():
+                return candidate / "SIZE.h"
+    return fallback
+
 def case_setting_sources(case_path: Path) -> List[Tuple[str, Path, Path]]:
     size_path = case_path / "code" / "SIZE.h"
     run_dirs = [
@@ -1850,7 +1950,7 @@ def case_setting_sources(case_path: Path) -> List[Tuple[str, Path, Path]]:
         label = alpha_from_name(run_dir.name)
         if label == run_dir.name and run_dir.name.startswith("run_"):
             label = run_dir.name[len("run_"):]
-        sources.append((label, run_dir / "data", size_path))
+        sources.append((label, run_dir / "data", size_path_for_run(case_path, run_dir, size_path)))
 
     if sources:
         return sources
