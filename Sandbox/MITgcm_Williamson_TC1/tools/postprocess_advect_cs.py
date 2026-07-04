@@ -191,7 +191,8 @@ def read_init_faces(path: Path) -> np.ndarray:
     raw = np.fromfile(path, dtype=">f8")
     if raw.size != FACE_SIZE * 6 * FACE_SIZE:
         raise ValueError(f"unexpected init size for {path}: {raw.size}")
-    return np.moveaxis(raw.reshape((FACE_SIZE, 6, FACE_SIZE), order="F"), 1, 0)
+    faces = np.moveaxis(raw.reshape((FACE_SIZE, 6, FACE_SIZE), order="F"), 1, 0)
+    return faces.transpose(0, 2, 1)
 
 
 def read_grid_faces(run_dir: Path) -> Tuple[np.ndarray, np.ndarray]:
@@ -204,8 +205,8 @@ def read_grid_faces(run_dir: Path) -> Tuple[np.ndarray, np.ndarray]:
             raise ValueError(f"unexpected grid size for {path}: {raw.size}")
         lon = raw[: 33 * 33].reshape((33, 33), order="F")[:FACE_SIZE, :FACE_SIZE]
         lat = raw[33 * 33 : 2 * 33 * 33].reshape((33, 33), order="F")[:FACE_SIZE, :FACE_SIZE]
-        lon_faces.append(lon)
-        lat_faces.append(lat)
+        lon_faces.append(lon.T)
+        lat_faces.append(lat.T)
     return np.asarray(lon_faces), np.asarray(lat_faces)
 
 
@@ -326,6 +327,11 @@ def read_diag_field(run_dir: Path, iteration: int, wanted: str) -> Optional[np.n
 
 def read_model_field(run_dir: Path, iteration: int, field: str, lon: np.ndarray, lat: np.ndarray, alpha: float) -> np.ndarray:
     if iteration == 0:
+        initial_output_name = {"tracer": "S", "theta": "T", "eta": "Eta"}.get(field)
+        if initial_output_name is not None:
+            data = read_mds_named(run_dir, initial_output_name, iteration)
+            if data is not None:
+                return compact_to_faces(data)
         if field == "tracer":
             return read_init_faces(run_dir / "S.init")
         if field == "theta":
@@ -466,6 +472,14 @@ def process_run(run_dir: Path) -> Dict[str, object]:
     iterations = available_iterations(run_dir)
     outputs: List[str] = []
     clean_alpha_assets(alpha_label)
+
+    initial_exact = advect_bell_exact(lon_faces, lat_faces, alpha, 0.0, 180.0, 35.0)
+    initial_model = read_model_field(run_dir, 0, "tracer", lon_faces, lat_faces, alpha)
+    initial_error = float(np.nanmax(np.abs(initial_model - initial_exact)))
+    if initial_error > 1.0e-10:
+        raise ValueError(
+            f"day-0 tracer/exact alignment failed for alpha={alpha_label}: max error={initial_error}"
+        )
 
     snap_root = OUTPUT_ROOT / "Snapshots" / f"alpha_{alpha_label}"
     error_root = OUTPUT_ROOT / "Diagnosis" / "error" / f"alpha_{alpha_label}"

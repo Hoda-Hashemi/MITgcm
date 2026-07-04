@@ -1605,7 +1605,9 @@ def advect_cs_data_paths() -> List[Path]:
         [
             path
             for path in ADVECT_CS_OUTPUT_ROOT.rglob("*")
-            if path.is_file() and path.suffix.lower() in ADVECT_CS_DATA_EXTENSIONS
+            if path.is_file()
+            and path.suffix.lower() in ADVECT_CS_DATA_EXTENSIONS
+            and not any(part.startswith("run_alpha_") for part in path.parts)
         ],
         key=path_sort_key,
     )
@@ -2039,6 +2041,13 @@ def detail_kind(title: str) -> str:
         return "parameters"
     return "notes"
 
+def williamson_gendata_path(slug: str) -> Optional[Path]:
+    match = re.fullmatch(r"testcase([1-7])", slug)
+    if not match:
+        return None
+    return SANDBOX_DIR / f"vortexSphere_Williamson_TC{match.group(1)}" / "input" / "gendata_ref.py"
+
+
 def render_williamson_details(section: Dict[str, object]) -> str:
     details = WILLIAMSON_DETAILS.get(str(section["slug"]))
     if not details:
@@ -2049,12 +2058,14 @@ def render_williamson_details(section: Dict[str, object]) -> str:
     for _index, detail in sorted(enumerate(details), key=detail_sort_key):
         kind = detail_kind(str(detail["title"]))
         body = str(detail["body"])
-        if slug == "testcase1" and kind == "equations":
-            body += render_inline_code_panel(
-                "Python initial-condition script",
-                SANDBOX_DIR / "vortexSphere_Williamson_TC1" / "input" / "gendata_ref.py",
-                "python",
-            )
+        if kind == "equations":
+            gendata_path = williamson_gendata_path(slug)
+            if gendata_path is not None:
+                body += render_inline_code_panel(
+                    "Python initial-condition script",
+                    gendata_path,
+                    "python",
+                )
         blocks.append(
             f"<section class='description-block detail-{html.escape(kind)}'>"
             f"<h3>{html.escape(detail['title'])}</h3>"
