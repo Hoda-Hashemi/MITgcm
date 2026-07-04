@@ -300,7 +300,7 @@ FIELD_TAB_ORDER = (
     ("phi", "PhiVEL"),
     ("velocity_magnitude", "Velocity Magnitude"),
 )
-ADVECT_CS_KEY_DAYS = (0.0, 6.0, 12.0)
+ADVECT_CS_KEY_DAYS = (0.0, 3.0, 6.0, 9.0, 10.0, 12.0)
 ADVECT_CS_FIELD_TAB_ORDER = (
     ("tracer", "Tracer"),
     ("tracer_error", "Tracer Error"),
@@ -1397,7 +1397,7 @@ def render_case_snapshot_browser(case: Dict[str, object], slug: str) -> str:
         if not panels:
             continue
 
-        diagnostics_label = "Diagnostics" if slug == "testcase6" else "Error"
+        diagnostics_label = "Diagnostics" if slug == "testcase6" else "Error analysis"
         buttons.append(
             f"<a class='field-tab field-tab-link' href='#{html.escape(slug)}-errors'>"
             f"{html.escape(diagnostics_label)}</a>"
@@ -1604,6 +1604,31 @@ def advect_cs_data_paths() -> List[Path]:
         ],
         key=path_sort_key,
     )
+
+def available_snapshot_days(alpha_dirs: List[Path], field_folders: Tuple[Tuple[str, str], ...]) -> Tuple[float, ...]:
+    days: set[float] = set()
+    for alpha_dir in alpha_dirs:
+        for folder, _label in field_folders:
+            field_dir = alpha_dir / folder
+            if not field_dir.is_dir():
+                continue
+            for path in field_dir.glob("*.png"):
+                day = extract_day(path)
+                if day is not None and is_key_snapshot_day(path, ADVECT_CS_KEY_DAYS):
+                    days.add(day)
+    return tuple(sorted(days))
+
+def rendered_days_note(prefix: str, available_days: Tuple[float, ...], requested_days: Tuple[float, ...]) -> str:
+    requested = ", ".join(format_number(day) for day in requested_days)
+    if not available_days:
+        return f"{prefix}: requested days {requested}; no rendered PNGs found."
+    available = ", ".join(format_number(day) for day in available_days)
+    if len(available_days) == len(requested_days) and all(
+        any(abs(day - requested_day) < 0.01 for day in available_days)
+        for requested_day in requested_days
+    ):
+        return f"{prefix}: {available}."
+    return f"{prefix}: {available}. Requested days: {requested}."
 
 def final_day_from_tc2_table(error_dir: Path) -> Optional[float]:
     table = error_dir / "TC2_error_norms.csv"
@@ -2054,32 +2079,32 @@ def render_error_comparison_block(title: str, items: List[Dict[str, object]], sl
         "</details>"
     )
 
-def render_dynamic_gallery(section: Dict[str, object], slug: str) -> str:
+def render_dynamic_gallery(section: Dict[str, object], slug: str, result_label: str) -> str:
     gallery = section.get("dynamic_gallery")
     if gallery == "tc1":
         return render_alpha_grouped_gallery(
-            "Results: signed-error contours",
+            f"Results: {result_label} - Error analysis",
             tc1_error_contour_items(),
             slug,
             f"{slug}-errors",
         )
     if gallery == "tc2":
         return render_alpha_grouped_gallery(
-            "Results: steady-state error norms",
+            f"Results: {result_label} - Error analysis",
             tc2_error_norm_items(),
             slug,
             f"{slug}-errors",
         )
     if gallery == "tc3":
         return render_alpha_grouped_gallery(
-            "Results: steady-state drift norms",
+            f"Results: {result_label} - Error analysis",
             tc3_error_norm_items(),
             slug,
             f"{slug}-errors",
         )
     if gallery == "tc6":
         return render_alpha_grouped_gallery(
-            "Results: vorticity, Q, energy, and mass diagnostics",
+            f"Results: {result_label} - Diagnostics",
             tc6_postprocessing_items(),
             slug,
             f"{slug}-errors",
@@ -2165,7 +2190,7 @@ def render_case_diagnosis_assets(case: Dict[str, object], slug: str) -> str:
 
     return (
         f"<details id='{html.escape(panel_id)}' class='media-section results-section diagnosis-assets' open>"
-        f"<summary>{html.escape(label)}: diagnosis assets and ready data</summary>"
+        f"<summary>Results: {html.escape(label)} - Diagnosis assets</summary>"
         f"<p class='section-note'>{html.escape(counts)} mirrored into the published assets.</p>"
         f"{''.join(alpha_blocks)}"
         "</details>"
@@ -2271,7 +2296,11 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
     if not alpha_blocks:
         return ""
 
-    days = ", ".join(format_number(day) for day in ADVECT_CS_KEY_DAYS)
+    days_note = rendered_days_note(
+        "Rendered days",
+        available_snapshot_days(alpha_dirs, ADVECT_CS_FIELD_TAB_ORDER),
+        ADVECT_CS_KEY_DAYS,
+    )
     errors_html = render_alpha_grouped_gallery(
         "Existing tutorial errors",
         advect_cs_error_items(),
@@ -2302,7 +2331,7 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         "</section>"
         "</article>"
         f"{settings_html}"
-        f"<p class='section-note'>Rendered days: {html.escape(days)}. Cubed-sphere panels are shown as an unfolded cube.</p>"
+        f"<p class='section-note'>{html.escape(days_note)} Cubed-sphere panels are shown as an unfolded cube.</p>"
         f"{''.join(alpha_blocks)}"
         "</div>"
         f"{errors_html}"
@@ -2334,17 +2363,18 @@ def render_section(section: Dict[str, object]) -> str:
         snapshot_html = render_case_snapshot_galleries(case, slug)
         if snapshot_html:
             media_blocks.append(snapshot_html)
-    dynamic_html = render_dynamic_gallery(section, slug)
+    result_label = case_display_label(case_configs[0]) if case_configs else str(section["title"])
+    dynamic_html = render_dynamic_gallery(section, slug, result_label)
     if dynamic_html:
         media_blocks.append(dynamic_html)
-    if slug == "testcase1":
-        advect_html = render_advect_cs_tutorial_block(slug)
-        if advect_html:
-            media_blocks.append(advect_html)
     for case in case_configs:
         diagnosis_html = render_case_diagnosis_assets(case, slug)
         if diagnosis_html:
             media_blocks.append(diagnosis_html)
+    if slug == "testcase1":
+        advect_html = render_advect_cs_tutorial_block(slug)
+        if advect_html:
+            media_blocks.append(advect_html)
     media_html = "".join(media_blocks) if media_blocks else "<p class='empty'>No media linked yet for this section.</p>"
 
     return (
