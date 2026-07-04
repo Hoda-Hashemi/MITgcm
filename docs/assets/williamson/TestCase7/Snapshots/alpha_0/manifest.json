@@ -14,15 +14,14 @@
         17280
       ],
       "saved_iterations": [
-        0
-      ],
-      "skipped_nonfinite_iterations": [
+        0,
         3456,
         6912,
         10368,
         13824,
         17280
-      ]
+      ],
+      "skipped_nonfinite_iterations": []
     },
     "etan": {
       "display": "ETAN",
@@ -35,14 +34,13 @@
         13824
       ],
       "saved_iterations": [
-        0
-      ],
-      "skipped_nonfinite_iterations": [
+        0,
         3456,
         6912,
         10368,
         13824
-      ]
+      ],
+      "skipped_nonfinite_iterations": []
     },
     "phi": {
       "display": "PhiVEL",
@@ -55,14 +53,13 @@
         13824
       ],
       "saved_iterations": [
-        0
-      ],
-      "skipped_nonfinite_iterations": [
+        0,
         3456,
         6912,
         10368,
         13824
-      ]
+      ],
+      "skipped_nonfinite_iterations": []
     },
     "psi": {
       "display": "PsiVEL",
@@ -75,14 +72,13 @@
         13824
       ],
       "saved_iterations": [
-        0
-      ],
-      "skipped_nonfinite_iterations": [
+        0,
         3456,
         6912,
         10368,
         13824
-      ]
+      ],
+      "skipped_nonfinite_iterations": []
     },
     "velocity_magnitude": {
       "display": "velocity magnitude",
@@ -96,15 +92,14 @@
         17280
       ],
       "saved_iterations": [
-        0
-      ],
-      "skipped_nonfinite_iterations": [
+        0,
         3456,
         6912,
         10368,
         13824,
         17280
-      ]
+      ],
+      "skipped_nonfinite_iterations": []
     }
   },
   "product": "snapshots",
@@ -115,6 +110,6 @@
     "phi",
     "velocity_magnitude"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/run_analysis",
-  "valid": false
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/run_analysis_cs32",
+  "valid": true
 }

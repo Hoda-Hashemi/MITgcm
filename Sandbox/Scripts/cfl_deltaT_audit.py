@@ -180,8 +180,12 @@ def parse_bool(raw):
 
 def parse_grid(path):
     values = parse_assignments(path)
-    nx, dlon = parse_repeat_grid(values["delX"], "delX")
-    ny, dlat = parse_repeat_grid(values["delY"], "delY")
+    if "delX" in values and "delY" in values:
+        nx, dlon = parse_repeat_grid(values["delX"], "delX")
+        ny, dlat = parse_repeat_grid(values["delY"], "delY")
+    else:
+        nx, dlon = 1440, 0.25
+        ny, dlat = 720, 0.25
     return Grid(
         nx=nx,
         ny=ny,
@@ -220,11 +224,22 @@ def discover_jobs(repo_root, case_id):
     for path in sorted((case_dir / "jobs" / "large").glob("job_{}_*.slurm".format(case_id.lower()))):
         text = path.read_text(encoding="utf-8", errors="ignore")
         name = parse_export(text, "CASE_NAME")
+        run_dir = parse_export(text, "RUN_DIR")
+        if run_dir:
+            expanded_run_dir = Path(
+                run_dir.replace("$CASE_DIR", str(case_dir)).replace("$MITGCM_DIR", str(repo_root))
+            )
+        else:
+            expanded_run_dir = None
+        run_schedule = parse_schedule(expanded_run_dir / "data") if expanded_run_dir is not None else Schedule(None, None)
         delta_t = parse_export(text, "DELTA_T")
         total_seconds = parse_export(text, "TOTAL_SECONDS")
-        run_dir = parse_export(text, "RUN_DIR")
+        if delta_t is None and run_schedule.delta_t is not None:
+            delta_t = str(run_schedule.delta_t)
+        if total_seconds is None and run_schedule.delta_t is not None and run_schedule.n_steps is not None:
+            total_seconds = str(run_schedule.delta_t * run_schedule.n_steps)
         alpha = parse_export(text, "ALPHA_VALUE") or "0.0"
-        if not name or not delta_t or not total_seconds or not run_dir:
+        if not name or not delta_t or not total_seconds or expanded_run_dir is None:
             continue
         jobs.append(
             Job(
@@ -233,7 +248,7 @@ def discover_jobs(repo_root, case_id):
                 alpha=safe_eval_number(alpha),
                 delta_t=safe_eval_number(delta_t),
                 total_seconds=safe_eval_number(total_seconds),
-                run_dir=Path(run_dir.replace("$CASE_DIR", str(case_dir))),
+                run_dir=expanded_run_dir,
                 path=path,
             )
         )
@@ -263,6 +278,8 @@ def initial_velocity(case_id, module, alpha):
 def cfl_from_uv(grid, delta_t, u, v, iteration=-1):
     u = np.asarray(u, dtype=np.float64)
     v = np.asarray(v, dtype=np.float64)
+    if u.shape != v.shape or u.shape != (grid.ny, grid.nx):
+        return None
     dx = grid.dx[:, None]
     dy = grid.dy
     finite = np.isfinite(u) & np.isfinite(v) & np.isfinite(dx) & (dx > 0.0)
@@ -459,6 +476,32 @@ def row_cells(row):
     ]
 
 
+def compact_row_cells(row):
+    max_cfl = None
+    if row.observed is not None:
+        max_cfl = row.observed.max_total
+    elif row.initial is not None:
+        max_cfl = row.initial.max_total
+    total = row.n_steps * row.delta_t
+    status = row.recommendation
+    if status == "no advective deltaT change indicated":
+        status = "OK"
+    elif status == "reduce deltaT before rerun":
+        status = "reduce dt"
+    elif status == "cannot verify advective CFL until inputs/run output exist":
+        status = "n/a"
+    return [
+        row.case_id,
+        row.label,
+        fmt(row.delta_t, 2),
+        str(row.n_steps),
+        fmt(total, 0),
+        fmt(total / 86400.0, 2),
+        fmt(max_cfl, 3),
+        status,
+    ]
+
+
 def markdown(rows):
     commands = sorted({row.command for row in rows})
     headers = [
@@ -568,26 +611,63 @@ def html_table(rows):
     headers = [
         "Case",
         "Run",
-        "alpha(rad)",
-        "template dt(s)",
-        "job dt(s)",
-        "run dt(s)",
-        "steps",
-        "H(m)",
-        "sqrt(gH)",
-        "init adv CFL",
-        "saved adv CFL",
-        "max speed",
-        "explicit Cg,x",
-        "Decision",
+        "dt(s)",
+        "n steps",
+        "total(s)",
+        "days",
+        "max CFL",
+        "Status/action",
     ]
     out = ["<div class='table-scroll'><table>"]
     out.append("<thead><tr>{}</tr></thead>".format("".join("<th>{}</th>".format(html.escape(h)) for h in headers)))
     out.append("<tbody>")
     for row in rows:
-        out.append("<tr>{}</tr>".format("".join("<td>{}</td>".format(html.escape(c)) for c in row_cells(row))))
+        out.append("<tr>{}</tr>".format("".join("<td>{}</td>".format(html.escape(c)) for c in compact_row_cells(row))))
     out.append("</tbody></table></div>")
     return "".join(out)
+
+
+def latex_escape(value):
+    return (
+        str(value)
+        .replace("\\", r"\textbackslash{}")
+        .replace("&", r"\&")
+        .replace("%", r"\%")
+        .replace("$", r"\$")
+        .replace("#", r"\#")
+        .replace("_", r"\_")
+        .replace("{", r"\{")
+        .replace("}", r"\}")
+    )
+
+
+def latex_table(rows):
+    lines = [
+        r"\begin{table}[htbp]",
+        r"\centering",
+        r"\caption{Submitted-run time-step and CFL settings used in the current MITgcm Williamson suite.}",
+        r"\label{tab:submitted_time_step_cfl}",
+        r"\begin{tabular}{llrrrrrl}",
+        r"\toprule",
+        r"Test & Run & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\",
+        r"\midrule",
+    ]
+    for row in rows:
+        case_id, label, dt, steps, total, days, max_cfl, status = compact_row_cells(row)
+        lines.append(
+            "{} & {} & {} & {} & {} & {} & {} & {} \\\\".format(
+                latex_escape(case_id),
+                latex_escape(label),
+                latex_escape(dt),
+                latex_escape(steps),
+                latex_escape(total),
+                latex_escape(days),
+                latex_escape(max_cfl),
+                latex_escape(status),
+            )
+        )
+    lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}", ""])
+    return "\n".join(lines)
 
 
 def html_fragment(rows):
@@ -693,8 +773,12 @@ def main():
         fragments.mkdir(parents=True, exist_ok=True)
         (fragments / "cfl_deltaT_report.md").write_text(markdown(rows), encoding="utf-8")
         (fragments / "cfl_deltaT_report.html").write_text(html_fragment(rows), encoding="utf-8")
+        latex_path = repo_root / "docs" / "assets" / "williamson" / "submitted_time_step_cfl_table.tex"
+        latex_path.parent.mkdir(parents=True, exist_ok=True)
+        latex_path.write_text(latex_table(rows), encoding="utf-8")
         print("wrote {}".format(fragments / "cfl_deltaT_report.md"))
         print("wrote {}".format(fragments / "cfl_deltaT_report.html"))
+        print("wrote {}".format(latex_path))
 
 
 if __name__ == "__main__":

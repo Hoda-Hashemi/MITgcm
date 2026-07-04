@@ -913,11 +913,36 @@ td {
   margin-top: 12px;
 }
 
-.diagnosis-data-list h4 {
+.diagnosis-data-list summary {
   margin: 0 0 8px;
   color: var(--primary-strong);
   font-size: 0.8rem;
   font-weight: 760;
+  cursor: pointer;
+}
+
+.inline-code-panel {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+.inline-code-panel summary {
+  cursor: pointer;
+  padding: 9px 11px;
+  color: var(--primary-strong);
+  font-weight: 760;
+}
+
+.inline-code-panel pre {
+  max-height: 360px;
+  overflow: auto;
+  margin: 0;
+  padding: 11px;
+  border-top: 1px solid var(--line);
+  font-size: 0.76rem;
+  line-height: 1.45;
 }
 
 .asset-link-grid {

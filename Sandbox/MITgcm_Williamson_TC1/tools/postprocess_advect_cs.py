@@ -33,7 +33,8 @@ OUTPUT_ROOT = (
 
 DAY = 86400.0
 DELTA_T = 2700.0
-ROTATION_RATE = 38.60328935834681 / 6_371_000.0
+# Match ini_vel.F: one full solid-body revolution in 12 days.
+ROTATION_RATE = 2.0 * math.pi / (12.0 * DAY)
 REQUESTED_SNAPSHOT_DAYS = (0, 3, 6, 9, 10, 12)
 SNAPSHOT_FIELDS = ("tracer", "theta", "eta", "velocity_magnitude", "tracer_error")
 ALPHA_ORDER = ("0", "0.05", "1.52", "1.57")

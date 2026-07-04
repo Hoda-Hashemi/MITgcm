@@ -259,7 +259,7 @@ READY_ASSET_EXTENSIONS = {
 }
 DIAGNOSIS_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".svg", ".webp"}
 DIAGNOSIS_DATA_EXTENSIONS = {".csv", ".json", ".md", ".txt"}
-ADVECT_CS_DATA_EXTENSIONS = DIAGNOSIS_DATA_EXTENSIONS | {".pdf"}
+ADVECT_CS_DATA_EXTENSIONS = DIAGNOSIS_DATA_EXTENSIONS
 CASE_OUTPUT_NAMES = {
     "TC1_prime": "TestCase1Prime",
     "TC1": "TestCase1",
@@ -467,7 +467,7 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             ),
         },
         {
-            "title": "Initial Conditions And Equations",
+            "title": "Initial Conditions",
             "body": (
                 "<p>The tracer is a bell centered at <code>(&lambda;c,&theta;c)=(3&pi;/2,0)</code> "
                 "with compact radius <code>R=a/3</code>:</p>"
@@ -1610,6 +1610,77 @@ def advect_cs_data_paths() -> List[Path]:
         key=path_sort_key,
     )
 
+def advect_cs_postprocessing_items() -> List[Dict[str, object]]:
+    post_root = ADVECT_CS_OUTPUT_ROOT / "Diagnosis" / "postprocessing"
+    if not post_root.exists():
+        return []
+
+    items: list[dict[str, object]] = []
+    for alpha_dir in sorted(post_root.glob("alpha_*"), key=lambda path: natural_key(path.name)):
+        if not alpha_dir.is_dir():
+            continue
+        alpha = alpha_from_name(alpha_dir.name)
+        for path in sorted(alpha_dir.glob("*.png"), key=path_sort_key):
+            label = path.stem.replace("_", " ")
+            items.append(
+                {
+                    "source": path,
+                    "caption": f"advect_cs alpha {alpha}, {label}",
+                }
+            )
+    return items
+
+def render_advect_cs_error_and_diagnosis(slug: str) -> str:
+    items = [*advect_cs_error_items(), *advect_cs_postprocessing_items()]
+    data_paths = advect_cs_data_paths()
+    if not items and not data_paths:
+        return ""
+
+    grouped: dict[str, dict[str, list[object]]] = {}
+    for item in items:
+        grouped.setdefault(alpha_from_path(Path(item["source"])), {"items": [], "data": []})["items"].append(item)
+    for path in data_paths:
+        grouped.setdefault(alpha_from_path(path), {"items": [], "data": []})["data"].append(path)
+
+    def alpha_group_key(alpha: str) -> Tuple[int, List[str]]:
+        return (1 if alpha == "unknown" else 0, natural_key(alpha))
+
+    alpha_blocks: list[str] = []
+    for index, alpha in enumerate(sorted(grouped, key=alpha_group_key)):
+        group = grouped[alpha]
+        figures = "".join(
+            render_plot_figure(item, slug, "subfigure diagnosis-figure")
+            for item in group["items"]
+        )
+        figures_html = (
+            "<div class='results-grid subfigure-grid diagnosis-grid'>"
+            f"{figures}"
+            "</div>"
+            if figures
+            else ""
+        )
+        data_html = render_diagnosis_data_links(
+            [Path(path) for path in group["data"]],
+            ADVECT_CS_OUTPUT_ROOT,
+            slug,
+        )
+        summary = "General" if alpha == "unknown" else f"&alpha;={html.escape(alpha)}"
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if index == 0 else ''}>"
+            f"<summary>{summary}</summary>"
+            f"{figures_html}"
+            f"{data_html}"
+            "</details>"
+        )
+
+    return (
+        f"<details id='{html.escape(slug)}-advect-cs-errors' class='media-section results-section diagnosis-assets' open>"
+        "<summary>Results: existing MITgcm tutorial advect_cs - Error analysis and diagnosis assets</summary>"
+        "<p class='section-note'>Errors are model passive tracer minus the advected analytic bell.</p>"
+        f"{''.join(alpha_blocks)}"
+        "</details>"
+    )
+
 def available_snapshot_days(alpha_dirs: List[Path], field_folders: Tuple[Tuple[str, str], ...]) -> Tuple[float, ...]:
     days: set[float] = set()
     for alpha_dir in alpha_dirs:
@@ -1973,16 +2044,35 @@ def render_williamson_details(section: Dict[str, object]) -> str:
     if not details:
         return ""
 
+    slug = str(section["slug"])
     blocks = []
     for _index, detail in sorted(enumerate(details), key=detail_sort_key):
         kind = detail_kind(str(detail["title"]))
+        body = str(detail["body"])
+        if slug == "testcase1" and kind == "equations":
+            body += render_inline_code_panel(
+                "Python initial-condition script",
+                SANDBOX_DIR / "vortexSphere_Williamson_TC1" / "input" / "gendata_ref.py",
+                "python",
+            )
         blocks.append(
             f"<section class='description-block detail-{html.escape(kind)}'>"
             f"<h3>{html.escape(detail['title'])}</h3>"
-            f"<div class='description-copy'>{detail['body']}</div>"
+            f"<div class='description-copy'>{body}</div>"
             "</section>"
         )
     return f"<article class='experiment-description' aria-label='Experiment details'>{''.join(blocks)}</article>"
+
+def render_inline_code_panel(summary: str, path: Path, language: str = "text") -> str:
+    if not path.exists():
+        return ""
+    code = path.read_text(encoding="utf-8", errors="ignore").rstrip()
+    return (
+        "<details class='inline-code-panel'>"
+        f"<summary>{html.escape(summary)}</summary>"
+        f"<pre><code class='language-{html.escape(language)}'>{html.escape(code)}</code></pre>"
+        "</details>"
+    )
 
 def render_media_card(media: Dict[str, object], slug: str) -> str:
     source = Path(media["source"])
@@ -2134,10 +2224,77 @@ def render_diagnosis_data_links(paths: List[Path], root: Path, slug: str) -> str
         )
 
     return (
-        "<div class='diagnosis-data-list'>"
-        "<h4>Ready data files</h4>"
+        "<details class='diagnosis-data-list ready-data-panel'>"
+        "<summary>Ready data files</summary>"
         f"<div class='asset-link-grid'>{''.join(links)}</div>"
-        "</div>"
+        "</details>"
+    )
+
+def render_tc1_error_and_diagnosis(case: Dict[str, object], slug: str, result_label: str) -> str:
+    root = case_diagnosis_root(case)
+    images, data_paths = discover_case_diagnosis_assets(case)
+    error_items = tc1_error_contour_items()
+    if not error_items and not images and not data_paths:
+        return ""
+
+    grouped: dict[str, dict[str, list[object]]] = {}
+    for item in error_items:
+        grouped.setdefault(alpha_from_path(Path(item["source"])), {"errors": [], "images": [], "data": []})["errors"].append(item)
+    if root is not None:
+        for path in images:
+            grouped.setdefault(alpha_from_path(path), {"errors": [], "images": [], "data": []})["images"].append(path)
+        for path in data_paths:
+            grouped.setdefault(alpha_from_path(path), {"errors": [], "images": [], "data": []})["data"].append(path)
+
+    def alpha_group_key(alpha: str) -> Tuple[int, List[str]]:
+        return (1 if alpha == "unknown" else 0, natural_key(alpha))
+
+    alpha_blocks: list[str] = []
+    for index, alpha in enumerate(sorted(grouped, key=alpha_group_key)):
+        group = grouped[alpha]
+        figures: list[str] = []
+        for item in group["errors"]:
+            figure = render_plot_figure(item, slug, "subfigure diagnosis-figure")
+            if figure:
+                figures.append(figure)
+        if root is not None:
+            for path in group["images"]:
+                figure = render_plot_figure(
+                    {
+                        "source": path,
+                        "caption": f"{result_label}: {diagnosis_asset_label(path, root)}",
+                    },
+                    slug,
+                    "subfigure diagnosis-figure",
+                )
+                if figure:
+                    figures.append(figure)
+        figures_html = (
+            "<div class='results-grid subfigure-grid diagnosis-grid'>"
+            f"{''.join(figures)}"
+            "</div>"
+            if figures
+            else ""
+        )
+        data_html = render_diagnosis_data_links(
+            [Path(path) for path in group["data"]],
+            root if root is not None else SANDBOX_OUTPUT_ROOT,
+            slug,
+        )
+        summary = "General" if alpha == "unknown" else f"&alpha;={html.escape(alpha)}"
+        alpha_blocks.append(
+            f"<details class='alpha-panel' {'open' if index == 0 else ''}>"
+            f"<summary>{summary}</summary>"
+            f"{figures_html}"
+            f"{data_html}"
+            "</details>"
+        )
+
+    return (
+        f"<details id='{html.escape(slug)}-errors' class='media-section results-section diagnosis-assets' open>"
+        f"<summary>Results: {html.escape(result_label)} - Error analysis and diagnosis assets</summary>"
+        f"{''.join(alpha_blocks)}"
+        "</details>"
     )
 
 def render_case_diagnosis_assets(case: Dict[str, object], slug: str) -> str:
@@ -2306,18 +2463,11 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         available_snapshot_days(alpha_dirs, ADVECT_CS_FIELD_TAB_ORDER),
         ADVECT_CS_KEY_DAYS,
     )
-    errors_html = render_alpha_grouped_gallery(
-        "Results: existing MITgcm tutorial advect_cs - Error analysis and diagnosis assets",
-        advect_cs_error_items(),
-        slug,
-        f"{slug}-advect-cs-errors",
-        "Errors are model passive tracer minus the advected analytic bell.",
-    )
-    data_html = render_diagnosis_data_links(advect_cs_data_paths(), ADVECT_CS_OUTPUT_ROOT, slug)
+    results_html = render_advect_cs_error_and_diagnosis(slug)
     settings_html = render_advect_cs_numerical_settings()
     return (
         f"<div id='{html.escape(slug)}-advect-cs' class='media-section snapshot-browser existing-tutorial-block'>"
-        "<h3>Existing MITgcm tutorial: advect_cs</h3>"
+        "<h3>Existing tutorials in MITgcm: advect_cs</h3>"
         "<article class='experiment-description' aria-label='Existing MITgcm tutorial details'>"
         "<section class='description-block detail-definition'>"
         "<h3>Definition</h3>"
@@ -2327,6 +2477,12 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         "four rotation angles, and no momentum stepping.</p>"
         "</div>"
         "</section>"
+        "<section class='description-block detail-measure'>"
+        "<h3>What This Test Measures</h3>"
+        "<div class='description-copy'>"
+        "<p>It isolates cubed-sphere passive-tracer transport: phase error, numerical diffusion, face-edge continuity, and tracer conservation under prescribed velocity.</p>"
+        "</div>"
+        "</section>"
         "<section class='description-block detail-expected'>"
         "<h3>Expected Output</h3>"
         "<div class='description-copy'>"
@@ -2334,13 +2490,27 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         "<code>Eta</code> is not the target field; this existing tutorial tests transport, not free-surface dynamics.</p>"
         "</div>"
         "</section>"
+        "<section class='description-block detail-equations'>"
+        "<h3>Initial Conditions</h3>"
+        "<div class='description-copy'>"
+        "<p><code>S.init</code> is the active passive tracer: a compact cosine bell centered at lon 180 deg, lat 35 deg, radius 0.3 chord units. <code>T.init</code> is an additional tracer from the original tutorial.</p>"
+        f"{render_inline_code_panel('MITgcm tutorial input generator', ADVECT_CS_SETUP_ROOT / 'input' / 'gendata.m', 'matlab')}"
+        "</div>"
+        "</section>"
+        "<section class='description-block detail-parameters'>"
+        "<h3>Parameters</h3>"
+        "<div class='description-copy'>"
+        "<ul><li>Grid: CS32 cubed sphere, six faces, six MPI ranks.</li>"
+        "<li>Velocity: 12-day solid-body rotation from <code>ini_vel.F</code>, with alpha read from <code>tc1_alpha.txt</code>.</li>"
+        "<li>Angles: <code>0, 0.05, 1.52, 1.57 rad</code>.</li></ul>"
+        "</div>"
+        "</section>"
         "</article>"
         f"{settings_html}"
         f"<p class='section-note'>{html.escape(days_note)} Cubed-sphere panels are shown as an unfolded cube.</p>"
         f"{''.join(alpha_blocks)}"
+        f"{results_html}"
         "</div>"
-        f"{errors_html}"
-        f"{data_html}"
     )
 
 def render_section(section: Dict[str, object]) -> str:
@@ -2369,13 +2539,18 @@ def render_section(section: Dict[str, object]) -> str:
         if snapshot_html:
             media_blocks.append(snapshot_html)
     result_label = case_display_label(case_configs[0]) if case_configs else str(section["title"])
-    dynamic_html = render_dynamic_gallery(section, slug, result_label)
-    if dynamic_html:
-        media_blocks.append(dynamic_html)
-    for case in case_configs:
-        diagnosis_html = render_case_diagnosis_assets(case, slug)
+    if slug == "testcase1" and case_configs:
+        diagnosis_html = render_tc1_error_and_diagnosis(case_configs[0], slug, result_label)
         if diagnosis_html:
             media_blocks.append(diagnosis_html)
+    else:
+        dynamic_html = render_dynamic_gallery(section, slug, result_label)
+        if dynamic_html:
+            media_blocks.append(dynamic_html)
+        for case in case_configs:
+            diagnosis_html = render_case_diagnosis_assets(case, slug)
+            if diagnosis_html:
+                media_blocks.append(diagnosis_html)
     if slug == "testcase1":
         advect_html = render_advect_cs_tutorial_block(slug)
         if advect_html:

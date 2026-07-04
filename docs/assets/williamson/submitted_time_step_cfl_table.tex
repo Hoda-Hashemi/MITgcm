@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Submitted-run time-step and CFL settings used in the current MITgcm Williamson suite.}
+\label{tab:submitted_time_step_cfl}
+\begin{tabular}{llrrrrrl}
+\toprule
+Test & Run & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\
+\midrule
+TC1 & alpha=0 & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
+TC1 & alpha=0.05 & 10.0 & 103680 & 1036800 & 12.0 & 0.332 & OK \\
+TC1 & alpha=1.52 & 0.75 & 1382400 & 1036800 & 12.0 & 0.490 & OK \\
+TC1 & alpha=1.57 & 0.75 & 1382400 & 1036800 & 12.0 & 0.477 & OK \\
+TC2 & alpha=0 & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
+TC2 & alpha=0.05 & 10.0 & 103680 & 1036800 & 12.0 & 0.332 & OK \\
+TC2 & alpha=1.52 & 0.75 & 1382400 & 1036800 & 12.0 & 0.477 & OK \\
+TC2 & alpha=1.57\_cs32 & 60.0 & 17280 & 1036800 & 12.0 & 38.2 & reduce dt \\
+TC3 & alpha=0 & 60.0 & 7200 & 432000 & 5.00 & 0.124 & OK \\
+TC3 & alpha=1.0472 & 0.75 & 576000 & 432000 & 5.00 & 0.477 & OK \\
+TC4 & run\_u0\_20 & 60.0 & 7200 & 432000 & 5.00 & n/a & n/a \\
+TC5 & run\_standard\_cs32 & 30.0 & 43200 & 1296000 & 15.0 & 0.022 & OK \\
+TC6 & standard & 30.0 & 40320 & 1209600 & 14.0 & 0.126 & OK \\
+TC7 & run\_analysis\_cs32 & 25.0 & 17280 & 432000 & 5.00 & 0.237 & OK \\
+\bottomrule
+\end{tabular}
+\end{table}
