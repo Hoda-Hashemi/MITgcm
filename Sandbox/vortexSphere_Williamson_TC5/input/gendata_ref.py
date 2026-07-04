@@ -9,6 +9,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import williamson_fields as wf
+import williamson_cube as wc
 
 NX = wf.NX
 NY = wf.NY
@@ -49,6 +50,15 @@ def make_velocity_fields(alpha_rad: float = ALPHA_RAD) -> tuple[object, object]:
 
 def main() -> None:
     base_dir = Path(__file__).resolve().parent
+    if not (base_dir / ".use_latlon_grid").exists():
+        wc.generate_tc5(base_dir)
+        print("")
+        print("Done.")
+        print(f"H0              = {H0:.12f} m")
+        print(f"mountain height = {wf.TC5_MOUNTAIN_HEIGHT:.12f} m")
+        print(f"U0              = {wf.TC5_U0:.12f} m/s")
+        return
+
     bathy = make_bathymetry()
     eta = make_eta()
     u, v = make_velocity_fields()

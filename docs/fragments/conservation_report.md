@@ -19,12 +19,12 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | Case | Status | Mass | Target quantity | Energy proxy | PV/enstrophy | Output health |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
-| TC2 | Issues | preserved to roundoff | not preserved | not preserved | not preserved | finite fields, but alpha 1.57 setup preflight fails |
-| TC3 | Validated with caveat | preserved to roundoff | not preserved for rotated alpha | not preserved for rotated alpha | not preserved for rotated alpha | finite saved state fields |
-| TC4 | Verified | preserved to roundoff | small drift | noticeable drift | small drift | finite saved state fields |
-| TC5 | Rerun in progress | awaiting rerun output | awaiting rerun output | awaiting rerun output | awaiting rerun output | arza job 816795 running; previous output invalid after day 1 |
+| TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
+| TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
+| TC4 | Verified | preserved to roundoff | noticeable drift | noticeable drift | noticeable drift | finite saved state fields |
+| TC5 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
-| TC7 | Rerun in progress | awaiting rerun output | awaiting rerun output | awaiting rerun output | awaiting rerun output | arza job 816794 running; no completed corrected MDS output archived yet |
+| TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
 
 ### Required output fields
 
@@ -46,7 +46,7 @@ Mass is preserved to roundoff (max |rel| 7.709e-16). The TC1 tracer amount is we
 
 #### TC2
 
-Mass is preserved to roundoff (max |rel| 8.499e-16), but the published alpha `1.57` setup fails preflight because the rotated Coriolis files are missing. The mechanical-energy proxy is not preserved (max |rel| 0.147859), and derived potential enstrophy is not preserved (max |rel| 0.0220451).
+Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy is not preserved (max |rel| 0.147859). Derived potential enstrophy is not preserved (max |rel| 0.0220451).
 
 - alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
 - alpha `0.05`: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved
@@ -55,22 +55,21 @@ Mass is preserved to roundoff (max |rel| 8.499e-16), but the published alpha `1.
 
 #### TC3
 
-Both published setups pass preflight and remain finite. Alpha `0` is clean, but alpha `1.0472` has larger steady-state drift and nontrivial energy/PV drift, so TC3 is validated with caveat rather than marked as a perfect pass.
+Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).
 
 - alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
-- alpha `1.0472`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
 
 #### TC4
 
-Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). Together with the analytic path check and published snapshots, the c1 output is marked verified.
+Mass is preserved to roundoff (max |rel| 7.406e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.511e-04, enstrophy max |rel| 1.360e-05). Together with the analytic path check and published snapshots, the c1 output is marked verified.
 
-- alpha `run_u0_20`: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift
+- alpha `run_u0_40`: mass preserved to roundoff; quantity noticeable drift; energy noticeable drift; PV/enstrophy noticeable drift
 
 #### TC5
 
-The archived output is invalid after day 1, and the corrected 30 s, `viscAh=1e1` arza rerun is currently running as job `816795`. Do not use the conservation verdict as final until the corrected run finishes with finite state fields.
+Mass is preserved to roundoff (max |rel| 1.786e-16). The mechanical-energy proxy is not preserved (max |rel| 0.444233). Derived potential enstrophy is not preserved (max |rel| 0.347357).
 
-- alpha `0`: invalid output; 15 non-finite saved records, first bad day 1
+- alpha `0`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
 
 #### TC6
 
@@ -80,6 +79,6 @@ Mass is preserved to roundoff (max |rel| 8.433e-16). The mechanical-energy proxy
 
 #### TC7
 
-The analyzed input is staged and the corrected 25 s, `viscAh=1e1` arza rerun is currently running as job `816794`. No completed corrected MDS output is archived yet.
+Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
 
-- alpha `0`: awaiting corrected run output from job `816794`
+- alpha `unavailable`: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet

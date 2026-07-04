@@ -133,9 +133,8 @@ def compact_to_faces(field: np.ndarray) -> np.ndarray:
             [arr[:, index * CS_FACE_SIZE : (index + 1) * CS_FACE_SIZE] for index in range(6)]
         )
     if arr.shape == (CS_FACE_SIZE * 6, CS_FACE_SIZE):
-        return np.asarray(
-            [arr[index * CS_FACE_SIZE : (index + 1) * CS_FACE_SIZE, :] for index in range(6)]
-        )
+        compact = arr.reshape((CS_FACE_SIZE, 6, CS_FACE_SIZE))
+        return np.moveaxis(compact, 1, 0)
     raise ValueError(f"cannot convert cubed-sphere field with shape {arr.shape} to six faces")
 
 

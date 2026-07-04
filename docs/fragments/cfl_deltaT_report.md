@@ -38,7 +38,7 @@ TC1 has two entries here: vortexSphere TC1 uses the submitted lat-lon jobs, whil
 
 No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 reaches about 0.56 in the saved fields, above the conservative 0.5 margin; deltaT <= 8.93 s would keep the saved-output maximum under 0.5.
 
-TC5 does not look like a simple CFL failure: the initial advective CFL is small, but archived fields become non-finite before the required late-day checks and the CG residuals later print NaN. Treat TC5 as needing a run-health rerun with the corrected H0, smaller timestep, and explicit viscosity before using later-day plots. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.
+TC5 is now a completed CS32 rerun: the initial and monitored advective CFL remain small, the final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.
 
 `n/a` means the audit could not read a finite CFL source for that column: missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere row where the spherical-polar gravity-wave metric is not used. TC4 now includes both `run_u0_20` and completed `run_u0_40` output.
 

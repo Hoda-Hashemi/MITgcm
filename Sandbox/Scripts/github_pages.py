@@ -173,10 +173,11 @@ SECTIONS = [
     {
         "slug": "testcase5",
         "title": "Williamson TC5: Zonal Flow Over an Isolated Mountain",
-        "summary": "Previous TC5 output became non-finite; a corrected 30 s, viscAh=1e1 rerun is active on arza job 816795 (anode[12-14]).",
+        "summary": "The corrected CS32, 48-rank TC5 run is complete for 15 days with finite fields; mountain topography, snapshots, conservation, and postprocessing assets are published.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC5",
         "key_days": (0.0, 3.0, 6.0, 9.0, 10.0, 12.0, 15.0),
         "snapshot_fields": [
+            ("mountain", "Mountain Height"),
             ("eta", "Eta"),
             ("etan", "ETAN"),
             ("psi", "PsiVEL"),
@@ -276,6 +277,7 @@ SNAPSHOT_FIELD_LABELS = {
     "tracer_error": "Tracer Error",
     "eta": "Eta",
     "etan": "ETAN",
+    "mountain": "Mountain Height",
     "psi": "PsiVEL",
     "phi": "PhiVEL",
     "theta": "Temperature Tracer",
@@ -286,15 +288,17 @@ SNAPSHOT_FIELD_UNITS = {
     "tracer_error": "psu",
     "eta": "m",
     "etan": "m",
+    "mountain": "m",
     "psi": "m<sup>3</sup> s<sup>-1</sup>",
     "phi": "m<sup>2</sup> s<sup>-1</sup>",
     "velocity_magnitude": "m s<sup>-1</sup>",
 }
 SNAPSHOT_FIELD_ORDER = {
     field: index
-    for index, field in enumerate(("tracer", "eta", "etan", "psi", "phi", "velocity_magnitude"))
+    for index, field in enumerate(("tracer", "mountain", "eta", "etan", "psi", "phi", "velocity_magnitude"))
 }
 FIELD_TAB_ORDER = (
+    ("mountain", "Mountain Height"),
     ("eta", "Eta"),
     ("etan", "ETAN"),
     ("tracer", "Tracer"),
@@ -327,7 +331,7 @@ STATUS_META = {
     "testcase2": ("Issues", "issues"),
     "testcase3": ("Validated with caveat", "pending"),
     "testcase4": ("Verified", "verified"),
-    "testcase5": ("Rerun in progress", "pending"),
+    "testcase5": ("Verified", "verified"),
     "testcase6": ("Pending validation", "pending"),
     "testcase7": ("Completed", "pending"),
     "case1_constant_bathymetry": ("Verified", "verified"),
@@ -705,8 +709,9 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "title": "Initial Conditions And Equations",
             "body": (
                 f"{COMMON_EQUATION_HTML}"
-                "<p>The initialized flow is zonal and geostrophically adjusted around mountain "
-                "topography:</p>"
+                "<p>The initialized flow is zonal. The isolated mountain is static lower-boundary "
+                "topography, so it enters through bathymetry/depth rather than as an added "
+                "free-surface bump:</p>"
                 + math_block(
                     "u=U_0\\cos\\theta,\\quad v=0",
                     "h_s=h_{s0}\\left(1-\\frac{r}{R}\\right),\\quad r<R",
@@ -719,7 +724,7 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "title": "Parameters",
             "body": (
                 "<ul>"
-                "<li><code>U0=20 m s^-1</code>, <code>H0=5400 m</code>.</li>"
+                "<li><code>U0=20 m s^-1</code>, <code>H0=5960 m</code>.</li>"
                 "<li>Mountain height <code>h_s0=2000 m</code>, radius <code>R=&pi;/9</code>.</li>"
                 "<li>Mountain center <code>(&lambda;c,&theta;c)=(3&pi;/2,&pi;/6)</code>.</li>"
                 "</ul>"
@@ -1945,6 +1950,8 @@ def case_setting_sources(case_path: Path) -> List[Tuple[str, Path, Path]]:
         for path in case_path.iterdir()
         if path.is_dir() and path.name.startswith("run_") and (path / "data").exists()
     ]
+    if case_path.name == "vortexSphere_Williamson_TC5":
+        run_dirs = [path for path in run_dirs if path.name == "run_standard_cs32"]
     sources: list[tuple[str, Path, Path]] = []
     for run_dir in sorted(run_dirs, key=lambda path: natural_key(path.name)):
         label = alpha_from_name(run_dir.name)

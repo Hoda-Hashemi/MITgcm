@@ -1,8 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=TC5_c1_large48
+#SBATCH --job-name=TC5_c1_cs32_48
 #SBATCH --account=hmh85
 #SBATCH --partition=large
-#SBATCH --nodelist=onode16
 #SBATCH --nodes=1
 #SBATCH --ntasks=48
 #SBATCH --ntasks-per-node=48
@@ -28,11 +27,12 @@ export CASE_NAME=c1
 export ALPHA_VALUE=0.0
 export DELTA_T=30.0
 export TOTAL_SECONDS=1296000
-export BUILD_DIR=$CASE_DIR/build/c1_large48
-export RUN_DIR=$CASE_DIR/run_standard
+export BUILD_DIR=$CASE_DIR/build/c1_cs32_large48
+export RUN_DIR=$CASE_DIR/run_standard_cs32
 export LOG_DIR=$CASE_DIR/logs
 export MPI_TASKS=${SLURM_NTASKS:-48}
 export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-48}
+export RUN_POSTPROCESS=${RUN_POSTPROCESS:-1}
 export N_TIME_STEPS=$(python3 -c "print(int(round(${TOTAL_SECONDS}/${DELTA_T})))")
 
 START_TIME=$(date +%s)
@@ -40,7 +40,7 @@ TOOLS_DIR=$MITGCM_DIR/tools
 BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
 MODS_DIR=$CASE_DIR/code
 PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC5.py
-SETUP_CHECK=$CASE_DIR/tools/check_setup_tc5.py
+SETUP_CHECK=$MITGCM_DIR/Sandbox/Scripts/williamson_cube_preflight.py
 
 finish() {
     local status=$1 end_time elapsed
@@ -59,17 +59,19 @@ stage_case_inputs() {
     sed -i "s/^ nTimeSteps=.*/ nTimeSteps=${N_TIME_STEPS},/" "$RUN_DIR/data"
     sed -i "s/^ deltaT=.*/ deltaT=${DELTA_T},/" "$RUN_DIR/data"
     (cd "$RUN_DIR" && python3 gendata_ref.py)
-    python3 "$SETUP_CHECK" --run-dir "$RUN_DIR" --alpha "$ALPHA_VALUE"
+    python3 "$SETUP_CHECK" --case TC5 --run-dir "$RUN_DIR"
 }
 
 clean_run_dir() {
     find "$RUN_DIR" -maxdepth 1 -type f \
         \( -name "*.data" -o -name "*.meta" -o -name "*.bin" \
         -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" \
+        -o -name "tile*.mitgrid" \
         -o -name "pickup*" -o -name "available_diagnostics.log" \
         -o -name "run.log" -o -name "run_inventory.log" \
         -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg" \
-        -o -name "data.diagnostics" -o -name "eedata" -o -name "eedata.mth" \
+        -o -name "data.diagnostics" -o -name "data.exch2" \
+        -o -name "eedata" -o -name "eedata.mth" \
         -o -name "gendata_ref.py" \) \
         -delete
 }
@@ -92,9 +94,13 @@ if [ "$STATUS" -ne 0 ]; then
     exit "$STATUS"
 fi
 
-set +e
-TC5_RUN_DIRS="$RUN_DIR" python3 "$PLOT_SCRIPT"
-STATUS=$?
-set -e
+if [ "${RUN_POSTPROCESS}" = "1" ]; then
+    set +e
+    TC5_RUN_DIRS="$RUN_DIR" python3 "$PLOT_SCRIPT"
+    STATUS=$?
+    set -e
+else
+    STATUS=0
+fi
 finish "$STATUS"
 exit "$STATUS"

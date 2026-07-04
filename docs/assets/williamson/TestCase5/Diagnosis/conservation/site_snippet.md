@@ -1,10 +1,10 @@
-# TC5 Conservation Diagnostics
+# TC5 Conservation and Output-Health Checks
 
 **Experiment:** Zonal flow over an isolated mountain
 
 ## Suggested Section Copy
 
-Output health is invalid because at least one Eta/U/V/scalar state contains non-finite values (minimum finite fraction 0). The first bad saved record is day 1. Do not use the conservation verdict as final until the run is regenerated with finite state fields.
+Mass is preserved to roundoff (max |rel| 1.786e-16). The mechanical-energy proxy is not preserved (max |rel| 0.444233). Derived potential enstrophy is not preserved (max |rel| 0.347357).
 
 These diagnostics use the current MITgcm MDS outputs only. Mass and free-surface drift come from `Eta/ETAN`; energy uses `momKE` when present, otherwise centered `U/V`; PV and potential enstrophy are derived from `U/V/Eta` because no run currently writes a native vorticity or PV diagnostic.
 
@@ -23,4 +23,4 @@ These diagnostics use the current MITgcm MDS outputs only. Mass and free-surface
 
 ## Per-Run Verdicts
 
-- alpha 0: mass invalid output; quantity invalid output; energy invalid output; enstrophy invalid output; health invalid output: non-finite state fields; first non-finite state at day 1.
+- alpha 0: mass preserved to roundoff; quantity not preserved; energy not preserved; enstrophy not preserved; health finite state fields.

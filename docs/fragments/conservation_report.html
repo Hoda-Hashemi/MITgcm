@@ -47,12 +47,12 @@
         <div class='table-scroll'><table><thead><tr><th>Case</th><th>Status</th><th>Mass</th><th>Target quantity</th><th>Energy proxy</th><th>PV/enstrophy</th><th>Output health</th></tr></thead><tbody>
 <tr><td> Case </td><td> Status </td><td> Mass </td><td> Target quantity </td><td> Energy proxy </td><td> PV/enstrophy </td><td> Output health </td></tr>
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC2 </td><td> Issues </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite fields, but alpha 1.57 setup preflight fails </td></tr>
-<tr><td> TC3 </td><td> Validated with caveat </td><td> preserved to roundoff </td><td> not preserved for rotated alpha </td><td> not preserved for rotated alpha </td><td> not preserved for rotated alpha </td><td> finite saved state fields </td></tr>
-<tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> small drift </td><td> noticeable drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC5 </td><td> Rerun in progress </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> arza job 816795 running; previous output invalid after day 1 </td></tr>
+<tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
+<tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> small drift </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> noticeable drift </td><td> noticeable drift </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC5 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC7 </td><td> Rerun in progress </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> awaiting rerun output </td><td> arza job 816794 running; no completed corrected MDS output archived yet </td></tr>
+<tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
         </tbody></table></div>
       </div>
     </div>
@@ -69,9 +69,9 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_tracer.png'>Tracer amount drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0.05/conservation_mass.png'>Mass/free surface drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0.05/conservation_tracer.png'>Tracer amount drift (alpha 0.05)</a></div>
 </details>
-<details class='details-panel case-block status-issues'>
-<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-issues'>Issues</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 8.499e-16), but the published alpha 1.57 setup fails preflight because the rotated Coriolis files are missing. The mechanical-energy proxy is not preserved (max |rel| 0.147859), and derived potential enstrophy is not preserved (max |rel| 0.0220451).</p>
+<details class='details-panel case-block status-pending'>
+<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-pending'>Pending validation</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy is not preserved (max |rel| 0.147859). Derived potential enstrophy is not preserved (max |rel| 0.0220451).</p>
 <ul>
 <li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
 <li><code>alpha=0.05</code>: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved</li>
@@ -81,29 +81,28 @@
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.png'>Mass/free surface drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.png'>Energy proxy drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0.05)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
-<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-pending'>Validated with caveat</span></summary>
-<p>Both published setups pass preflight and remain finite. Alpha 0 is clean, but alpha 1.0472 has larger steady-state drift and nontrivial energy/PV drift, so TC3 is validated with caveat rather than marked as a perfect pass.</p>
+<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-pending'>Pending validation</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).</p>
 <ul>
 <li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
-<li><code>alpha=1.0472</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
 <details class='details-panel case-block status-verified'>
 <summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-verified'>Verified</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 7.640e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.080e-04, enstrophy max |rel| 4.617e-06). Together with the analytic path check and published snapshots, the c1 output is marked verified.</p>
+<p>Mass is preserved to roundoff (max |rel| 7.406e-16). Because TC4 is analytically forced, the mechanical-energy and derived potential-enstrophy curves are diagnostic traces, not unforced conservation claims (energy max |rel| 1.511e-04, enstrophy max |rel| 1.360e-05). Together with the analytic path check and published snapshots, the c1 output is marked verified.</p>
 <ul>
-<li><code>alpha=run_u0_20</code>: mass preserved to roundoff; quantity small drift; energy noticeable drift; PV/enstrophy small drift</li>
+<li><code>alpha=run_u0_40</code>: mass preserved to roundoff; quantity noticeable drift; energy noticeable drift; PV/enstrophy noticeable drift</li>
 </ul>
-<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_mass.png'>Mass/free surface drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_energy.png'>Energy proxy drift (alpha run_u0_20)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha run_u0_20)</a></div>
+<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_mass.png'>Mass/free surface drift (alpha run_u0_40)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_energy.png'>Energy proxy drift (alpha run_u0_40)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha run_u0_40)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
-<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-pending'>Rerun in progress</span></summary>
-<p>The archived output is invalid after day 1, and the corrected 30 s, viscAh=1e1 arza rerun is currently running as job 816795. Do not use the conservation verdict as final until the corrected run finishes with finite state fields.</p>
+<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-pending'>Pending validation</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 1.786e-16). The mechanical-energy proxy is not preserved (max |rel| 0.444233). Derived potential enstrophy is not preserved (max |rel| 0.347357).</p>
 <ul>
-<li><code>alpha=0</code>: invalid output; 15 non-finite saved records, first bad day 1</li>
+<li><code>alpha=0</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
 </ul>
-<p class='section-note'>Plot files are archived, but they are not shown as validation evidence because the saved state fields are non-finite.</p>
+<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
 <summary>TC6 - Rossby-Haurwitz wave <span class='status-chip status-pending'>Pending validation</span></summary>
@@ -114,10 +113,10 @@
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
 <details class='details-panel case-block status-pending'>
-<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Rerun in progress</span></summary>
-<p>The analyzed input is staged and the corrected 25 s, viscAh=1e1 arza rerun is currently running as job 816794. No completed corrected MDS output is archived yet.</p>
+<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Pending output</span></summary>
+<p>Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</p>
 <ul>
-<li><code>alpha=0</code>: awaiting corrected run output from job 816794</li>
+<li><code>alpha=unavailable</code>: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</li>
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
