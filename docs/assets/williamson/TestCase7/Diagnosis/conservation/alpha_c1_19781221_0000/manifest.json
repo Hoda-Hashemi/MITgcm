@@ -1,0 +1,37 @@
+{
+  "alpha": "c1_19781221_0000",
+  "case": "TC7",
+  "fields": {
+    "eta": "Eta",
+    "kinetic": "momKE",
+    "scalar": null,
+    "u": "U",
+    "v": "V",
+    "vorticity": null
+  },
+  "iterations": [
+    0,
+    3456,
+    6912,
+    10368,
+    13824,
+    17280
+  ],
+  "product": "conservation",
+  "saved": [
+    "conservation_timeseries.csv",
+    "conservation_mass.pdf",
+    "conservation_mass.png",
+    "conservation_energy.pdf",
+    "conservation_energy.png",
+    "conservation_pv_enstrophy.pdf",
+    "conservation_pv_enstrophy.png"
+  ],
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/run_c1_19781221_0000",
+  "summary": {
+    "max_abs_mass_rel_change": 0.0,
+    "max_abs_mechanical_energy_rel_change": 0.011494913602784772,
+    "max_abs_potential_enstrophy_rel_change": 0.2936032894513437,
+    "max_abs_tracer_mass_rel_change": NaN
+  }
+}

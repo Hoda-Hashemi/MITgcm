@@ -204,7 +204,7 @@ SECTIONS = [
     {
         "slug": "testcase7",
         "title": "Williamson TC7: Analyzed 500 mb Initial State",
-        "summary": "Three CS32 analyzed-state runs are complete: 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979. The current suite uses deltaT=25 s and 48 MPI ranks.",
+        "summary": "Three CS32 analyzed-state runs are verified: 0000 GMT 21 Dec 1978, 16 Jan 1979, and 9 Jan 1979. The current suite uses deltaT=25 s and 48 MPI ranks.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC7",
         "key_days": (0.0, 1.0, 2.0, 3.0, 4.0, 5.0),
         "snapshot_fields": [
@@ -333,7 +333,7 @@ STATUS_META = {
     "testcase4": ("Verified", "verified"),
     "testcase5": ("Verified", "verified"),
     "testcase6": ("Pending validation", "pending"),
-    "testcase7": ("Completed", "pending"),
+    "testcase7": ("Verified", "verified"),
     "case1_constant_bathymetry": ("Verified", "verified"),
     "case2_real_bathymetry": ("Verified", "verified"),
     "case3_geostrophic_adjustment": ("Verified", "verified"),
@@ -809,6 +809,8 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<p>The paper uses analyzed atmospheric states truncated to T42 spectral resolution, "
                 "with optional nonlinear normal-mode initialization. This repository applies "
                 "a large-scale filter before staging MITgcm CS32 cubed-sphere input. "
+                "The local source catalog is "
+                "<a href='https://psl.noaa.gov/thredds/catalog/Datasets/ncep.reanalysis/pressure/catalog.html'>NOAA PSL NCEP/NCAR Reanalysis pressure levels</a>. "
                 "The downloaded source files are "
                 "<code>hgt.1978.nc</code>, <code>hgt.1979.nc</code>, "
                 "<code>uwnd.1978_12_21.nc</code>, <code>vwnd.1978_12_21.nc</code>, "
@@ -829,6 +831,14 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<li>Williamson TC7 is specified from T42 analyzed states, about <code>2.8 deg</code>; the local MITgcm runs use a comparable <code>CS32</code> cubed-sphere grid, stored as six <code>32 x 32</code> faces.</li>"
                 "<li>The completed runs use <code>deltaT=25 s</code>, <code>nTimeSteps=17280</code>, 5 simulated days, 48 MPI ranks, large-scale filtering, polar velocity tapering, and <code>viscAh=1e1</code>.</li>"
                 "</ul>"
+                "<p>Latest available HPC wall times from the TC7 Slurm logs:</p>"
+                "<div class='table-scroll'><table><thead><tr>"
+                "<th>Run</th><th>Elapsed wall time</th><th>Source</th>"
+                "</tr></thead><tbody>"
+                "<tr><td>c1: 0000 GMT 21 Dec 1978</td><td>0h 10m 50s</td><td>slurm-817514.out</td></tr>"
+                "<tr><td>c2: 0000 GMT 16 Jan 1979</td><td>0h 11m 24s</td><td>slurm-817515.out</td></tr>"
+                "<tr><td>c3: 0000 GMT 9 Jan 1979</td><td>0h 10m 49s</td><td>slurm-817516.out</td></tr>"
+                "</tbody></table></div>"
             ),
         },
         {
@@ -1184,7 +1194,8 @@ def sync_ready_output_assets() -> None:
         is_advect_pdf = suffix == ".pdf" and ADVECT_CS_OUTPUT_ROOT in source.parents
         if suffix not in READY_ASSET_EXTENSIONS and not is_advect_pdf:
             continue
-        if "Diagnosis" not in source.parts and "Snapshots" not in source.parts:
+        has_snapshot_part = any(part.startswith("Snapshots") for part in source.parts)
+        if "Diagnosis" not in source.parts and not has_snapshot_part:
             continue
         ensure_docs_asset(source, "ready-output")
 
@@ -1264,6 +1275,16 @@ def case_display_label(case: Dict[str, object]) -> str:
     case_dir = case.get("case_dir")
     return Path(case_dir).name if case_dir is not None else ""
 
+def preferred_snapshot_root(output_root: Path) -> Path:
+    for folder in ("Snapshots_latlon", "Snapshots"):
+        candidate = output_root / folder
+        if candidate.exists():
+            return candidate
+    return output_root / "Snapshots"
+
+def advect_cs_snapshot_root() -> Path:
+    return preferred_snapshot_root(ADVECT_CS_OUTPUT_ROOT)
+
 def case_snapshot_root(case: Dict[str, object]) -> Optional[Path]:
     case_dir = case.get("case_dir")
     if case_dir is None:
@@ -1272,7 +1293,7 @@ def case_snapshot_root(case: Dict[str, object]) -> Optional[Path]:
     output_name = case.get("output_name") or infer_case_output_name(case_path)
     if output_name is None:
         return None
-    return SANDBOX_OUTPUT_ROOT / str(output_name) / "Snapshots"
+    return preferred_snapshot_root(SANDBOX_OUTPUT_ROOT / str(output_name))
 
 def case_output_root(case: Dict[str, object]) -> Optional[Path]:
     case_dir = case.get("case_dir")
@@ -1409,6 +1430,48 @@ def render_snapshot_grid(items: List[Dict[str, object]], slug: str) -> str:
         return "<p class='empty'>No key-day snapshots available.</p>"
     return f"<div class='snapshot-grid'>{figures}</div>"
 
+def alpha_asset_matches(path: Path, alpha: str) -> bool:
+    asset_alpha = alpha_from_path(path)
+    return asset_alpha == alpha or asset_alpha == "unknown"
+
+def render_alpha_diagnosis_tab(
+    case: Dict[str, object],
+    slug: str,
+    alpha: str,
+    root: Path | None,
+    images: List[Path],
+    data_paths: List[Path],
+) -> str:
+    if root is None:
+        return ""
+
+    group_images = [path for path in images if alpha_asset_matches(path, alpha)]
+    group_data = [path for path in data_paths if alpha_asset_matches(path, alpha)]
+    if not group_images and not group_data:
+        return ""
+
+    label = case_display_label(case)
+    figures = "".join(
+        render_plot_figure(
+            {
+                "source": path,
+                "caption": f"{label}: {diagnosis_asset_label(path, root)}",
+            },
+            slug,
+            "subfigure diagnosis-figure",
+        )
+        for path in group_images
+    )
+    figures_html = (
+        "<div class='results-grid subfigure-grid diagnosis-grid'>"
+        f"{figures}"
+        "</div>"
+        if figures
+        else ""
+    )
+    data_html = render_diagnosis_data_links(group_data, root, slug)
+    return f"{figures_html}{data_html}"
+
 def render_field_units_note(fields: List[Tuple[str, str]]) -> str:
     entries = [
         label_with_unit(label, unit_from_token(folder))
@@ -1436,6 +1499,8 @@ def render_case_snapshot_browser(case: Dict[str, object], slug: str) -> str:
     if not alpha_dirs:
         return ""
 
+    diagnosis_root = case_diagnosis_root(case)
+    diagnosis_images, diagnosis_data = discover_case_diagnosis_assets(case)
     key_days = snapshot_key_days(case)
     alpha_blocks: list[str] = []
     for alpha_index, alpha_dir in enumerate(alpha_dirs):
@@ -1471,11 +1536,26 @@ def render_case_snapshot_browser(case: Dict[str, object], slug: str) -> str:
         if not panels:
             continue
 
-        diagnostics_label = "Diagnostics" if slug == "testcase6" else "Error analysis"
-        buttons.append(
-            f"<a class='field-tab field-tab-link' href='#{html.escape(slug)}-errors'>"
-            f"{html.escape(diagnostics_label)}</a>"
+        diagnosis_content = render_alpha_diagnosis_tab(
+            case,
+            slug,
+            alpha,
+            diagnosis_root,
+            diagnosis_images,
+            diagnosis_data,
         )
+        if diagnosis_content:
+            tab_id = f"{tab_base}-error-analysis"
+            buttons.append(
+                "<button class='field-tab' type='button' "
+                f"data-tab-target='{html.escape(tab_id)}' aria-selected='false'>"
+                "Error analysis</button>"
+            )
+            panels.append(
+                f"<div class='tab-panel' data-tab-panel='{html.escape(tab_id)}' hidden>"
+                f"{diagnosis_content}"
+                "</div>"
+            )
         alpha_blocks.append(
             f"<details class='alpha-panel' {'open' if alpha_index == 0 else ''}>"
             f"<summary>&alpha;={html.escape(alpha)}</summary>"
@@ -1492,10 +1572,15 @@ def render_case_snapshot_browser(case: Dict[str, object], slug: str) -> str:
     days = ", ".join(format_number(day) for day in key_days)
     label = html.escape(case_display_label(case))
     field_units_note = render_field_units_note(case_snapshot_fields(case, snapshot_root))
+    product_note = (
+        " Shown PNGs are lat-lon interpolations; native cube-net plots are retained separately."
+        if snapshot_root.name == "Snapshots_latlon"
+        else ""
+    )
     return (
         "<div class='media-section snapshot-browser'>"
         f"<h3>{label}: key-day snapshots</h3>"
-        f"<p class='section-note'>Rendered days: {html.escape(days)}.</p>"
+        f"<p class='section-note'>Rendered days: {html.escape(days)}.{html.escape(product_note)}</p>"
         f"{field_units_note}"
         f"{''.join(alpha_blocks)}"
         "</div>"
@@ -1535,7 +1620,7 @@ def final_day_from_error_table(error_dir: Path) -> Optional[float]:
     return float(value) if value not in (None, "") else None
 
 def tc1_snapshot_items() -> List[Dict[str, object]]:
-    snapshot_root = SANDBOX_OUTPUT_ROOT / "TestCase1" / "Snapshots"
+    snapshot_root = preferred_snapshot_root(SANDBOX_OUTPUT_ROOT / "TestCase1")
     items: list[dict[str, object]] = []
     if not snapshot_root.exists():
         return items
@@ -1636,7 +1721,7 @@ def tc1_error_contour_items() -> List[Dict[str, object]]:
 
 def advect_cs_snapshot_items(alpha_dir: Path, folder: str, field_label: str) -> List[Dict[str, object]]:
     items = case_alpha_snapshot_items(
-        ADVECT_CS_OUTPUT_ROOT / "Snapshots",
+        advect_cs_snapshot_root(),
         alpha_dir,
         folder,
         field_label,
@@ -1789,7 +1874,7 @@ def final_day_from_tc2_table(error_dir: Path) -> Optional[float]:
     return float(value) if value not in (None, "") else None
 
 def tc2_snapshot_items() -> List[Dict[str, object]]:
-    snapshot_root = SANDBOX_OUTPUT_ROOT / "TestCase2" / "Snapshots"
+    snapshot_root = preferred_snapshot_root(SANDBOX_OUTPUT_ROOT / "TestCase2")
     items: list[dict[str, object]] = []
     if not snapshot_root.exists():
         return items
@@ -2490,7 +2575,7 @@ def render_advect_cs_numerical_settings() -> str:
     if not alpha_dirs:
         alpha_dirs = [
             alpha_dir
-            for alpha_dir in sorted((ADVECT_CS_OUTPUT_ROOT / "Snapshots").glob("alpha_*"), key=lambda path: natural_key(path.name))
+            for alpha_dir in sorted(advect_cs_snapshot_root().glob("alpha_*"), key=lambda path: natural_key(path.name))
             if alpha_dir.is_dir()
         ]
 
@@ -2516,7 +2601,7 @@ def render_advect_cs_numerical_settings() -> str:
     )
 
 def render_advect_cs_tutorial_block(slug: str) -> str:
-    snapshot_root = ADVECT_CS_OUTPUT_ROOT / "Snapshots"
+    snapshot_root = advect_cs_snapshot_root()
     if not snapshot_root.exists():
         return ""
 
@@ -2625,7 +2710,7 @@ def render_advect_cs_tutorial_block(slug: str) -> str:
         "</section>"
         "</article>"
         f"{settings_html}"
-        f"<p class='section-note'>{html.escape(days_note)} Cubed-sphere panels are shown as an unfolded cube.</p>"
+        f"<p class='section-note'>{html.escape(days_note)} Shown PNGs are lat-lon interpolations when available; native cube-net plots are retained separately.</p>"
         f"{''.join(alpha_blocks)}"
         f"{results_html}"
         "</div>"
@@ -2656,19 +2741,6 @@ def render_section(section: Dict[str, object]) -> str:
         snapshot_html = render_case_snapshot_galleries(case, slug)
         if snapshot_html:
             media_blocks.append(snapshot_html)
-    result_label = case_display_label(case_configs[0]) if case_configs else str(section["title"])
-    if slug == "testcase1" and case_configs:
-        diagnosis_html = render_tc1_error_and_diagnosis(case_configs[0], slug, result_label)
-        if diagnosis_html:
-            media_blocks.append(diagnosis_html)
-    else:
-        dynamic_html = render_dynamic_gallery(section, slug, result_label)
-        if dynamic_html:
-            media_blocks.append(dynamic_html)
-        for case in case_configs:
-            diagnosis_html = render_case_diagnosis_assets(case, slug)
-            if diagnosis_html:
-                media_blocks.append(diagnosis_html)
     if slug == "testcase1":
         advect_html = render_advect_cs_tutorial_block(slug)
         if advect_html:
