@@ -220,6 +220,10 @@ def compact_to_faces(field: np.ndarray) -> np.ndarray:
         return np.asarray(
             [arr[:, index * FACE_SIZE : (index + 1) * FACE_SIZE] for index in range(6)]
         )
+    if arr.shape == (FACE_SIZE * 6, FACE_SIZE):
+        return np.asarray(
+            [arr[index * FACE_SIZE : (index + 1) * FACE_SIZE, :].T for index in range(6)]
+        )
     if arr.shape == (FACE_SIZE * 3, FACE_SIZE * 2):
         faces = []
         for row in range(3):
@@ -433,6 +437,86 @@ def plot_net(
     return save_figure(fig, output_base)
 
 
+def faces_to_latlon(
+    faces: np.ndarray,
+    lon_faces: np.ndarray,
+    lat_faces: np.ndarray,
+    *,
+    lon_step: float = 1.0,
+    lat_step: float = 1.0,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    from scipy.interpolate import griddata
+
+    lon = ((lon_faces.ravel() + 180.0) % 360.0) - 180.0
+    lat = lat_faces.ravel()
+    values = faces.ravel()
+    valid = np.isfinite(lon) & np.isfinite(lat) & np.isfinite(values)
+
+    lon_grid = np.arange(-180.0, 180.0 + lon_step, lon_step)
+    lat_grid = np.arange(-90.0, 90.0 + lat_step, lat_step)
+    lon2, lat2 = np.meshgrid(lon_grid, lat_grid)
+    if not np.any(valid):
+        return lon2, lat2, np.full_like(lon2, np.nan, dtype=np.float64)
+
+    points = np.column_stack((lon[valid], lat[valid]))
+    values = values[valid]
+    wrapped_points = np.vstack(
+        (
+            points,
+            np.column_stack((points[:, 0] - 360.0, points[:, 1])),
+            np.column_stack((points[:, 0] + 360.0, points[:, 1])),
+        )
+    )
+    wrapped_values = np.tile(values, 3)
+    interpolated = griddata(wrapped_points, wrapped_values, (lon2, lat2), method="linear")
+    missing = ~np.isfinite(interpolated)
+    if np.any(missing):
+        nearest = griddata(wrapped_points, wrapped_values, (lon2, lat2), method="nearest")
+        interpolated[missing] = nearest[missing]
+    return lon2, lat2, interpolated
+
+
+def plot_latlon(
+    faces: np.ndarray,
+    lon_faces: np.ndarray,
+    lat_faces: np.ndarray,
+    output_base: Path,
+    title: str,
+    units: str,
+    *,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    center_zero: bool = False,
+) -> List[str]:
+    _lon2, _lat2, field = faces_to_latlon(faces, lon_faces, lat_faces)
+    fig, ax = plt.subplots(figsize=(9.0, 5.8))
+    norm = None
+    if center_zero:
+        limit = float(np.nanmax(np.abs(field)))
+        if limit == 0.0:
+            limit = 1.0
+        norm = TwoSlopeNorm(vmin=-limit, vcenter=0.0, vmax=limit)
+    image = ax.imshow(
+        field,
+        origin="lower",
+        extent=(-180.0, 180.0, -90.0, 90.0),
+        interpolation="bilinear",
+        aspect="auto",
+        cmap="seismic",
+        vmin=vmin,
+        vmax=vmax,
+        norm=norm,
+    )
+    ax.set_xticks(np.arange(-180, 181, 60))
+    ax.set_yticks(np.arange(-90, 91, 30))
+    ax.set_xlabel("longitude [deg]")
+    ax.set_ylabel("latitude [deg]")
+    ax.set_title(title)
+    cbar = fig.colorbar(image, ax=ax, orientation="horizontal", pad=0.12, fraction=0.08)
+    cbar.set_label(units)
+    return save_figure(fig, output_base)
+
+
 def write_experiment_file(path: Path, alpha_label: str, alpha: float, snapshot_iterations: Sequence[int]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -447,7 +531,7 @@ def write_experiment_file(path: Path, alpha_label: str, alpha: float, snapshot_i
                 "logic: passive tracer S is advected by the TC1 solid-body velocity; momentum is not stepped.",
                 f"requested_snapshot_days: {', '.join(str(day) for day in REQUESTED_SNAPSHOT_DAYS)}",
                 f"snapshot_iterations: {', '.join(str(item) for item in snapshot_iterations)}",
-                "plot_style: unfolded cubed-sphere net with seismic colormap",
+                "plot_style: lat-lon interpolated snapshots plus native unfolded cubed-sphere net",
                 "",
             ]
         )
@@ -457,6 +541,8 @@ def write_experiment_file(path: Path, alpha_label: str, alpha: float, snapshot_i
 def clean_alpha_assets(alpha_label: str) -> None:
     for target in (
         OUTPUT_ROOT / "Snapshots" / f"alpha_{alpha_label}",
+        OUTPUT_ROOT / "Snapshots_latlon" / f"alpha_{alpha_label}",
+        OUTPUT_ROOT / "Snapshots_cube" / f"alpha_{alpha_label}",
         OUTPUT_ROOT / "Diagnosis" / "error" / f"alpha_{alpha_label}",
         OUTPUT_ROOT / "Diagnosis" / "postprocessing" / f"alpha_{alpha_label}",
     ):
@@ -481,7 +567,8 @@ def process_run(run_dir: Path) -> Dict[str, object]:
             f"day-0 tracer/exact alignment failed for alpha={alpha_label}: max error={initial_error}"
         )
 
-    snap_root = OUTPUT_ROOT / "Snapshots" / f"alpha_{alpha_label}"
+    snap_latlon_root = OUTPUT_ROOT / "Snapshots_latlon" / f"alpha_{alpha_label}"
+    snap_cube_root = OUTPUT_ROOT / "Snapshots_cube" / f"alpha_{alpha_label}"
     error_root = OUTPUT_ROOT / "Diagnosis" / "error" / f"alpha_{alpha_label}"
     post_root = OUTPUT_ROOT / "Diagnosis" / "postprocessing" / f"alpha_{alpha_label}"
 
@@ -507,9 +594,22 @@ def process_run(run_dir: Path) -> Dict[str, object]:
         )
         for folder, label, data, units, vmin, vmax, center_zero in fields:
             outputs.extend(
+                plot_latlon(
+                    data,
+                    lon_faces,
+                    lat_faces,
+                    snap_latlon_root / folder / f"advect_cs_alpha_{alpha_label}_day_{day:02d}",
+                    f"advect_cs {label} | alpha={alpha_label} | day={day:.2f}",
+                    units,
+                    vmin=vmin,
+                    vmax=vmax,
+                    center_zero=center_zero,
+                )
+            )
+            outputs.extend(
                 plot_net(
                     data,
-                    snap_root / folder / f"advect_cs_alpha_{alpha_label}_day_{day:02d}",
+                    snap_cube_root / folder / f"advect_cs_alpha_{alpha_label}_day_{day:02d}",
                     f"advect_cs {label} | alpha={alpha_label} | day={day:.2f}",
                     units,
                     vmin=vmin,
@@ -586,7 +686,8 @@ def process_run(run_dir: Path) -> Dict[str, object]:
     velocity = read_model_field(run_dir, final_iter, "velocity_magnitude", lon_faces, lat_faces, alpha)
     outputs.extend(plot_net(velocity, post_root / "postprocessing_velocity", f"advect_cs velocity magnitude | alpha={alpha_label}", "m s^-1"))
 
-    write_experiment_file(snap_root / "experiment.txt", alpha_label, alpha, snapshot_iterations)
+    write_experiment_file(snap_latlon_root / "experiment.txt", alpha_label, alpha, snapshot_iterations)
+    write_experiment_file(snap_cube_root / "experiment.txt", alpha_label, alpha, snapshot_iterations)
     write_experiment_file(error_root / "experiment.txt", alpha_label, alpha, snapshot_iterations)
     write_experiment_file(post_root / "experiment.txt", alpha_label, alpha, snapshot_iterations)
 
@@ -601,7 +702,7 @@ def process_run(run_dir: Path) -> Dict[str, object]:
         "snapshot_iterations": snapshot_iterations,
         "outputs": outputs,
     }
-    for folder in (snap_root, error_root, post_root):
+    for folder in (snap_latlon_root, snap_cube_root, error_root, post_root):
         (folder / "manifest.json").write_text(json.dumps(manifest, indent=2))
     return manifest
 
@@ -623,7 +724,7 @@ def count_outputs() -> Dict[str, int]:
 
 
 def existing_snapshot_days(alpha: str, field: str) -> List[int]:
-    field_dir = OUTPUT_ROOT / "Snapshots" / f"alpha_{alpha}" / field
+    field_dir = OUTPUT_ROOT / "Snapshots_latlon" / f"alpha_{alpha}" / field
     days: set[int] = set()
     for path in field_dir.glob("*.png"):
         match = re.search(r"_day_([0-9]+)", path.name)
@@ -634,7 +735,7 @@ def existing_snapshot_days(alpha: str, field: str) -> List[int]:
 
 def missing_snapshot_days() -> Dict[str, Dict[str, List[int]]]:
     missing: Dict[str, Dict[str, List[int]]] = {}
-    alpha_dirs = sorted((OUTPUT_ROOT / "Snapshots").glob("alpha_*"), key=alpha_sort_key)
+    alpha_dirs = sorted((OUTPUT_ROOT / "Snapshots_latlon").glob("alpha_*"), key=alpha_sort_key)
     for alpha_dir in alpha_dirs:
         if not alpha_dir.is_dir():
             continue
@@ -667,7 +768,7 @@ def clean_run_products() -> int:
 
 def existing_manifests() -> List[Dict[str, object]]:
     manifests: List[Dict[str, object]] = []
-    paths = sorted((OUTPUT_ROOT / "Snapshots").glob("alpha_*/manifest.json"), key=lambda item: alpha_sort_key(item.parent))
+    paths = sorted((OUTPUT_ROOT / "Snapshots_latlon").glob("alpha_*/manifest.json"), key=lambda item: alpha_sort_key(item.parent))
     for path in paths:
         manifests.append(json.loads(path.read_text()))
     return manifests

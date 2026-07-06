@@ -18,9 +18,9 @@
     "free_surface_integral": true,
     "kinetic_energy": true,
     "mass": true,
-    "potential_enstrophy": true,
-    "potential_vorticity": true,
-    "relative_vorticity": true,
+    "potential_enstrophy": false,
+    "potential_vorticity": false,
+    "relative_vorticity": false,
     "tracer_amount": false
   },
   "diagnostic_stream_fields": {

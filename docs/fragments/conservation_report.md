@@ -19,12 +19,12 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | Case | Status | Mass | Target quantity | Energy proxy | PV/enstrophy | Output health |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
-| TC2 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC3 | Pending validation | preserved to roundoff | small drift | small drift | small drift | finite saved state fields |
+| TC2 | Scaffold | unavailable | unavailable | unavailable | unavailable | no usable run output |
+| TC3 | Scaffold | unavailable | unavailable | unavailable | unavailable | no usable run output |
 | TC4 | Verified | preserved to roundoff | noticeable drift | noticeable drift | noticeable drift | finite saved state fields |
 | TC5 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
 | TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
-| TC7 | Pending output | unavailable | unavailable | unavailable | unavailable | pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet |
+| TC7 | Verified | preserved to roundoff | not a scalar test | not preserved | unavailable | finite saved state fields |
 
 ### Required output fields
 
@@ -46,18 +46,15 @@ Mass is preserved to roundoff (max |rel| 7.709e-16). The TC1 tracer amount is we
 
 #### TC2
 
-Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy is not preserved (max |rel| 0.147859). Derived potential enstrophy is not preserved (max |rel| 0.0220451).
+Unavailable: no usable run output found
 
-- alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
-- alpha `0.05`: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved
-- alpha `1.52`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
-- alpha `1.57`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
+- No conservation output found.
 
 #### TC3
 
-Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).
+Unavailable: no usable run output found
 
-- alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
+- No conservation output found.
 
 #### TC4
 
@@ -79,6 +76,8 @@ Mass is preserved to roundoff (max |rel| 8.433e-16). The mechanical-energy proxy
 
 #### TC7
 
-Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
+Mass is preserved to roundoff (max |rel| 1.782e-16). The mechanical-energy proxy is not preserved (max |rel| 0.0114949). Derived potential enstrophy is unavailable (max |rel| n/a).
 
-- alpha `unavailable`: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet
+- alpha `c1_19781221_0000`: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable
+- alpha `c2_19790116_0000`: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable
+- alpha `c3_19790109_0000`: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Williamson TC7 static initial-condition NPZ file."""
+"""Validate the Williamson TC7 prepared initial-condition NPZ files."""
 
 import argparse
 import sys
@@ -12,7 +12,12 @@ NY = 720
 REQUIRED_ARRAYS = ("eta_m", "u_m_s", "v_m_s")
 OPTIONAL_ARRAYS = ("bathymetry_m",)
 DEFAULT_RELATIVE_PATH = (
-    "vortexSphere_Williamson_TC7/input/raw/tc7_initial_conditions.npz"
+    "vortexSphere_Williamson_TC7/input/raw"
+)
+DEFAULT_CASE_FILES = (
+    "tc7_19781221_0000_initial_conditions.npz",
+    "tc7_19790116_0000_initial_conditions.npz",
+    "tc7_19790109_0000_initial_conditions.npz",
 )
 
 
@@ -86,6 +91,9 @@ def validate_npz(path):
             "%s does not exist. TC7 needs eta_m, u_m_s, and v_m_s arrays there."
             % path
         )
+    metadata_path = path.with_suffix(".metadata.json")
+    if not metadata_path.exists():
+        raise FileNotFoundError("%s is missing matching metadata JSON" % path)
 
     summaries = []
     arrays = {}
@@ -107,37 +115,70 @@ def validate_npz(path):
     return summaries, warnings, unexpected
 
 
+def expand_input_paths(paths):
+    if not paths:
+        paths = [default_input_path()]
+
+    expanded = []
+    for path in paths:
+        path = path.expanduser()
+        if path.is_dir():
+            expected = [path / name for name in DEFAULT_CASE_FILES]
+            if all(item.exists() for item in expected):
+                expanded.extend(expected)
+            else:
+                expanded.extend(sorted(path.glob("tc7_*_initial_conditions.npz")))
+        else:
+            expanded.append(path)
+
+    seen = set()
+    unique = []
+    for path in expanded:
+        resolved = path.resolve()
+        if resolved not in seen:
+            seen.add(resolved)
+            unique.append(resolved)
+    if not unique:
+        raise FileNotFoundError("no TC7 initial-condition NPZ files found")
+    return unique
+
+
 def parse_args(argv):
     parser = argparse.ArgumentParser(
-        description="Validate TC7 input/raw/tc7_initial_conditions.npz."
+        description="Validate TC7 prepared initial-condition NPZ files."
     )
     parser.add_argument(
-        "path",
-        nargs="?",
+        "paths",
+        nargs="*",
         type=Path,
-        default=default_input_path(),
-        help="NPZ file to validate; defaults to the TC7 raw input path.",
+        help="NPZ file(s) or raw directory to validate; defaults to the TC7 raw input directory.",
     )
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = parse_args(argv or sys.argv[1:])
-    path = args.path.expanduser().resolve()
 
     try:
-        summaries, warnings, unexpected = validate_npz(path)
+        paths = expand_input_paths(args.paths)
     except Exception as exc:
         print("ERROR: %s" % exc, file=sys.stderr)
         return 1
 
-    print("TC7 initial-condition file OK: %s" % path)
-    for summary in summaries:
-        print(summary)
-    if unexpected:
-        print("Unexpected arrays ignored by gendata_ref.py: %s" % ", ".join(unexpected))
-    for warning in warnings:
-        print("WARNING: %s" % warning)
+    for path in paths:
+        try:
+            summaries, warnings, unexpected = validate_npz(path)
+        except Exception as exc:
+            print("ERROR: %s" % exc, file=sys.stderr)
+            return 1
+
+        print("TC7 initial-condition file OK: %s" % path)
+        for summary in summaries:
+            print(summary)
+        if unexpected:
+            print("Unexpected arrays ignored by gendata_ref.py: %s" % ", ".join(unexpected))
+        for warning in warnings:
+            print("WARNING: %s" % warning)
     return 0
 
 

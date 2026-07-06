@@ -1,0 +1,31 @@
+{
+  "case_id": "c1",
+  "case_title": "0000 GMT 21 December 1978",
+  "source_dataset": "NOAA PSL NCEP/NCAR Reanalysis pressure-level analysis",
+  "source_is_original_williamson_reference": false,
+  "source_note": "Downloaded from NOAA PSL THREDDS NetCDF Subset Service. This is a practical TC7 analysis source, not a confirmed copy of the original Williamson reference archive.",
+  "selected_time_utc": "1978-12-21T00:00:00Z",
+  "pressure_level_hpa": 500.0,
+  "height_variable": "hgt, geopotential height in meters",
+  "eta_definition": "eta_m = hgt_m - 8000",
+  "raw_files": {
+    "hgt": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/input/raw/hgt.1978.nc",
+    "uwnd": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/input/raw/uwnd.1978_12_21.nc",
+    "vwnd": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC7/input/raw/vwnd.1978_12_21.nc"
+  },
+  "download_urls": {
+    "hgt": "https://psl.noaa.gov/thredds/ncss/grid/Datasets/ncep.reanalysis/pressure/hgt.1978.nc?var=hgt&disableProjSubset=on&horizStride=1&time=1978-12-21T00%3A00%3A00Z&vertCoord=500&accept=netcdf3",
+    "uwnd": "https://psl.noaa.gov/thredds/ncss/grid/Datasets/ncep.reanalysis/pressure/uwnd.1978.nc?var=uwnd&disableProjSubset=on&horizStride=1&time=1978-12-21T00%3A00%3A00Z&vertCoord=500&accept=netcdf3",
+    "vwnd": "https://psl.noaa.gov/thredds/ncss/grid/Datasets/ncep.reanalysis/pressure/vwnd.1978.nc?var=vwnd&disableProjSubset=on&horizStride=1&time=1978-12-21T00%3A00%3A00Z&vertCoord=500&accept=netcdf3"
+  },
+  "target_grid": {
+    "shape": [
+      720,
+      1440
+    ],
+    "spacing_degrees": 0.25,
+    "eta": "cell centers: lon 0.125..359.875, lat -89.875..89.875",
+    "u": "U faces: lon 0.0..359.75, lat cell centers",
+    "v": "V faces: lon cell centers, lat -90.0..89.75; first/last rows zeroed"
+  }
+}

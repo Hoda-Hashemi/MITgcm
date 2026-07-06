@@ -1,4 +1,65 @@
 {
-  "assets": [],
+  "assets": [
+    {
+      "alpha": "c1_19781221_0000",
+      "label": "Mass/free surface drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_mass.png"
+    },
+    {
+      "alpha": "c1_19781221_0000",
+      "label": "Energy proxy drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_energy.png"
+    },
+    {
+      "alpha": "c1_19781221_0000",
+      "label": "Conservation time series table",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_timeseries.csv"
+    },
+    {
+      "alpha": "c1_19781221_0000",
+      "label": "Conservation summary data",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_summary.json"
+    },
+    {
+      "alpha": "c2_19790116_0000",
+      "label": "Mass/free surface drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_mass.png"
+    },
+    {
+      "alpha": "c2_19790116_0000",
+      "label": "Energy proxy drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_energy.png"
+    },
+    {
+      "alpha": "c2_19790116_0000",
+      "label": "Conservation time series table",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_timeseries.csv"
+    },
+    {
+      "alpha": "c2_19790116_0000",
+      "label": "Conservation summary data",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_summary.json"
+    },
+    {
+      "alpha": "c3_19790109_0000",
+      "label": "Mass/free surface drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_mass.png"
+    },
+    {
+      "alpha": "c3_19790109_0000",
+      "label": "Energy proxy drift",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_energy.png"
+    },
+    {
+      "alpha": "c3_19790109_0000",
+      "label": "Conservation time series table",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_timeseries.csv"
+    },
+    {
+      "alpha": "c3_19790109_0000",
+      "label": "Conservation summary data",
+      "path": "assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_summary.json"
+    }
+  ],
   "case": "TC7"
 }

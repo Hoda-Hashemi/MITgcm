@@ -1,8 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=TC7_c1_large48
+#SBATCH --job-name=TC7_c1_19781221_48
 #SBATCH --account=hmh85
 #SBATCH --partition=large
-#SBATCH --nodelist=onode16
 #SBATCH --nodes=1
 #SBATCH --ntasks=48
 #SBATCH --ntasks-per-node=48
@@ -25,16 +24,17 @@ source /home/hmh85/scratch/MITgcm/.venv/bin/activate
 export MITGCM_DIR=/home/hmh85/scratch/MITgcm
 export CASE_DIR=$MITGCM_DIR/Sandbox/vortexSphere_Williamson_TC7
 export CASE_NAME=c1
+export TC7_CASE_LABEL=19781221_0000
 export ALPHA_VALUE=0.0
-export DELTA_T=50.0
+export DELTA_T=25.0
 export TOTAL_SECONDS=432000
-export BUILD_DIR=$CASE_DIR/build/c1_large48
-export RUN_DIR=$CASE_DIR/run_analysis
+export BUILD_DIR=$CASE_DIR/build/c1_cs32_large48
+export RUN_DIR=$CASE_DIR/run_c1_19781221_0000
 export LOG_DIR=$CASE_DIR/logs
 export MPI_TASKS=${SLURM_NTASKS:-48}
 export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-48}
 export N_TIME_STEPS=$(python3 -c "print(int(round(${TOTAL_SECONDS}/${DELTA_T})))")
-export TC7_RAW_FILE=$CASE_DIR/input/raw/tc7_initial_conditions.npz
+export TC7_RAW_FILE=$CASE_DIR/input/raw/tc7_${TC7_CASE_LABEL}_initial_conditions.npz
 
 START_TIME=$(date +%s)
 TOOLS_DIR=$MITGCM_DIR/tools
@@ -42,6 +42,7 @@ BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
 MODS_DIR=$CASE_DIR/code
 PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC7.py
 VALIDATE_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/tc7_validate_initial_conditions.py
+SETUP_CHECK=$MITGCM_DIR/Sandbox/Scripts/williamson_cube_preflight.py
 
 finish() {
     local status=$1 end_time elapsed
@@ -60,16 +61,19 @@ stage_case_inputs() {
     sed -i "s/^ nTimeSteps=.*/ nTimeSteps=${N_TIME_STEPS},/" "$RUN_DIR/data"
     sed -i "s/^ deltaT=.*/ deltaT=${DELTA_T},/" "$RUN_DIR/data"
     (cd "$RUN_DIR" && python3 gendata_ref.py)
+    python3 "$SETUP_CHECK" --case TC7 --run-dir "$RUN_DIR"
 }
 
 clean_run_dir() {
     find "$RUN_DIR" -maxdepth 1 -type f \
         \( -name "*.data" -o -name "*.meta" -o -name "*.bin" \
         -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" \
+        -o -name "tile*.mitgrid" \
         -o -name "pickup*" -o -name "available_diagnostics.log" \
         -o -name "run.log" -o -name "run_inventory.log" \
         -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg" \
-        -o -name "data.diagnostics" -o -name "eedata" -o -name "eedata.mth" \
+        -o -name "data.diagnostics" -o -name "data.exch2" \
+        -o -name "eedata" -o -name "eedata.mth" \
         -o -name "gendata_ref.py" \) \
         -delete
 }

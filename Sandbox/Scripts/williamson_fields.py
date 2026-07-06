@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -23,7 +24,7 @@ TC3_LAT1 = np.pi / 2.0
 TC3_LAT_GRID = np.linspace(-0.5 * np.pi, 0.5 * np.pi, 20001)
 
 TC5_U0 = 20.0
-TC5_H0 = 5400.0
+TC5_H0 = 5960.0
 TC5_MOUNTAIN_HEIGHT = 2000.0
 TC5_MOUNTAIN_RADIUS = np.pi / 9.0
 TC5_MOUNTAIN_LON = 1.5 * np.pi
@@ -406,15 +407,25 @@ def preprocess_tc7_analysis_fields(
 
 
 def resolve_tc7_raw_file(base_dir: Path) -> Path:
+    env_path = os.environ.get("TC7_RAW_FILE")
+    if env_path:
+        path = Path(env_path).expanduser().resolve()
+        if path.exists():
+            return path
+        raise FileNotFoundError(f"TC7_RAW_FILE points to a missing file: {path}")
+
     candidates = [
         base_dir / "raw" / "tc7_initial_conditions.npz",
+        base_dir / "raw" / "tc7_19781221_0000_initial_conditions.npz",
         base_dir.parent / "input" / "raw" / "tc7_initial_conditions.npz",
+        base_dir.parent / "input" / "raw" / "tc7_19781221_0000_initial_conditions.npz",
     ]
     for path in candidates:
         if path.exists():
             return path
     raise FileNotFoundError(
-        "TC7 requires input/raw/tc7_initial_conditions.npz with eta_m, u_m_s, and v_m_s arrays."
+        "TC7 requires TC7_RAW_FILE or input/raw/tc7_*_initial_conditions.npz "
+        "with eta_m, u_m_s, and v_m_s arrays."
     )
 
 

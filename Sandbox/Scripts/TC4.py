@@ -21,7 +21,7 @@ RUN_DIRS = [
     Path(item).expanduser()
     for item in os.environ.get("TC4_RUN_DIRS", "").split(os.pathsep)
     if item
-] or [CASE_DIR / "run_alpha_0"]
+] or [CASE_DIR / "run_u0_20", CASE_DIR / "run_u0_40"]
 MAKE_POSTPROCESSING = True
 
 POSTPROCESSING_SPEC = PostprocessingSpec(

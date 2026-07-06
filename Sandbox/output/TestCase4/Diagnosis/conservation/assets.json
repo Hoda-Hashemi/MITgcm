@@ -1,29 +1,29 @@
 {
   "assets": [
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "label": "Mass/free surface drift",
-      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_mass.png"
+      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_mass.png"
     },
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "label": "Energy proxy drift",
-      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_energy.png"
+      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_energy.png"
     },
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "label": "PV/enstrophy drift",
-      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_pv_enstrophy.png"
+      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_pv_enstrophy.png"
     },
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "label": "Conservation time series table",
-      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_timeseries.csv"
+      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_timeseries.csv"
     },
     {
-      "alpha": "run_u0_20",
+      "alpha": "run_u0_40",
       "label": "Conservation summary data",
-      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_20/conservation_summary.json"
+      "path": "assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_summary.json"
     }
   ],
   "case": "TC4"

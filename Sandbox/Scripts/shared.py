@@ -126,8 +126,16 @@ def infer_alpha_label(run_dir: Path, case_code: str, override: str | None = None
     return run_dir.name
 
 
-def snapshot_output_dir(case_code: str, alpha_label: str) -> Path:
-    return OUTPUT_ROOT / case_output_name(case_code) / "Snapshots" / f"alpha_{alpha_label}"
+def snapshot_output_dir(case_code: str, alpha_label: str, variant: str | None = None) -> Path:
+    folder = {
+        None: "Snapshots",
+        "native": "Snapshots",
+        "cube": "Snapshots_cube",
+        "latlon": "Snapshots_latlon",
+    }.get(variant)
+    if folder is None:
+        raise ValueError(f"unknown snapshot variant: {variant}")
+    return OUTPUT_ROOT / case_output_name(case_code) / folder / f"alpha_{alpha_label}"
 
 
 def diagnosis_output_dir(case_code: str, kind: str, alpha_label: str) -> Path:

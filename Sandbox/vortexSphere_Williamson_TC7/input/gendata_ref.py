@@ -11,6 +11,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import williamson_fields as wf
+import williamson_cube as wc
 
 NX = wf.NX
 NY = wf.NY
@@ -56,19 +57,35 @@ def make_bathymetry() -> object:
 
 def make_eta(alpha_rad: float = ALPHA_RAD) -> object:
     del alpha_rad
-    eta, _u, _v, _bathy = load_fields()
+    eta, u, v, _bathy = load_fields()
+    eta, _u, _v = wf.preprocess_tc7_analysis_fields(eta, u, v)
     return eta
 
 
 def make_velocity_fields(alpha_rad: float = ALPHA_RAD) -> tuple[object, object]:
     del alpha_rad
-    _eta, u, v, _bathy = load_fields()
+    eta, u, v, _bathy = load_fields()
+    _eta, u, v = wf.preprocess_tc7_analysis_fields(eta, u, v)
     return apply_polar_velocity_taper(u, v)
 
 
 def main() -> None:
     base_dir = Path(__file__).resolve().parent
+    raw_file = wf.resolve_tc7_raw_file(base_dir)
+    if not (base_dir / ".use_latlon_grid").exists():
+        wc.generate_tc7(base_dir)
+        print("")
+        print("Done.")
+        print(f"TC7 input source: {raw_file}")
+        print(
+            "Applied TC7 large-scale filter: "
+            f"zonal wavenumber <= {wf.TC7_LONGITUDE_WAVENUMBER_CUTOFF}, "
+            f"{wf.TC7_SHAPIRO_SMOOTHING_PASSES} Shapiro passes"
+        )
+        return
+
     eta, u, v, bathy = load_fields()
+    eta, u, v = wf.preprocess_tc7_analysis_fields(eta, u, v)
     u, v = apply_polar_velocity_taper(u, v)
     wf.write_field(base_dir, BATHY_FILE, bathy)
     wf.write_field(base_dir, ETA_FILE, eta)
@@ -76,7 +93,12 @@ def main() -> None:
     wf.write_field(base_dir, V_FILE, v)
     print("")
     print("Done.")
-    print("TC7 input source: input/raw/tc7_initial_conditions.npz")
+    print(f"TC7 input source: {raw_file}")
+    print(
+        "Applied TC7 large-scale filter: "
+        f"zonal wavenumber <= {wf.TC7_LONGITUDE_WAVENUMBER_CUTOFF}, "
+        f"{wf.TC7_SHAPIRO_SMOOTHING_PASSES} Shapiro passes"
+    )
     print(f"Applied polar velocity taper poleward of {POLAR_TAPER_START_DEG:g} deg")
 
 

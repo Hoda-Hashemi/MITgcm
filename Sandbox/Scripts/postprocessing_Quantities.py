@@ -185,6 +185,21 @@ def lat_derivative(values: np.ndarray, lat_rad: np.ndarray) -> np.ndarray:
     return np.gradient(values, lat_rad, axis=0, edge_order=edge_order)
 
 
+def is_regular_latlon_grid(xc: np.ndarray, yc: np.ndarray) -> bool:
+    xc = np.asarray(xc, dtype=np.float64)
+    yc = np.asarray(yc, dtype=np.float64)
+    if xc.ndim != 2 or yc.ndim != 2 or xc.shape != yc.shape:
+        return False
+    lon = xc[0, :]
+    lat = yc[:, 0]
+    return (
+        np.allclose(xc, np.broadcast_to(lon[None, :], xc.shape), equal_nan=True)
+        and np.allclose(yc, np.broadcast_to(lat[:, None], yc.shape), equal_nan=True)
+        and np.all(np.diff(lon) > 0.0)
+        and np.all(np.diff(lat) > 0.0)
+    )
+
+
 def relative_vorticity(
     u: np.ndarray,
     v: np.ndarray,
@@ -192,6 +207,8 @@ def relative_vorticity(
     yc: np.ndarray,
     radius: float,
 ) -> np.ndarray:
+    if not is_regular_latlon_grid(xc, yc):
+        return np.full(np.asarray(xc).shape, np.nan, dtype=np.float64)
     u = center_to_shape(u, xc.shape)
     v = center_to_shape(v, xc.shape)
     lon_rad = np.deg2rad(xc[0, :])
@@ -510,6 +527,8 @@ def plot_vorticity_pv(output_dir: Path, rows: list[dict[str, float]], dpi: int) 
     q_min = np.array([row["pv_min_s-1_m-1"] for row in rows], dtype=np.float64)
     q_max = np.array([row["pv_max_s-1_m-1"] for row in rows], dtype=np.float64)
     q_rms = np.array([row["pv_rms_s-1_m-1"] for row in rows], dtype=np.float64)
+    if not (np.any(np.isfinite(z_mean)) or np.any(np.isfinite(z_min)) or np.any(np.isfinite(q_mean)) or np.any(np.isfinite(q_min))):
+        return []
 
     fig, axes = plt.subplots(2, 1, figsize=(7.0, 6.4), sharex=True, constrained_layout=True)
     plot_min_mean_rms(
@@ -552,6 +571,12 @@ def plot_timeseries(
     return saved
 
 
+def clear_generated_postprocessing(output_dir: Path) -> None:
+    for pattern in ("postprocessing_*.png", "postprocessing_*.pdf"):
+        for path in output_dir.glob(pattern):
+            path.unlink()
+
+
 def analyze_run(
     run_dir: Path,
     *,
@@ -566,6 +591,7 @@ def analyze_run(
     alpha = infer_alpha_label(run_dir, case_code)
     output_dir = diagnosis_output_dir(case_code, "postprocessing", alpha)
     output_dir.mkdir(parents=True, exist_ok=True)
+    clear_generated_postprocessing(output_dir)
 
     eta_name, u_name, v_name, conserved_name, kinetic_name, vorticity_name, iterations = common_iterations(run_dir, spec)
     xc, yc = lon_lat(run_dir)

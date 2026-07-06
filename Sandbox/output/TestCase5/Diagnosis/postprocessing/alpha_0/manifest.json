@@ -11,21 +11,21 @@
   },
   "iterations": [
     0,
-    1440,
     2880,
-    4320,
     5760,
-    7200,
     8640,
-    10080,
     11520,
-    12960,
     14400,
-    15840,
     17280,
-    18720,
     20160,
-    21600
+    23040,
+    25920,
+    28800,
+    31680,
+    34560,
+    37440,
+    40320,
+    43200
   ],
   "product": "postprocessing",
   "saved": [
@@ -37,5 +37,11 @@
     "postprocessing_energies.pdf",
     "postprocessing_energies.png"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC5/run_standard"
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC5/run_standard_cs32",
+  "validity": {
+    "first_bad_day": null,
+    "min_state_finite_fraction": 1.0,
+    "nonfinite_iterations": [],
+    "valid": true
+  }
 }

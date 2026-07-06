@@ -198,7 +198,15 @@ def compute_report(
 ) -> CflReport:
     if not hasattr(gendata_module, "make_velocity_fields"):
         raise ValueError("gendata_ref.py must define make_velocity_fields(alpha_rad=...)")
-    u, v = gendata_module.make_velocity_fields(alpha_rad=job.alpha)
+    try:
+        u, v = gendata_module.make_velocity_fields(alpha_rad=job.alpha)
+    except TypeError as exc:
+        if "alpha_rad" not in str(exc):
+            raise
+        u0_value = parse_export_value(job.path.read_text(), "TC4_U0_VALUE")
+        if u0_value is not None and hasattr(gendata_module, "U0"):
+            gendata_module.U0 = safe_eval_number(u0_value)
+        u, v = gendata_module.make_velocity_fields()
 
     lat = -90.0 + (np.arange(grid.ny, dtype=np.float64) + 0.5) * grid.dlat_deg
     lon = (np.arange(grid.nx, dtype=np.float64) + 0.5) * grid.dlon_deg

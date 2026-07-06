@@ -10,6 +10,7 @@ from matplotlib.colors import TwoSlopeNorm
 import numpy as np
 
 from mitgcm_io import (
+    DIAGNOSTIC_STREAMS,
     center_to_shape,
     day_number,
     discover_iterations,
@@ -137,6 +138,136 @@ def compact_to_faces(field: np.ndarray) -> np.ndarray:
             [arr[index * CS_FACE_SIZE : (index + 1) * CS_FACE_SIZE, :].T for index in range(6)]
         )
     raise ValueError(f"cannot convert cubed-sphere field with shape {arr.shape} to six faces")
+
+
+def xmitgcm_extra_dims(field: str) -> list[str]:
+    field_upper = field.strip().upper()
+    if field_upper in {"U", "UVEL", "UVELMASS"}:
+        return ["j", "i_g"]
+    if field_upper in {"V", "VVEL", "VVELMASS"}:
+        return ["j_g", "i"]
+    return ["j", "i"]
+
+
+def xarray_dataarray_to_faces(data_array) -> np.ndarray:
+    data_array = data_array.squeeze(drop=True)
+    if "face" not in data_array.dims:
+        return compact_to_faces(np.asarray(data_array.values, dtype=np.float64))
+    y_dim = next((dim for dim in ("j", "j_g") if dim in data_array.dims), None)
+    x_dim = next((dim for dim in ("i", "i_g") if dim in data_array.dims), None)
+    if y_dim is None or x_dim is None:
+        raise ValueError(f"cannot identify cubed-sphere dims for {data_array.name}: {data_array.dims}")
+    return np.asarray(data_array.transpose("face", y_dim, x_dim).values, dtype=np.float64)
+
+
+def read_field_grid_faces_xmitgcm(
+    run_dir: Path,
+    field: str,
+    iteration: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    stream = DIAGNOSTIC_STREAMS.get(field.strip())
+    if stream is not None:
+        raise ValueError(f"{field} is stored inside multi-record diagnostic stream {stream}")
+    from xmitgcm import open_mdsdataset
+
+    dataset = open_mdsdataset(
+        str(run_dir),
+        grid_dir=str(run_dir),
+        iters=[iteration],
+        prefix=[field],
+        read_grid=True,
+        geometry="cs",
+        nx=CS_FACE_SIZE,
+        delta_t=read_delta_t(run_dir, default=1.0),
+        default_dtype=np.dtype("float64"),
+        ignore_unknown_vars=False,
+        extra_variables={
+            field: {
+                "dims": xmitgcm_extra_dims(field),
+                "attrs": {"long_name": field, "units": ""},
+            }
+        },
+    )
+    if field in dataset:
+        field_faces = xarray_dataarray_to_faces(dataset[field])
+    elif field.upper() in dataset:
+        field_faces = xarray_dataarray_to_faces(dataset[field.upper()])
+    else:
+        raise KeyError(f"{field} not present in xmitgcm dataset")
+    return field_faces, xarray_dataarray_to_faces(dataset["XC"]), xarray_dataarray_to_faces(dataset["YC"])
+
+
+def read_faces_xmitgcm(run_dir: Path, field: str, iteration: int) -> np.ndarray:
+    field_faces, _xc_faces, _yc_faces = read_field_grid_faces_xmitgcm(run_dir, field, iteration)
+    return field_faces
+
+
+def lonlat_unit_vectors(lon: np.ndarray, lat: np.ndarray) -> np.ndarray:
+    lon_rad = np.deg2rad(np.asarray(lon, dtype=np.float64).ravel())
+    lat_rad = np.deg2rad(np.asarray(lat, dtype=np.float64).ravel())
+    cos_lat = np.cos(lat_rad)
+    return np.column_stack((cos_lat * np.cos(lon_rad), cos_lat * np.sin(lon_rad), np.sin(lat_rad)))
+
+
+def remap_compact_to_xmitgcm_faces(
+    field: np.ndarray,
+    raw_xc: np.ndarray,
+    raw_yc: np.ndarray,
+    target_xc: np.ndarray,
+    target_yc: np.ndarray,
+) -> np.ndarray:
+    from scipy.spatial import cKDTree
+
+    raw_field = np.squeeze(np.asarray(field, dtype=np.float64))
+    raw_xc = np.squeeze(np.asarray(raw_xc, dtype=np.float64))
+    raw_yc = np.squeeze(np.asarray(raw_yc, dtype=np.float64))
+    if raw_field.shape != raw_xc.shape or raw_field.shape != raw_yc.shape:
+        raise ValueError(f"cannot remap unmatched compact arrays: {raw_field.shape}, {raw_xc.shape}, {raw_yc.shape}")
+
+    tree = cKDTree(lonlat_unit_vectors(raw_xc, raw_yc))
+    distance, index = tree.query(lonlat_unit_vectors(target_xc, target_yc), k=1)
+    if float(np.max(distance)) > 1.0e-8:
+        raise ValueError(f"nearest-grid remap mismatch: max unit-sphere distance {float(np.max(distance)):.3e}")
+    return raw_field.ravel()[index].reshape(np.asarray(target_xc).shape)
+
+
+def read_xmitgcm_grid_faces(run_dir: Path, iteration: int) -> tuple[np.ndarray, np.ndarray]:
+    for anchor in ("Eta", "S", "T", "U", "V"):
+        if (run_dir / f"{anchor}.{iteration:010d}.meta").exists():
+            _field, xc_faces, yc_faces = read_field_grid_faces_xmitgcm(run_dir, anchor, iteration)
+            return xc_faces, yc_faces
+    raise FileNotFoundError(f"no direct field available for xmitgcm cube grid at iteration {iteration}")
+
+
+def cube_arrays_for_plot(
+    run_dir: Path,
+    field: str,
+    iteration: int,
+    fallback_field: np.ndarray,
+    fallback_xc: np.ndarray,
+    fallback_yc: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    try:
+        return read_field_grid_faces_xmitgcm(run_dir, field, iteration)
+    except Exception as exc:
+        if is_cs_compact(fallback_field) and is_cs_compact(fallback_xc) and is_cs_compact(fallback_yc):
+            try:
+                target_xc, target_yc = read_xmitgcm_grid_faces(run_dir, iteration)
+                remapped = remap_compact_to_xmitgcm_faces(
+                    fallback_field,
+                    fallback_xc,
+                    fallback_yc,
+                    target_xc,
+                    target_yc,
+                )
+                return remapped, target_xc, target_yc
+            except Exception as remap_exc:
+                print(
+                    f"warning {field} iteration {iteration}: xmitgcm remap failed "
+                    f"({type(remap_exc).__name__}: {remap_exc})"
+                )
+        print(f"warning {field} iteration {iteration}: xmitgcm fallback to raw MDS ({type(exc).__name__}: {exc})")
+        return fallback_field, fallback_xc, fallback_yc
 
 
 def angular_distance_degrees(left: float, right: float) -> float:
@@ -350,6 +481,18 @@ def save_scalar_series(
     skipped_nonfinite_iterations: list[int] = []
     for iteration in iterations:
         field = to_2d(read_mds_field(run_dir, spec.field, iteration))
+        plot_field = field
+        plot_xc = xc
+        plot_yc = yc
+        if cube_plot and is_cs_compact(field):
+            plot_field, plot_xc, plot_yc = cube_arrays_for_plot(
+                run_dir,
+                spec.field,
+                iteration,
+                field,
+                xc,
+                yc,
+            )
         value_range = finite_min_max(field)
         if value_range is None:
             print(f"skip {spec.display} iteration {iteration}: no finite values")
@@ -365,11 +508,11 @@ def save_scalar_series(
             f"min {field_min:.3e} | max {field_max:.3e}"
         )
         out = output_root / spec.folder / f"{case}_{spec.folder}_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
-        if cube_plot and is_cs_compact(field) and plot_mode == "latlon":
+        if cube_plot and is_cs_compact(plot_field) and plot_mode == "latlon":
             plot_cube_latlon_snapshot(
-                field,
-                xc,
-                yc,
+                plot_field,
+                plot_xc,
+                plot_yc,
                 title,
                 spec.units,
                 out,
@@ -378,11 +521,11 @@ def save_scalar_series(
                 center_zero=spec.center_zero,
                 dpi=dpi,
             )
-        elif cube_plot and is_cs_compact(field):
+        elif cube_plot and is_cs_compact(plot_field):
             plot_cube_net_snapshot(
-                field,
-                xc,
-                yc,
+                plot_field,
+                plot_xc,
+                plot_yc,
                 title,
                 spec.units,
                 out,
@@ -425,8 +568,8 @@ def save_velocity_magnitude(
     output_root: Path,
     delta_t: float,
     *,
-    u_candidates: tuple[str, ...] = ("U", "UVEL", "UVELMASS"),
-    v_candidates: tuple[str, ...] = ("V", "VVEL", "VVELMASS"),
+    u_candidates: tuple[str, ...] = ("UVEL", "UVELMASS", "U"),
+    v_candidates: tuple[str, ...] = ("VVEL", "VVELMASS", "V"),
     dpi: int = 220,
     plot_mode: str = "auto",
 ) -> SnapshotResult:
@@ -450,6 +593,17 @@ def save_velocity_magnitude(
         u = center_to_shape(read_mds_field(run_dir, u_name, iteration), xc.shape)
         v = center_to_shape(read_mds_field(run_dir, v_name, iteration), xc.shape)
         speed = np.sqrt(u * u + v * v)
+        plot_speed = speed
+        plot_xc = xc
+        plot_yc = yc
+        if cube_plot and is_cs_compact(speed):
+            try:
+                target_xc, target_yc = read_xmitgcm_grid_faces(run_dir, iteration)
+                plot_speed = remap_compact_to_xmitgcm_faces(speed, xc, yc, target_xc, target_yc)
+                plot_xc = target_xc
+                plot_yc = target_yc
+            except Exception as exc:
+                print(f"warning velocity magnitude iteration {iteration}: xmitgcm remap failed ({type(exc).__name__}: {exc})")
         value_range = finite_min_max(speed)
         if value_range is None:
             print(f"skip velocity magnitude iteration {iteration}: no finite values")
@@ -465,10 +619,10 @@ def save_velocity_magnitude(
             f"min {speed_min:.3e} | max {speed_max:.3e}"
         )
         out = output_root / "velocity_magnitude" / f"{case}_velocity_magnitude_day_{day_number(iteration, delta_t):05.2f}_iter_{iteration:010d}.pdf"
-        if cube_plot and is_cs_compact(speed) and plot_mode == "latlon":
-            plot_cube_latlon_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
-        elif cube_plot and is_cs_compact(speed):
-            plot_cube_net_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
+        if cube_plot and is_cs_compact(plot_speed) and plot_mode == "latlon":
+            plot_cube_latlon_snapshot(plot_speed, plot_xc, plot_yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
+        elif cube_plot and is_cs_compact(plot_speed):
+            plot_cube_net_snapshot(plot_speed, plot_xc, plot_yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
         else:
             plot_snapshot(speed, xc, yc, title, r"m s$^{-1}$", out, vmin=0.0, dpi=dpi)
         saved_iterations.append(iteration)

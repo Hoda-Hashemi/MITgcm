@@ -853,8 +853,9 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "title": "Expected Output",
             "body": (
                 "<p>The shallow-water model is not expected to reproduce the real atmosphere perfectly. "
-                "Use high-resolution reference comparisons, day-1/day-5 forecast-error plots, and the "
-                "same global invariants as TC6 to judge behavior.</p>"
+                "Use finite-state health, mass conservation, energy-proxy drift, and day-0 through "
+                "day-5 visual evolution to judge behavior. Add native vorticity/PV diagnostics before "
+                "making a TC7 PV/enstrophy conservation claim on the cubed sphere.</p>"
             ),
         },
     ],

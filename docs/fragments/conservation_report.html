@@ -47,12 +47,12 @@
         <div class='table-scroll'><table><thead><tr><th>Case</th><th>Status</th><th>Mass</th><th>Target quantity</th><th>Energy proxy</th><th>PV/enstrophy</th><th>Output health</th></tr></thead><tbody>
 <tr><td> Case </td><td> Status </td><td> Mass </td><td> Target quantity </td><td> Energy proxy </td><td> PV/enstrophy </td><td> Output health </td></tr>
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC2 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
-<tr><td> TC3 </td><td> Pending validation </td><td> preserved to roundoff </td><td> small drift </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC2 </td><td> Scaffold </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> no usable run output </td></tr>
+<tr><td> TC3 </td><td> Scaffold </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> no usable run output </td></tr>
 <tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> noticeable drift </td><td> noticeable drift </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC5 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
 <tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC7 </td><td> Pending output </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet </td></tr>
+<tr><td> TC7 </td><td> Verified </td><td> preserved to roundoff </td><td> not a scalar test </td><td> not preserved </td><td> unavailable </td><td> finite saved state fields </td></tr>
         </tbody></table></div>
       </div>
     </div>
@@ -67,26 +67,23 @@
 <li><code>alpha=1.52</code>: mass preserved to roundoff; quantity well preserved; energy small drift; PV/enstrophy small drift</li>
 <li><code>alpha=1.57</code>: mass preserved to roundoff; quantity well preserved; energy small drift; PV/enstrophy small drift</li>
 </ul>
-<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_tracer.png'>Tracer amount drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0.05/conservation_mass.png'>Mass/free surface drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase1/Diagnosis/conservation/alpha_0.05/conservation_tracer.png'>Tracer amount drift (alpha 0.05)</a></div>
+<p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-pending'>Pending validation</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 8.499e-16). The mechanical-energy proxy is not preserved (max |rel| 0.147859). Derived potential enstrophy is not preserved (max |rel| 0.0220451).</p>
+<details class='details-panel case-block status-scaffold'>
+<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-scaffold'>Scaffold</span></summary>
+<p>Unavailable: no usable run output found</p>
 <ul>
-<li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
-<li><code>alpha=0.05</code>: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved</li>
-<li><code>alpha=1.52</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
-<li><code>alpha=1.57</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
+<li>No conservation output found.</li>
 </ul>
-<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_mass.png'>Mass/free surface drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_energy.png'>Energy proxy drift (alpha 0.05)</a><a class='btn-secondary' href='assets/williamson/TestCase2/Diagnosis/conservation/alpha_0.05/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0.05)</a></div>
+<p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-pending'>Pending validation</span></summary>
-<p>Mass is preserved to roundoff (max |rel| 6.699e-16). The mechanical-energy proxy is small drift (max |rel| 6.415e-07). Derived potential enstrophy is small drift (max |rel| 5.460e-07).</p>
+<details class='details-panel case-block status-scaffold'>
+<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-scaffold'>Scaffold</span></summary>
+<p>Unavailable: no usable run output found</p>
 <ul>
-<li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
+<li>No conservation output found.</li>
 </ul>
-<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase3/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
+<p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
 <details class='details-panel case-block status-verified'>
 <summary>TC4 - Forced nonlinear exact solution <span class='status-chip status-verified'>Verified</span></summary>
@@ -112,13 +109,15 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase6/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-pending'>Pending output</span></summary>
-<p>Unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</p>
+<details class='details-panel case-block status-verified'>
+<summary>TC7 - Analyzed 500 mb initial state <span class='status-chip status-verified'>Verified</span></summary>
+<p>Mass is preserved to roundoff (max |rel| 1.782e-16). The mechanical-energy proxy is not preserved (max |rel| 0.0114949). Derived potential enstrophy is unavailable (max |rel| n/a).</p>
 <ul>
-<li><code>alpha=unavailable</code>: unavailable: pending validation: TC7 analyzed input is staged, but no completed MDS output is archived yet</li>
+<li><code>alpha=c1_19781221_0000</code>: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable</li>
+<li><code>alpha=c2_19790116_0000</code>: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable</li>
+<li><code>alpha=c3_19790109_0000</code>: mass preserved to roundoff; quantity not a scalar test; energy not preserved; PV/enstrophy unavailable</li>
 </ul>
-<p class='section-note'>No plot assets are available for this case yet.</p>
+<div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_mass.png'>Mass/free surface drift (alpha c1_19781221_0000)</a><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c1_19781221_0000/conservation_energy.png'>Energy proxy drift (alpha c1_19781221_0000)</a><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_mass.png'>Mass/free surface drift (alpha c2_19790116_0000)</a><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c2_19790116_0000/conservation_energy.png'>Energy proxy drift (alpha c2_19790116_0000)</a><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_mass.png'>Mass/free surface drift (alpha c3_19790109_0000)</a><a class='btn-secondary' href='assets/williamson/TestCase7/Diagnosis/conservation/alpha_c3_19790109_0000/conservation_energy.png'>Energy proxy drift (alpha c3_19790109_0000)</a></div>
 </details>
   </div>
 </section>

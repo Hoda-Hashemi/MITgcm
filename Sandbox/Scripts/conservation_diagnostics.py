@@ -123,6 +123,21 @@ SUMMARY_COLUMNS = (
     "output_dir",
 )
 
+CONSERVATION_PRODUCTS = (
+    "availability.json",
+    "conservation_energy.pdf",
+    "conservation_energy.png",
+    "conservation_mass.pdf",
+    "conservation_mass.png",
+    "conservation_pv_enstrophy.pdf",
+    "conservation_pv_enstrophy.png",
+    "conservation_summary.json",
+    "conservation_timeseries.csv",
+    "conservation_tracer.pdf",
+    "conservation_tracer.png",
+    "manifest.json",
+)
+
 
 @dataclass(frozen=True)
 class CaseSpec:
@@ -173,7 +188,14 @@ CASE_SPECS: dict[str, CaseSpec] = {
     "TC7": CaseSpec(
         title="Analyzed 500 mb initial state",
         quantity_label="mass, energy, and potential enstrophy",
-        notes="TC7 has staged analyzed input and needs completed run output before conservation diagnostics can be evaluated.",
+        notes=(
+            "TC7 has three completed filtered analyzed-state runs at 0000 GMT "
+            "21 Dec 1978, 16 Jan 1979, and 9 Jan 1979. The saved MITgcm state "
+            "fields are finite through day 5, and conservation diagnostics are "
+            "available as validation assets. The current conservation script does "
+            "not compute cubed-sphere PV/enstrophy without a native vorticity or "
+            "PV diagnostic, so that column remains unavailable for TC7."
+        ),
     ),
 }
 
@@ -682,6 +704,13 @@ def plot_all(output_dir: Path, rows: list[dict[str, float]], dpi: int) -> list[P
     return saved
 
 
+def prune_conservation_products(output_dir: Path) -> None:
+    for name in CONSERVATION_PRODUCTS:
+        path = output_dir / name
+        if path.exists():
+            path.unlink()
+
+
 def analyze_run(
     run_dir: Path,
     *,
@@ -697,6 +726,7 @@ def analyze_run(
     alpha = alpha_label(run_dir, case_code)
     output_dir = diagnosis_output_dir(case_code, "conservation", alpha)
     output_dir.mkdir(parents=True, exist_ok=True)
+    prune_conservation_products(output_dir)
 
     eta_name, eta_iters = first_iteration_field(run_dir, ETA_NAMES)
     if eta_name is None or not eta_iters:
@@ -790,9 +820,9 @@ def analyze_run(
             "mass": eta_name is not None,
             "free_surface_integral": eta_name is not None,
             "kinetic_energy": (ke_name is not None) or (u_name is not None and v_name is not None),
-            "relative_vorticity": (vort_name is not None) or (u_name is not None and v_name is not None),
-            "potential_vorticity": u_name is not None and v_name is not None and eta_name is not None,
-            "potential_enstrophy": u_name is not None and v_name is not None and eta_name is not None,
+            "relative_vorticity": available_metric(rows, "zeta_mean_s-1"),
+            "potential_vorticity": available_metric(rows, "pv_mean_s-1_m-1"),
+            "potential_enstrophy": available_metric(rows, "potential_enstrophy"),
             "tracer_amount": scalar_name is not None,
             "coriolis_source": coriolis_source,
         },
@@ -933,8 +963,8 @@ def default_unavailable_reason(case_code: str) -> str:
         )
     if case_code == "TC7":
         return (
-            "pending validation: rerun TC7 with the filtered 25 s setup and require "
-            "finite MDS output through day 5"
+            "no completed filtered 25 s TC7 MDS output was found; expected finite "
+            "state output through day 5 for the three analyzed 500 mb dates"
         )
     return "no run directory with MDS metadata was found"
 
@@ -985,7 +1015,7 @@ def asset_entries(case_code: str, summaries: list[dict[str, Any]], *, docs_paths
             ("conservation_summary.json", "Conservation summary data"),
         ):
             source = run_dir / name
-            if source.exists() or name in saved or name == "conservation_summary.json":
+            if name in saved or (name == "conservation_summary.json" and source.exists()):
                 entries.append(
                     {
                         "alpha": alpha,
@@ -1451,7 +1481,9 @@ def mirror_to_docs(case_code: str) -> None:
     dst = docs_conservation_root(case_code)
     if not src.exists():
         return
-    dst.mkdir(parents=True, exist_ok=True)
+    if dst.exists():
+        shutil.rmtree(dst)
+    dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
