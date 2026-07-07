@@ -8,5 +8,5 @@
     "TC2_error_norms.txt",
     "TC2_error_norms.tex"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_0.05"
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_0.05_latlon_rotcori_12day"
 }

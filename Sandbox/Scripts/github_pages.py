@@ -328,7 +328,7 @@ AUDIT_SECTIONS = (
 
 STATUS_META = {
     "testcase1": ("Verified", "verified"),
-    "testcase2": ("Issues", "issues"),
+    "testcase2": ("Verified", "verified"),
     "testcase3": ("Validated with caveat", "pending"),
     "testcase4": ("Verified", "verified"),
     "testcase5": ("Verified", "verified"),
@@ -337,6 +337,15 @@ STATUS_META = {
     "case1_constant_bathymetry": ("Verified", "verified"),
     "case2_real_bathymetry": ("Verified", "verified"),
     "case3_geostrophic_adjustment": ("Verified", "verified"),
+}
+
+CANONICAL_SETTING_RUNS = {
+    "vortexSphere_Williamson_TC2": (
+        ("0", "run_alpha_0_latlon"),
+        ("0.05", "run_alpha_0.05_latlon_rotcori_12day"),
+        ("1.52", "run_alpha_1.52_latlon_rotcori_12day"),
+        ("1.57", "run_alpha_1.57_latlon_rotcori_12day_dt0p5"),
+    ),
 }
 
 NAV_LABELS = {
@@ -569,15 +578,17 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
         {
             "title": "Validation Result",
             "body": (
-                "<p>Validation is mixed. Alpha <code>0</code>, <code>0.05</code>, and <code>1.52</code> "
-                "pass setup preflight and keep finite saved fields with mass preserved to roundoff. "
-                "The published alpha <code>1.57</code> run fails setup preflight because "
-                "<code>fCoriC.bin</code> is missing, so its rotated Coriolis field does not match "
-                "the rotated initial state. Its day-12 error table has order-one drift "
-                "(<code>L2_eta=7.93e-1</code>, <code>L2_u=2.13</code>, "
-                "<code>L2_v=46.5 m s^-1</code>). Keep TC2 flagged as an issue until alpha "
-                "<code>1.57</code> is regenerated with <code>selectCoriMap=3</code> and the rotated "
-                "<code>fCoriC/fCoriG/fCorCs</code> files.</p>"
+                "<p>Validation is complete for the four local tilt cases. Alpha <code>0</code> "
+                "uses the unrotated lat-lon run; alpha <code>0.05</code>, <code>1.52</code>, and "
+                "<code>1.57</code> use the regenerated rotated-Coriolis 12-day runs with "
+                "<code>selectCoriMap=3</code> and the rotated <code>fCoriC/fCoriG/fCorCs</code> "
+                "files. All saved postprocessing fields remain finite, with mass preserved to "
+                "roundoff. Day-12 error norms are steady for the corrected outputs: "
+                "<code>L2_eta=2.42e-7, L2_u=4.03e-7, L2_v=6.29e-6</code> at alpha <code>0</code>; "
+                "<code>L2_eta=4.17e-5, L2_u=2.34e-4, L2_v=4.75e-3</code> at alpha <code>0.05</code>; "
+                "<code>L2_eta=2.98e-4, L2_u=8.74e-3, L2_v=1.33e-1</code> at alpha <code>1.52</code>; "
+                "and <code>L2_eta=2.93e-4, L2_u=1.35e-2, L2_v=2.11e-1</code> at alpha "
+                "<code>1.57</code>.</p>"
             ),
         },
     ],
@@ -2031,6 +2042,17 @@ def size_path_for_run(case_path: Path, run_dir: Path, fallback: Path) -> Path:
 
 def case_setting_sources(case_path: Path) -> List[Tuple[str, Path, Path]]:
     size_path = case_path / "code" / "SIZE.h"
+    canonical_runs = CANONICAL_SETTING_RUNS.get(case_path.name)
+    if canonical_runs is not None:
+        sources: list[tuple[str, Path, Path]] = []
+        for label, run_name in canonical_runs:
+            run_dir = case_path / run_name
+            data_path = run_dir / "data"
+            if data_path.exists():
+                sources.append((label, data_path, size_path_for_run(case_path, run_dir, size_path)))
+        if sources:
+            return sources
+
     run_dirs = [
         path
         for path in case_path.iterdir()

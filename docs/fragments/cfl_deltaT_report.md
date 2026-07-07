@@ -16,12 +16,12 @@ TC1 has two entries here: vortexSphere TC1 uses the submitted lat-lon jobs, whil
 | TC1 | alpha=0.05 | 0.05 | 1.00 | 10.0 | 10.0 | 103680 | 4000 | 198 | 0.332 | n/a | 38.6 | 32.7 | no advective deltaT change indicated |
 | TC1 | alpha=1.52 | 1.5208 | 1.00 | 0.75 | 0.75 | 1382400 | 4000 | 198 | 0.490 | n/a | 1095 | 2 | no advective deltaT change indicated |
 | TC1 | alpha=1.57 | 1.5708 | 1.00 | 0.75 | 0.75 | 1382400 | 4000 | 198 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
-| TC2 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.083 | n/a | 38.6 | 170 | no advective deltaT change indicated |
-| TC2 | alpha=0.05 | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | n/a | 38.6 | 28.3 | no advective deltaT change indicated |
-| TC2 | alpha=1.52 | 1.5208 | 60.0 | 0.75 | 0.75 | 1382400 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
-| TC2 | alpha=1.57_cs32 | 1.5708 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.021 | n/a | 54.6 | 170 | no advective deltaT change indicated |
-| TC3 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 2997 | 171 | 0.124 | n/a | 38.6 | 170 | no advective deltaT change indicated |
-| TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | 0.75 | 576000 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
+| TC2 | alpha=0 | 0 | 60.0 | 60.0 | 60.0 | 17280 | 2997 | 171 | 0.083 | 0.083 | 38.6 | 170 | no advective deltaT change indicated |
+| TC2 | alpha=0.05 | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | 0.603 | 38.6 | 28.3 | above 0.5 margin; use deltaT <= 8.30 s for margin |
+| TC2 | alpha=1.52 | 1.5208 | 60.0 | 1.00 | 1.00 | 1036800 | 2997 | 171 | 0.636 | 0.728 | 44.2 | 3 | above 0.5 margin; use deltaT <= 0.69 s for margin |
+| TC2 | alpha=1.57 | 1.5708 | 60.0 | 0.50 | 0.50 | 2073600 | 2997 | 171 | 0.318 | 0.377 | 46.2 | 1 | no advective deltaT change indicated |
+| TC3 | alpha=0 | 0 | 60.0 | 60.0 | n/a | 7200 | 2997 | 171 | 0.097 | n/a | 38.6 | 170 | no advective deltaT change indicated |
+| TC3 | alpha=1.0472 | 1.0472 | 60.0 | 0.75 | n/a | 576000 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
 | TC4 | run_u0_20 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.139 | n/a | 40.0 | 313 | no advective deltaT change indicated |
 | TC4 | run_u0_40 | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.192 | 0.193 | 56.4 | 313 | no advective deltaT change indicated |
 | TC5 | run_standard_cs32 | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5960 | 242 | 0.005 | n/a | 28.3 | 120 | no advective deltaT change indicated |
@@ -36,7 +36,7 @@ TC1 has two entries here: vortexSphere TC1 uses the submitted lat-lon jobs, whil
 
 ### Decisions
 
-No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 reaches about 0.56 in the saved fields, above the conservative 0.5 margin; deltaT <= 8.93 s would keep the saved-output maximum under 0.5.
+No completed run exceeds advective CFL 1.0. In the verified TC2 suite, alpha=0.05 and alpha=1.52 sit above the conservative 0.5 saved-output margin; use deltaT <= 8.30 s and <= 0.69 s, respectively, if that extra margin is required. TC2 alpha=1.57 uses the completed 0.5 s rotated-Coriolis run and remains below the 0.5 margin.
 
 TC5 is now a completed CS32 rerun: the initial and monitored advective CFL remain small, the final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.
 

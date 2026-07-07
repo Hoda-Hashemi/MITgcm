@@ -23,6 +23,18 @@ from mitgcm_io import discover_iterations, read_mds_field, to_2d
 WARN_CFL = 0.5
 FAIL_CFL = 1.0
 CASE_IDS = ("TC1", "TC2", "TC3", "TC4", "TC5", "TC6", "TC7")
+CANONICAL_AUDIT_RUNS = {
+    "TC2": {
+        "run_alpha_0_latlon": "alpha=0",
+        "run_alpha_0.05_latlon_rotcori_12day": "alpha=0.05",
+        "run_alpha_1.52_latlon_rotcori_12day": "alpha=1.52",
+        "run_alpha_1.57_latlon_rotcori_12day_dt0p5": "alpha=1.57",
+    },
+    "TC3": {
+        "run_alpha_0_cs32": "alpha=0",
+        "run_alpha_1.0472_cs32": "alpha=1.0472",
+    },
+}
 
 
 @dataclass
@@ -70,9 +82,12 @@ class Job:
     total_seconds: float
     run_dir: Path
     path: Path
+    label_override: str | None = None
 
     @property
     def label(self):
+        if self.label_override is not None:
+            return self.label_override
         if self.run_dir.name.startswith("run_alpha_"):
             return self.run_dir.name.replace("run_alpha_", "alpha=")
         if self.run_dir.name == "run_standard":
@@ -226,6 +241,7 @@ def parse_export(text, name):
 
 def discover_jobs(repo_root, case_id):
     case_dir = repo_root / "Sandbox" / "vortexSphere_Williamson_{}".format(case_id)
+    canonical_runs = CANONICAL_AUDIT_RUNS.get(case_id)
     jobs = []
     for path in sorted((case_dir / "jobs" / "large").glob("job_{}_*.slurm".format(case_id.lower()))):
         text = path.read_text(encoding="utf-8", errors="ignore")
@@ -237,6 +253,11 @@ def discover_jobs(repo_root, case_id):
             )
         else:
             expanded_run_dir = None
+        label_override = None
+        if canonical_runs is not None:
+            if expanded_run_dir is None or expanded_run_dir.name not in canonical_runs:
+                continue
+            label_override = canonical_runs[expanded_run_dir.name]
         run_schedule = parse_schedule(expanded_run_dir / "data") if expanded_run_dir is not None else Schedule(None, None)
         delta_t = parse_export(text, "DELTA_T")
         total_seconds = parse_export(text, "TOTAL_SECONDS")
@@ -256,6 +277,7 @@ def discover_jobs(repo_root, case_id):
                 total_seconds=safe_eval_number(total_seconds),
                 run_dir=expanded_run_dir,
                 path=path,
+                label_override=label_override,
             )
         )
     return jobs
@@ -750,9 +772,11 @@ def markdown(rows):
     lines.append("### Decisions")
     lines.append("")
     lines.append(
-        "No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 reaches "
-        "about 0.56 in the saved fields, above the conservative 0.5 margin; "
-        "deltaT <= 8.93 s would keep the saved-output maximum under 0.5."
+        "No completed run exceeds advective CFL 1.0. In the verified TC2 suite, "
+        "alpha=0.05 and alpha=1.52 sit above the conservative 0.5 saved-output "
+        "margin; use deltaT <= 8.30 s and <= 0.69 s, respectively, if that "
+        "extra margin is required. TC2 alpha=1.57 uses the completed 0.5 s "
+        "rotated-Coriolis run and remains below the 0.5 margin."
     )
     lines.append("")
     lines.append(
@@ -895,13 +919,13 @@ def html_fragment(rows):
         <div class='description-copy'>
           <p>The template <code>input/data</code> files provide the grid and default schedule, but the submitted Slurm files are the source of truth for vortexSphere runs. Each job exports <code>DELTA_T</code>, computes <code>nTimeSteps=round(TOTAL_SECONDS/DELTA_T)</code>, copies the input directory, then rewrites the run-local <code>data</code> file. The table keeps template, job, and archived-run <code>deltaT</code> separate.</p>
           <p>TC1 has two entries here: the vortexSphere TC1 rows use the submitted lat-lon jobs, while <code>TC1 cubed</code> rows are MITgcm <code>advect_cs</code> runs and keep the tutorial timestep <code>deltaT=2700 s</code>. The cubed CFL values come from MITgcm monitor output.</p>
-          <p>The small near-polar/tilted cases use <code>0.75 s</code>, the mildly tilted cases use <code>10 s</code>, standard zonal cases use <code>60 s</code>, and TC6 uses <code>30 s</code>.</p>
+          <p>The mild tilts use <code>10 s</code>, the verified TC2 high tilts use <code>1.0 s</code> and <code>0.5 s</code>, the standard zonal cases use <code>60 s</code>, and TC6 uses <code>30 s</code>.</p>
         </div>
       </section>
       <section class='description-block detail-expected'>
         <h3>Decision</h3>
         <div class='description-copy'>
-          <p>No completed run exceeds advective CFL 1.0. TC2 alpha=0.05 is above the conservative 0.5 margin in saved output, so use <code>deltaT&lt;=8.93 s</code> if that margin is required. TC5 is now a completed CS32 rerun: final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.</p>
+          <p>No completed run exceeds advective CFL 1.0. In the verified TC2 suite, alpha=0.05 and alpha=1.52 are above the conservative 0.5 saved-output margin, so use <code>deltaT&lt;=8.30 s</code> and <code>deltaT&lt;=0.69 s</code>, respectively, if that extra margin is required. TC2 alpha=1.57 uses the completed <code>0.5 s</code> rotated-Coriolis run and remains below the 0.5 margin. TC5 is now a completed CS32 rerun: final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.</p>
           <p><code>n/a</code> means the audit could not read a finite CFL source for that column: missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere row where the spherical-polar gravity-wave metric is not used. TC4 now includes both <code>run_u0_20</code> and completed <code>run_u0_40</code> output.</p>
         </div>
       </section>

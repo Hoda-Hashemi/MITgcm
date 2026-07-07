@@ -11,18 +11,18 @@
   },
   "iterations": [
     0,
-    115200,
-    230400,
+    86400,
+    172800,
+    259200,
     345600,
-    460800,
-    576000,
+    432000,
+    518400,
+    604800,
     691200,
-    806400,
-    921600,
-    1036800,
-    1152000,
-    1267200,
-    1382400
+    777600,
+    864000,
+    950400,
+    1036800
   ],
   "product": "postprocessing",
   "saved": [
@@ -34,5 +34,11 @@
     "postprocessing_energies.pdf",
     "postprocessing_energies.png"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.52"
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.52_latlon_rotcori_12day",
+  "validity": {
+    "first_bad_day": null,
+    "min_state_finite_fraction": 1.0,
+    "nonfinite_iterations": [],
+    "valid": true
+  }
 }
