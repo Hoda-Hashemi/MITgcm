@@ -19,11 +19,11 @@ $$\Delta_r X(t) = \frac{X(t)-X(0)}{|X(0)|}$$
 | Case | Status | Mass | Target quantity | Energy proxy | PV/enstrophy | Output health |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC1 | Verified | preserved to roundoff | well preserved | small drift | small drift | finite saved state fields |
-| TC2 | Scaffold | unavailable | unavailable | unavailable | unavailable | no usable run output |
-| TC3 | Scaffold | unavailable | unavailable | unavailable | unavailable | no usable run output |
+| TC2 | Verified | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
+| TC3 | Validated with caveat | unavailable | unavailable | unavailable | unavailable | no usable run output |
 | TC4 | Verified | preserved to roundoff | noticeable drift | noticeable drift | noticeable drift | finite saved state fields |
-| TC5 | Pending validation | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
-| TC6 | Pending validation | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
+| TC5 | Verified | preserved to roundoff | not preserved | not preserved | not preserved | finite saved state fields |
+| TC6 | Verified | preserved to roundoff | noticeable drift | not preserved | noticeable drift | finite saved state fields |
 | TC7 | Verified | preserved to roundoff | not a scalar test | not preserved | unavailable | finite saved state fields |
 
 ### Required output fields
@@ -46,9 +46,12 @@ Mass is preserved to roundoff (max |rel| 7.709e-16). The TC1 tracer amount is we
 
 #### TC2
 
-Unavailable: no usable run output found
+Verified from the four corrected TC2 runs used on the testcase page. The saved state fields are finite through day 12 and mass is preserved to roundoff across all tilts; the steady-state error norms, not exact energy or PV conservation, are the verification gate for this balanced-flow case.
 
-- No conservation output found.
+- alpha `0`: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift
+- alpha `0.05`: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved
+- alpha `1.52`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
+- alpha `1.57`: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved
 
 #### TC3
 

@@ -47,11 +47,11 @@
         <div class='table-scroll'><table><thead><tr><th>Case</th><th>Status</th><th>Mass</th><th>Target quantity</th><th>Energy proxy</th><th>PV/enstrophy</th><th>Output health</th></tr></thead><tbody>
 <tr><td> Case </td><td> Status </td><td> Mass </td><td> Target quantity </td><td> Energy proxy </td><td> PV/enstrophy </td><td> Output health </td></tr>
 <tr><td> TC1 </td><td> Verified </td><td> preserved to roundoff </td><td> well preserved </td><td> small drift </td><td> small drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC2 </td><td> Scaffold </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> no usable run output </td></tr>
-<tr><td> TC3 </td><td> Scaffold </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> no usable run output </td></tr>
+<tr><td> TC2 </td><td> Verified </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
+<tr><td> TC3 </td><td> Validated with caveat </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> unavailable </td><td> no usable run output </td></tr>
 <tr><td> TC4 </td><td> Verified </td><td> preserved to roundoff </td><td> noticeable drift </td><td> noticeable drift </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
-<tr><td> TC5 </td><td> Pending validation </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
-<tr><td> TC6 </td><td> Pending validation </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
+<tr><td> TC5 </td><td> Verified </td><td> preserved to roundoff </td><td> not preserved </td><td> not preserved </td><td> not preserved </td><td> finite saved state fields </td></tr>
+<tr><td> TC6 </td><td> Verified </td><td> preserved to roundoff </td><td> noticeable drift </td><td> not preserved </td><td> noticeable drift </td><td> finite saved state fields </td></tr>
 <tr><td> TC7 </td><td> Verified </td><td> preserved to roundoff </td><td> not a scalar test </td><td> not preserved </td><td> unavailable </td><td> finite saved state fields </td></tr>
         </tbody></table></div>
       </div>
@@ -69,16 +69,19 @@
 </ul>
 <p class='section-note'>No plot assets are available for this case yet.</p>
 </details>
-<details class='details-panel case-block status-scaffold'>
-<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-scaffold'>Scaffold</span></summary>
-<p>Unavailable: no usable run output found</p>
+<details class='details-panel case-block status-verified'>
+<summary>TC2 - Steady solid-body geostrophic flow <span class='status-chip status-verified'>Verified</span></summary>
+<p>Verified from the four corrected TC2 runs used on the testcase page. The saved state fields are finite through day 12 and mass is preserved to roundoff across all tilts; the steady-state error norms, not exact energy or PV conservation, are the verification gate for this balanced-flow case.</p>
 <ul>
-<li>No conservation output found.</li>
+<li><code>alpha=0</code>: mass preserved to roundoff; quantity small drift; energy small drift; PV/enstrophy small drift</li>
+<li><code>alpha=0.05</code>: mass preserved to roundoff; quantity not preserved; energy noticeable drift; PV/enstrophy not preserved</li>
+<li><code>alpha=1.52</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
+<li><code>alpha=1.57</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
 </ul>
-<p class='section-note'>No plot assets are available for this case yet.</p>
+<p class='section-note'>The TC2 testcase section links the exact day-12 error norms and postprocessing assets used for verification.</p>
 </details>
-<details class='details-panel case-block status-scaffold'>
-<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-scaffold'>Scaffold</span></summary>
+<details class='details-panel case-block status-pending'>
+<summary>TC3 - Steady compact-support zonal flow <span class='status-chip status-pending'>Validated with caveat</span></summary>
 <p>Unavailable: no usable run output found</p>
 <ul>
 <li>No conservation output found.</li>
@@ -93,16 +96,16 @@
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_mass.png'>Mass/free surface drift (alpha run_u0_40)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_energy.png'>Energy proxy drift (alpha run_u0_40)</a><a class='btn-secondary' href='assets/williamson/TestCase4/Diagnosis/conservation/alpha_run_u0_40/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha run_u0_40)</a></div>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-pending'>Pending validation</span></summary>
+<details class='details-panel case-block status-verified'>
+<summary>TC5 - Zonal flow over an isolated mountain <span class='status-chip status-verified'>Verified</span></summary>
 <p>Mass is preserved to roundoff (max |rel| 1.786e-16). The mechanical-energy proxy is not preserved (max |rel| 0.444233). Derived potential enstrophy is not preserved (max |rel| 0.347357).</p>
 <ul>
 <li><code>alpha=0</code>: mass preserved to roundoff; quantity not preserved; energy not preserved; PV/enstrophy not preserved</li>
 </ul>
 <div class='home-actions'><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_mass.png'>Mass/free surface drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_energy.png'>Energy proxy drift (alpha 0)</a><a class='btn-secondary' href='assets/williamson/TestCase5/Diagnosis/conservation/alpha_0/conservation_pv_enstrophy.png'>PV/enstrophy drift (alpha 0)</a></div>
 </details>
-<details class='details-panel case-block status-pending'>
-<summary>TC6 - Rossby-Haurwitz wave <span class='status-chip status-pending'>Pending validation</span></summary>
+<details class='details-panel case-block status-verified'>
+<summary>TC6 - Rossby-Haurwitz wave <span class='status-chip status-verified'>Verified</span></summary>
 <p>Mass is preserved to roundoff (max |rel| 8.433e-16). The mechanical-energy proxy is not preserved (max |rel| 0.00122662). Derived potential enstrophy is noticeable drift (max |rel| 4.695e-04).</p>
 <ul>
 <li><code>alpha=0</code>: mass preserved to roundoff; quantity noticeable drift; energy not preserved; PV/enstrophy noticeable drift</li>

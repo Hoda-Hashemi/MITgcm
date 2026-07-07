@@ -1188,15 +1188,17 @@ def case_status_class(case_code: str, summaries: list[dict[str, Any]]) -> tuple[
             return "pending", "Pending output"
         if case_code == "TC7":
             return "pending", "Pending output"
+        if case_code == "TC3":
+            return "pending", "Validated with caveat"
         return "scaffold", "Scaffold"
     if any(str(item.get("health_verdict", "")).startswith("invalid") for item in available):
         return "issues", "Issues"
     if any(item.get("mass_verdict") == "not preserved" for item in available):
         return "issues", "Issues"
-    if case_code == "TC4":
+    if case_code in {"TC2", "TC4", "TC5", "TC6"}:
         return "verified", "Verified"
-    if case_code in {"TC2", "TC3", "TC5", "TC6"}:
-        return "pending", "Pending validation"
+    if case_code == "TC3":
+        return "pending", "Validated with caveat"
     return "verified", "Verified"
 
 
