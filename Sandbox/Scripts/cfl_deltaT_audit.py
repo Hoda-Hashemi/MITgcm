@@ -120,6 +120,8 @@ class AuditRow:
     case_id: str
     label: str
     job_name: str
+    job_file: str
+    run_dir_name: str
     alpha: float
     template_delta_t: float | None
     template_n_steps: int | None
@@ -503,6 +505,8 @@ def audit(repo_root):
                 case_id=case_id,
                 label=job.label,
                 job_name=job.name,
+                job_file=job.path.name,
+                run_dir_name=job.run_dir.name,
                 alpha=job.alpha,
                 template_delta_t=template_schedule.delta_t,
                 template_n_steps=template_schedule.n_steps,
@@ -607,6 +611,8 @@ def discover_tc1_cubed_rows(repo_root):
             case_id="TC1 cubed",
             label="advect_cs alpha={}".format(alpha_label),
             job_name="MITGCM_Williamson_TC1_advect_cs",
+            job_file="advect_cs tutorial",
+            run_dir_name="{}/{}".format(run_dir.parent.name, run_dir.name),
             alpha=alpha,
             template_delta_t=template_schedule.delta_t,
             template_n_steps=template_schedule.n_steps,
@@ -660,6 +666,8 @@ def row_cells(row):
     return [
         row.case_id,
         row.label,
+        row.run_dir_name,
+        row.job_file,
         alpha_text(row.alpha),
         fmt(row.template_delta_t, 2),
         fmt(row.delta_t, 2),
@@ -695,6 +703,7 @@ def compact_row_cells(row):
     return [
         row.case_id,
         row.label,
+        row.run_dir_name,
         fmt(row.delta_t, 2),
         str(row.n_steps),
         fmt(total, 0),
@@ -714,6 +723,8 @@ def markdown(rows):
     headers = [
         "case",
         "run",
+        "run dir",
+        "job file",
         "alpha(rad)",
         "template dt(s)",
         "job dt(s)",
@@ -764,6 +775,11 @@ def markdown(rows):
         "`deltaT=2700 s`. The cubed CFL values come from MITgcm monitor output."
     )
     lines.append("")
+    lines.append(
+        "The `run dir` and `job file` columns are the exact archived sources used for "
+        "the row; `run dt(s)` is read from that run-local `data` file when it exists."
+    )
+    lines.append("")
     lines.append("| " + " | ".join(headers) + " |")
     lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
     for row in rows:
@@ -783,7 +799,9 @@ def markdown(rows):
         "TC5 is now a completed CS32 rerun: the initial and monitored advective CFL "
         "remain small, the final saved state fields are finite through day 15, and "
         "the mountain is verified as static bathymetry rather than an eta bump. "
-        "TC7 uses cubed-sphere compact initial fields for the submitted three-date suite."
+        "TC6 is the completed Rossby-Haurwitz `run_standard` row at deltaT=30 s "
+        "for 40320 steps, and TC7 uses cubed-sphere compact initial fields for "
+        "the submitted three-date suite."
     )
     lines.append("")
     lines.append(
@@ -819,6 +837,7 @@ def html_table(rows):
     headers = [
         "Case",
         "Run",
+        "Run dir",
         "dt(s)",
         "n steps",
         "total(s)",
@@ -860,17 +879,18 @@ def latex_table(rows):
         r"\centering",
         r"\caption{Submitted-run time-step and CFL settings used in the current MITgcm Williamson suite.}",
         r"\label{tab:submitted_time_step_cfl}",
-        r"\begin{tabular}{llrrrrrl}",
+        r"\begin{tabular}{lllrrrrrl}",
         r"\toprule",
-        r"Test & Run & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\",
+        r"Test & Run & Run dir & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\",
         r"\midrule",
     ]
     for row in rows:
-        case_id, label, dt, steps, total, days, max_cfl, status = compact_row_cells(row)
+        case_id, label, run_dir, dt, steps, total, days, max_cfl, status = compact_row_cells(row)
         lines.append(
-            "{} & {} & {} & {} & {} & {} & {} & {} \\\\".format(
+            "{} & {} & {} & {} & {} & {} & {} & {} & {} \\\\".format(
                 latex_escape(case_id),
                 latex_escape(label),
+                latex_escape(run_dir),
                 latex_escape(dt),
                 latex_escape(steps),
                 latex_escape(total),
@@ -919,13 +939,14 @@ def html_fragment(rows):
         <div class='description-copy'>
           <p>The template <code>input/data</code> files provide the grid and default schedule, but the submitted Slurm files are the source of truth for vortexSphere runs. Each job exports <code>DELTA_T</code>, computes <code>nTimeSteps=round(TOTAL_SECONDS/DELTA_T)</code>, copies the input directory, then rewrites the run-local <code>data</code> file. The table keeps template, job, and archived-run <code>deltaT</code> separate.</p>
           <p>TC1 has two entries here: the vortexSphere TC1 rows use the submitted lat-lon jobs, while <code>TC1 cubed</code> rows are MITgcm <code>advect_cs</code> runs and keep the tutorial timestep <code>deltaT=2700 s</code>. The cubed CFL values come from MITgcm monitor output.</p>
+          <p>The <code>Run dir</code> column is the exact archived directory whose run-local <code>data</code> file was used for the timestep row.</p>
           <p>The mild tilts use <code>10 s</code>, the verified TC2 high tilts use <code>1.0 s</code> and <code>0.5 s</code>, the standard zonal cases use <code>60 s</code>, and TC6 uses <code>30 s</code>.</p>
         </div>
       </section>
       <section class='description-block detail-expected'>
         <h3>Decision</h3>
         <div class='description-copy'>
-          <p>No completed run exceeds advective CFL 1.0. In the verified TC2 suite, alpha=0.05 and alpha=1.52 are above the conservative 0.5 saved-output margin, so use <code>deltaT&lt;=8.30 s</code> and <code>deltaT&lt;=0.69 s</code>, respectively, if that extra margin is required. TC2 alpha=1.57 uses the completed <code>0.5 s</code> rotated-Coriolis run and remains below the 0.5 margin. TC5 is now a completed CS32 rerun: final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.</p>
+          <p>No completed run exceeds advective CFL 1.0. In the verified TC2 suite, alpha=0.05 and alpha=1.52 are above the conservative 0.5 saved-output margin, so use <code>deltaT&lt;=8.30 s</code> and <code>deltaT&lt;=0.69 s</code>, respectively, if that extra margin is required. TC2 alpha=1.57 uses the completed <code>0.5 s</code> rotated-Coriolis run and remains below the 0.5 margin. TC5 is now a completed CS32 rerun: final saved state fields are finite through day 15, and the mountain is verified as static bathymetry rather than an eta bump. TC6 is the completed Rossby-Haurwitz <code>run_standard</code> row at <code>deltaT=30 s</code> for <code>40320</code> steps. TC7 uses cubed-sphere compact initial fields for the submitted three-date suite.</p>
           <p><code>n/a</code> means the audit could not read a finite CFL source for that column: missing archived U/V fields, unavailable initial-velocity hook, or a cubed-sphere row where the spherical-polar gravity-wave metric is not used. TC4 now includes both <code>run_u0_20</code> and completed <code>run_u0_40</code> output.</p>
         </div>
       </section>

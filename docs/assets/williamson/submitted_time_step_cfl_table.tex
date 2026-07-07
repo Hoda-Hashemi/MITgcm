@@ -2,31 +2,31 @@
 \centering
 \caption{Submitted-run time-step and CFL settings used in the current MITgcm Williamson suite.}
 \label{tab:submitted_time_step_cfl}
-\begin{tabular}{llrrrrrl}
+\begin{tabular}{lllrrrrrl}
 \toprule
-Test & Run & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\
+Test & Run & Run dir & $\Delta t$ [s] & $n$ steps & Total [s] & Days & Max CFL & Status/action \\
 \midrule
-TC1 & alpha=0 & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
-TC1 & alpha=0.05 & 10.0 & 103680 & 1036800 & 12.0 & 0.332 & OK \\
-TC1 & alpha=1.52 & 0.75 & 1382400 & 1036800 & 12.0 & 0.490 & OK \\
-TC1 & alpha=1.57 & 0.75 & 1382400 & 1036800 & 12.0 & 0.477 & OK \\
-TC2 & alpha=0 & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
-TC2 & alpha=0.05 & 10.0 & 103680 & 1036800 & 12.0 & 0.603 & OK<1; 0.5 margin dt<=8.30 s \\
-TC2 & alpha=1.52 & 1.00 & 1036800 & 1036800 & 12.0 & 0.728 & OK<1; 0.5 margin dt<=0.69 s \\
-TC2 & alpha=1.57 & 0.50 & 2073600 & 1036800 & 12.0 & 0.377 & OK \\
-TC3 & alpha=0 & 60.0 & 7200 & 432000 & 5.00 & 0.097 & OK \\
-TC3 & alpha=1.0472 & 0.75 & 576000 & 432000 & 5.00 & 0.477 & OK \\
-TC4 & run\_u0\_20 & 60.0 & 7200 & 432000 & 5.00 & 0.139 & OK \\
-TC4 & run\_u0\_40 & 60.0 & 7200 & 432000 & 5.00 & 0.193 & OK \\
-TC5 & run\_standard\_cs32 & 30.0 & 43200 & 1296000 & 15.0 & 0.005 & OK \\
-TC6 & standard & 30.0 & 40320 & 1209600 & 14.0 & 0.126 & OK \\
-TC7 & run\_c1\_19781221\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.009 & OK \\
-TC7 & run\_c2\_19790116\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.012 & OK \\
-TC7 & run\_c3\_19790109\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.011 & OK \\
-TC1 cubed & advect\_cs alpha=0 & 2700 & 384 & 1036800 & 12.0 & 0.768 & OK<1; 0.5 margin dt<=1757.71 s \\
-TC1 cubed & advect\_cs alpha=0.05 & 2700 & 384 & 1036800 & 12.0 & 0.786 & OK<1; 0.5 margin dt<=1717.65 s \\
-TC1 cubed & advect\_cs alpha=1.52 & 2700 & 384 & 1036800 & 12.0 & 0.786 & OK<1; 0.5 margin dt<=1717.65 s \\
-TC1 cubed & advect\_cs alpha=1.57 & 2700 & 384 & 1036800 & 12.0 & 0.768 & OK<1; 0.5 margin dt<=1757.71 s \\
+TC1 & alpha=0 & run\_alpha\_0 & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
+TC1 & alpha=0.05 & run\_alpha\_0.05 & 10.0 & 103680 & 1036800 & 12.0 & 0.332 & OK \\
+TC1 & alpha=1.52 & run\_alpha\_1.52 & 0.75 & 1382400 & 1036800 & 12.0 & 0.490 & OK \\
+TC1 & alpha=1.57 & run\_alpha\_1.57 & 0.75 & 1382400 & 1036800 & 12.0 & 0.477 & OK \\
+TC2 & alpha=0 & run\_alpha\_0\_latlon & 60.0 & 17280 & 1036800 & 12.0 & 0.083 & OK \\
+TC2 & alpha=0.05 & run\_alpha\_0.05\_latlon\_rotcori\_12day & 10.0 & 103680 & 1036800 & 12.0 & 0.603 & OK<1; 0.5 margin dt<=8.30 s \\
+TC2 & alpha=1.52 & run\_alpha\_1.52\_latlon\_rotcori\_12day & 1.00 & 1036800 & 1036800 & 12.0 & 0.728 & OK<1; 0.5 margin dt<=0.69 s \\
+TC2 & alpha=1.57 & run\_alpha\_1.57\_latlon\_rotcori\_12day\_dt0p5 & 0.50 & 2073600 & 1036800 & 12.0 & 0.377 & OK \\
+TC3 & alpha=0 & run\_alpha\_0\_cs32 & 60.0 & 7200 & 432000 & 5.00 & 0.097 & OK \\
+TC3 & alpha=1.0472 & run\_alpha\_1.0472\_cs32 & 0.75 & 576000 & 432000 & 5.00 & 0.477 & OK \\
+TC4 & run\_u0\_20 & run\_u0\_20 & 60.0 & 7200 & 432000 & 5.00 & 0.139 & OK \\
+TC4 & run\_u0\_40 & run\_u0\_40 & 60.0 & 7200 & 432000 & 5.00 & 0.193 & OK \\
+TC5 & run\_standard\_cs32 & run\_standard\_cs32 & 30.0 & 43200 & 1296000 & 15.0 & 0.005 & OK \\
+TC6 & standard & run\_standard & 30.0 & 40320 & 1209600 & 14.0 & 0.126 & OK \\
+TC7 & run\_c1\_19781221\_0000 & run\_c1\_19781221\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.009 & OK \\
+TC7 & run\_c2\_19790116\_0000 & run\_c2\_19790116\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.012 & OK \\
+TC7 & run\_c3\_19790109\_0000 & run\_c3\_19790109\_0000 & 25.0 & 17280 & 432000 & 5.00 & 0.011 & OK \\
+TC1 cubed & advect\_cs alpha=0 & alpha\_0/run\_alpha\_0 & 2700 & 384 & 1036800 & 12.0 & 0.768 & OK<1; 0.5 margin dt<=1757.71 s \\
+TC1 cubed & advect\_cs alpha=0.05 & alpha\_0.05/run\_alpha\_0.05 & 2700 & 384 & 1036800 & 12.0 & 0.786 & OK<1; 0.5 margin dt<=1717.65 s \\
+TC1 cubed & advect\_cs alpha=1.52 & alpha\_1.52/run\_alpha\_1.52 & 2700 & 384 & 1036800 & 12.0 & 0.786 & OK<1; 0.5 margin dt<=1717.65 s \\
+TC1 cubed & advect\_cs alpha=1.57 & alpha\_1.57/run\_alpha\_1.57 & 2700 & 384 & 1036800 & 12.0 & 0.768 & OK<1; 0.5 margin dt<=1757.71 s \\
 \bottomrule
 \end{tabular}
 \end{table}

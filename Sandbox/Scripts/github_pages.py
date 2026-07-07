@@ -189,6 +189,7 @@ SECTIONS = [
     {
         "slug": "testcase6",
         "title": "Williamson TC6: Rossby-Haurwitz Wave",
+        "summary": "The completed Rossby-Haurwitz run_standard case is verified through day 14 with deltaT=30 s, 40320 steps, and max initial advective CFL 0.126.",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC6",
         "key_days": (0.0, 3.0, 6.0, 9.0, 10.0, 12.0, 14.0),
         "snapshot_fields": [
@@ -332,7 +333,7 @@ STATUS_META = {
     "testcase3": ("Validated with caveat", "pending"),
     "testcase4": ("Verified", "verified"),
     "testcase5": ("Verified", "verified"),
-    "testcase6": ("Pending validation", "pending"),
+    "testcase6": ("Verified", "verified"),
     "testcase7": ("Verified", "verified"),
     "case1_constant_bathymetry": ("Verified", "verified"),
     "case2_real_bathymetry": ("Verified", "verified"),
@@ -345,6 +346,9 @@ CANONICAL_SETTING_RUNS = {
         ("0.05", "run_alpha_0.05_latlon_rotcori_12day"),
         ("1.52", "run_alpha_1.52_latlon_rotcori_12day"),
         ("1.57", "run_alpha_1.57_latlon_rotcori_12day_dt0p5"),
+    ),
+    "vortexSphere_Williamson_TC6": (
+        ("standard", "run_standard"),
     ),
 }
 
@@ -802,6 +806,19 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<p>The wave should retain a coherent planetary-scale structure with controlled phase "
                 "drift. Look for smooth contour evolution and slow, explainable drift in global invariants "
                 "rather than noisy small-scale breakdown.</p>"
+            ),
+        },
+        {
+            "title": "Validation Result",
+            "body": (
+                "<p>Verified. The published Rossby-Haurwitz row is the completed "
+                "<code>run_standard</code> archive using <code>deltaT=30 s</code>, "
+                "<code>nTimeSteps=40320</code>, and 14 simulated days. The CFL audit "
+                "reports max initial advective CFL <code>0.126</code>, below the "
+                "0.5 warning margin and well below the 1.0 stability limit. The "
+                "postprocessed state fields remain finite through day 14 with mass "
+                "preserved to roundoff; the energy and potential-enstrophy diagnostics "
+                "show small Rossby-wave drift rather than numerical breakdown.</p>"
             ),
         },
     ],

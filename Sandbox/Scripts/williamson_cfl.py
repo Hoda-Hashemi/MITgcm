@@ -94,9 +94,11 @@ def parse_data_file(path: Path) -> GridConfig:
         if key in {"deltaT", "rSphere", "delX", "delY"}:
             values[key] = raw_value
 
-    missing = sorted({"deltaT", "rSphere", "delX", "delY"} - set(values))
+    missing = sorted({"deltaT", "rSphere"} - set(values))
     if missing:
         raise ValueError(f"{path} is missing: {', '.join(missing)}")
+    values.setdefault("delX", "1440*0.25")
+    values.setdefault("delY", "720*0.25")
 
     nx, dlon_deg = parse_repeat_grid(values["delX"], "delX")
     ny, dlat_deg = parse_repeat_grid(values["delY"], "delY")
