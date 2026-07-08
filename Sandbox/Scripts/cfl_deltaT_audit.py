@@ -18,6 +18,8 @@ from pathlib import Path
 import numpy as np
 
 from mitgcm_io import discover_iterations, read_mds_field, to_2d
+import williamson_cube as wc
+import williamson_fields as wf
 
 
 WARN_CFL = 0.5
@@ -398,6 +400,35 @@ def cube_initial_cfl(run_dir, delta_t):
     )
 
 
+def cube_template_initial_cfl(repo_root, case_id, job):
+    if not job.run_dir.name.endswith("_cs32"):
+        return None
+    try:
+        grid = wc.CubeGrid(wc.resolve_cs32_grid_dir(repo_root))
+        if case_id == "TC2":
+            u, v = wc.velocity_faces_from_functions(grid, wf.tc2_u, wf.tc2_v, alpha_rad=job.alpha)
+        elif case_id == "TC3":
+            u, v = wc.velocity_faces_from_functions(grid, wf.tc3_u, wf.tc3_v, alpha_rad=job.alpha)
+        else:
+            return None
+    except Exception:
+        return None
+
+    dx_min = float(min(np.min(grid.dxc), np.min(grid.dxf)))
+    dy_min = float(min(np.min(grid.dyc), np.min(grid.dyf)))
+    cfl_x = float(np.max(np.abs(u))) * job.delta_t / dx_min
+    cfl_y = float(np.max(np.abs(v))) * job.delta_t / dy_min
+    return CflStats(
+        max_x=cfl_x,
+        max_y=cfl_y,
+        max_total=max(cfl_x, cfl_y),
+        lon=math.nan,
+        lat=math.nan,
+        max_speed=float(np.nanmax(np.hypot(u, v))),
+        iteration=-1,
+    )
+
+
 def scan_run_output(grid, job, delta_t):
     run_dir = job.run_dir
     if not run_dir.is_dir():
@@ -465,7 +496,11 @@ def audit(repo_root):
             initial = cube_initial_cfl(job.run_dir, job.delta_t)
             if initial is not None:
                 notes.append("cubed-sphere initial CFL from compact run inputs.")
-            else:
+            if initial is None:
+                initial = cube_template_initial_cfl(repo_root, case_id, job)
+                if initial is not None:
+                    notes.append("cubed-sphere initial CFL from analytic CS32 template.")
+            if initial is None:
                 try:
                     u, v = initial_velocity(case_id, module, job)
                     initial = cfl_from_uv(grid, job.delta_t, u, v)
@@ -642,6 +677,8 @@ def fmt(value, digits=3):
         return "n/a"
     if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
         return "n/a"
+    if 0.0 < abs(float(value)) < 1.0e-3:
+        return "{:.2e}".format(float(value))
     if abs(float(value)) >= 100.0:
         return "{:.0f}".format(float(value))
     if abs(float(value)) >= 10.0:

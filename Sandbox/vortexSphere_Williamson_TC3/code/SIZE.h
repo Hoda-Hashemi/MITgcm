@@ -11,14 +11,14 @@ C    !===  GRID SPACING & DOMAIN SIZE =====================================
       INTEGER Ny
       INTEGER Nr
 
-      PARAMETER ( sNx =  360 )        ! grid points in x-dir per tile
-      PARAMETER ( sNy =  180 )        ! grid points in y-dir per tile
+      PARAMETER ( sNx =   16 )        ! CS32 compact tile width
+      PARAMETER ( sNy =    8 )        ! CS32 compact tile height
       PARAMETER ( OLx =    2 )        ! overlap in x-dir
       PARAMETER ( OLy =    2 )        ! overlap in y-dir
       PARAMETER ( nSx =    1 )
       PARAMETER ( nSy =    1 )
-      PARAMETER ( nPx =    4 )
-      PARAMETER ( nPy =    4 )
+      PARAMETER ( nPx =   48 )
+      PARAMETER ( nPy =    1 )
       PARAMETER ( Nx  = sNx*nSx*nPx )
       PARAMETER ( Ny  = sNy*nSy*nPy )
       PARAMETER ( Nr  =    1 )        ! vertical levels

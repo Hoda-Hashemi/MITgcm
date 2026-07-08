@@ -8,5 +8,5 @@
     "TC3_error_norms.txt",
     "TC3_error_norms.tex"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC3/run_alpha_1.0472"
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC3/run_alpha_1.0472_latlon_rotcori_5day_45rank"
 }

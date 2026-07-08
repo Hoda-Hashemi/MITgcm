@@ -11,6 +11,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import williamson_fields as wf
+import williamson_cube as wc
 
 NX = wf.NX
 NY = wf.NY
@@ -38,16 +39,26 @@ def grid_corners() -> tuple[object, object]:
     return np.meshgrid(lon, lat, indexing="xy")
 
 
+def rotated_mu(lon_rad: object, lat_rad: object, alpha_rad: float) -> object:
+    return (
+        -np.cos(lon_rad) * np.cos(lat_rad) * np.sin(alpha_rad)
+        + np.sin(lat_rad) * np.cos(alpha_rad)
+    )
+
+
 def write_rotated_coriolis(base_dir: Path, alpha_rad: float = ALPHA_RAD) -> None:
     lon_c, lat_c = wf.grid_cell_centers()
     lon_g, lat_g = grid_corners()
+    mu_c = rotated_mu(lon_c, lat_c, alpha_rad)
+    mu_g = rotated_mu(lon_g, lat_g, alpha_rad)
 
-    lat_rot_c = wf.rotated_latitude(lon_c, lat_c, alpha_rad)
-    lat_rot_g = wf.rotated_latitude(lon_g, lat_g, alpha_rad)
-
-    wf.write_field(base_dir, FCORI_C_FILE, 2.0 * wf.OMEGA * np.sin(lat_rot_c))
-    wf.write_field(base_dir, FCORI_G_FILE, 2.0 * wf.OMEGA * np.sin(lat_rot_g))
-    wf.write_field(base_dir, FCORI_COS_FILE, 2.0 * wf.OMEGA * np.cos(lat_rot_c))
+    wf.write_field(base_dir, FCORI_C_FILE, 2.0 * wf.OMEGA * mu_c)
+    wf.write_field(base_dir, FCORI_G_FILE, 2.0 * wf.OMEGA * mu_g)
+    wf.write_field(
+        base_dir,
+        FCORI_COS_FILE,
+        2.0 * wf.OMEGA * np.sqrt(np.maximum(0.0, 1.0 - mu_c * mu_c)),
+    )
 
 
 def make_eta(alpha_rad: float = ALPHA_RAD) -> object:
@@ -61,6 +72,17 @@ def make_velocity_fields(alpha_rad: float = ALPHA_RAD) -> tuple[object, object]:
 
 def main() -> None:
     base_dir = Path(__file__).resolve().parent
+    if not (base_dir / ".use_latlon_grid").exists():
+        wc.generate_tc3(base_dir, alpha_rad=ALPHA_RAD)
+        print("")
+        print("Done.")
+        print(f"ALPHA_RAD = {ALPHA_RAD:.16g}")
+        print(f"ALPHA_DEG = {np.rad2deg(ALPHA_RAD):.16g}")
+        print(f"H0        = {H0:.12f} m")
+        print(f"U0        = {wf.TC3_U0:.12f} m/s")
+        print(f"XE        = {wf.TC3_XE:.12f}")
+        return
+
     bathy = make_bathymetry()
     write_rotated_coriolis(base_dir, alpha_rad=ALPHA_RAD)
     eta = make_eta(alpha_rad=ALPHA_RAD)
@@ -73,8 +95,10 @@ def main() -> None:
     print("")
     print("Done.")
     print(f"ALPHA_RAD = {ALPHA_RAD:.16g}")
+    print(f"ALPHA_DEG = {np.rad2deg(ALPHA_RAD):.16g}")
     print(f"H0        = {H0:.12f} m")
     print(f"U0        = {wf.TC3_U0:.12f} m/s")
+    print(f"XE        = {wf.TC3_XE:.12f}")
 
 
 if __name__ == "__main__":

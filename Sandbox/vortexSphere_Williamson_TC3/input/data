@@ -1,6 +1,6 @@
 # ===============================================================
 # Williamson TC3 compact-support steady geostrophic flow.
-# One-layer, global lat-lon shallow-water solve.
+# One-layer, global cubed-sphere shallow-water solve.
 # ===============================================================
 
 # Continuous equation parameters
@@ -18,8 +18,8 @@
  exactConserv           = .TRUE.,
  momStepping            = .TRUE.,
  momAdvection           = .TRUE.,
+ vectorInvariantMomentum= .TRUE.,
  useCoriolis            = .TRUE.,
- selectCoriMap          = 3,
  tempStepping           = .FALSE.,
  saltStepping           = .FALSE.,
 
@@ -62,11 +62,8 @@
 
 # Grid parameters
 &PARM04
- usingSphericalPolarGrid = .TRUE.,
- delX = 1440*0.25,
- delY = 720*0.25,
- xgOrigin = 0.,
- ygOrigin = -90.,
+ usingCurvilinearGrid = .TRUE.,
+ radius_fromHorizGrid = 6370.E3,
  rSphere = 6371000.,
  delR = 2996.9418960244646,
 /

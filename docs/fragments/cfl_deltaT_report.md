@@ -22,8 +22,8 @@ The `run dir` and `job file` columns are the exact archived sources used for the
 | TC2 | alpha=0.05 | run_alpha_0.05_latlon_rotcori_12day | job_tc2_c2_rotcori_12day.slurm | 0.05 | 60.0 | 10.0 | 10.0 | 103680 | 2997 | 171 | 0.332 | 0.603 | 38.6 | 28.3 | above 0.5 margin; use deltaT <= 8.30 s for margin |
 | TC2 | alpha=1.52 | run_alpha_1.52_latlon_rotcori_12day | job_tc2_c3_rotcori_12day.slurm | 1.5208 | 60.0 | 1.00 | 1.00 | 1036800 | 2997 | 171 | 0.636 | 0.728 | 44.2 | 3 | above 0.5 margin; use deltaT <= 0.69 s for margin |
 | TC2 | alpha=1.57 | run_alpha_1.57_latlon_rotcori_12day_dt0p5 | job_tc2_c4_rotcori_12day_dt0p5.slurm | 1.5708 | 60.0 | 0.50 | 0.50 | 2073600 | 2997 | 171 | 0.318 | 0.377 | 46.2 | 1 | no advective deltaT change indicated |
-| TC3 | alpha=0 | run_alpha_0_cs32 | job_tc3_c1.slurm | 0 | 60.0 | 60.0 | n/a | 7200 | 2997 | 171 | 0.097 | n/a | 38.6 | 170 | no advective deltaT change indicated |
-| TC3 | alpha=1.0472 | run_alpha_1.0472_cs32 | job_tc3_c2.slurm | 1.0472 | 60.0 | 0.75 | n/a | 576000 | 2997 | 171 | 0.477 | n/a | 38.7 | 2 | no advective deltaT change indicated |
+| TC3 | alpha=0 | run_alpha_0_cs32 | job_tc3_c1.slurm | 0 | 60.0 | 60.0 | n/a | 7200 | 2997 | 171 | 0.021 | n/a | 54.5 | 170 | no advective deltaT change indicated |
+| TC3 | alpha=1.0472 | run_alpha_1.0472_cs32 | job_tc3_c2.slurm | 1.0472 | 60.0 | 0.75 | n/a | 576000 | 2997 | 171 | 2.38e-04 | n/a | 49.9 | 2 | no advective deltaT change indicated |
 | TC4 | run_u0_20 | run_u0_20 | job_tc4_c1.slurm | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.139 | n/a | 40.0 | 313 | no advective deltaT change indicated |
 | TC4 | run_u0_40 | run_u0_40 | job_tc4_c2.slurm | 0 | 60.0 | 60.0 | 60.0 | 7200 | 10194 | 316 | 0.192 | 0.193 | 56.4 | 313 | no advective deltaT change indicated |
 | TC5 | run_standard_cs32 | run_standard_cs32 | job_tc5_c1.slurm | 0 | 30.0 | 30.0 | 30.0 | 43200 | 5960 | 242 | 0.005 | n/a | 28.3 | 120 | no advective deltaT change indicated |

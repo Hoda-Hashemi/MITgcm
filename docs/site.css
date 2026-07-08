@@ -820,6 +820,28 @@ tbody tr:nth-child(odd) {
   background: var(--surface-2);
 }
 
+#cfl-deltat-audit tbody tr[class*="cfl-row"] {
+  background:
+    linear-gradient(90deg, rgb(var(--cfl-row-rgb, 8 95 99) / 0.16), transparent 48%),
+    var(--surface);
+  box-shadow: inset 4px 0 0 rgb(var(--cfl-row-rgb, 8 95 99) / 0.82);
+}
+
+#cfl-deltat-audit tbody tr[class*="cfl-row"]:nth-child(odd) {
+  background:
+    linear-gradient(90deg, rgb(var(--cfl-row-rgb, 8 95 99) / 0.18), transparent 48%),
+    var(--surface-2);
+}
+
+#cfl-deltat-audit .cfl-row-tc1 { --cfl-row-rgb: 8 95 99; }
+#cfl-deltat-audit .cfl-row-tc1-cubed { --cfl-row-rgb: 129 80 20; }
+#cfl-deltat-audit .cfl-row-tc2 { --cfl-row-rgb: 43 103 173; }
+#cfl-deltat-audit .cfl-row-tc3 { --cfl-row-rgb: 81 92 42; }
+#cfl-deltat-audit .cfl-row-tc4 { --cfl-row-rgb: 155 56 74; }
+#cfl-deltat-audit .cfl-row-tc5 { --cfl-row-rgb: 105 84 156; }
+#cfl-deltat-audit .cfl-row-tc6 { --cfl-row-rgb: 34 118 78; }
+#cfl-deltat-audit .cfl-row-tc7 { --cfl-row-rgb: 128 67 115; }
+
 td {
   color: var(--text);
 }

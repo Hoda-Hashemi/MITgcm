@@ -1,14 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=TC3_c2_normal16
+#SBATCH --job-name=TC3_c2_cs32_o13
 #SBATCH --account=hmh85
-#SBATCH --partition=normal
-#SBATCH --nodelist=onode18
+#SBATCH --partition=large
+#SBATCH --nodelist=onode13
 #SBATCH --nodes=1
-#SBATCH --ntasks=16
-#SBATCH --ntasks-per-node=16
+#SBATCH --ntasks=48
+#SBATCH --ntasks-per-node=48
 #SBATCH --cpus-per-task=1
-##SBATCH --exclusive
-#SBATCH --mem=0
+#SBATCH --mem=64G
 #SBATCH --time=1-00:00:00
 #SBATCH --output=/home/hmh85/scratch/MITgcm/Sandbox/vortexSphere_Williamson_TC3/logs/slurm-%j.out
 #SBATCH --error=/home/hmh85/scratch/MITgcm/Sandbox/vortexSphere_Williamson_TC3/logs/slurm-%j.err
@@ -28,8 +27,8 @@ export CASE_NAME=c2
 export ALPHA_VALUE=1.0471975511965976
 export DELTA_T=0.75
 export TOTAL_SECONDS=432000
-export BUILD_DIR=$CASE_DIR/build/c2_normal16
-export RUN_DIR=$CASE_DIR/run_alpha_1.0472
+export BUILD_DIR=$CASE_DIR/build/c2_cs32_large48
+export RUN_DIR=$CASE_DIR/run_alpha_1.0472_cs32
 export LOG_DIR=$CASE_DIR/logs
 export MPI_TASKS=${SLURM_NTASKS:-48}
 export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-48}
@@ -40,7 +39,7 @@ TOOLS_DIR=$MITGCM_DIR/tools
 BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
 MODS_DIR=$CASE_DIR/code
 PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC3.py
-SETUP_CHECK=$CASE_DIR/tools/check_setup_tc3.py
+SETUP_CHECK=$MITGCM_DIR/Sandbox/Scripts/williamson_cube_preflight.py
 
 finish() {
     local status=$1 end_time elapsed
@@ -64,17 +63,19 @@ stage_case_inputs() {
     sed -i "s/^ nTimeSteps=.*/ nTimeSteps=${N_TIME_STEPS},/" "$RUN_DIR/data"
     sed -i "s/^ deltaT=.*/ deltaT=${DELTA_T},/" "$RUN_DIR/data"
     (cd "$RUN_DIR" && python3 gendata_ref.py)
-    python3 "$SETUP_CHECK" --run-dir "$RUN_DIR" --alpha "$ALPHA_VALUE"
+    python3 "$SETUP_CHECK" --case TC3 --run-dir "$RUN_DIR"
 }
 
 clean_run_dir() {
     find "$RUN_DIR" -maxdepth 1 -type f \
         \( -name "*.data" -o -name "*.meta" -o -name "*.bin" \
         -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" \
+        -o -name "tile*.mitgrid" -o -name "fCoriG.face*.bin" \
         -o -name "pickup*" -o -name "available_diagnostics.log" \
         -o -name "run.log" -o -name "run_inventory.log" \
         -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg" \
-        -o -name "data.diagnostics" -o -name "eedata" -o -name "eedata.mth" \
+        -o -name "data.diagnostics" -o -name "data.exch2" \
+        -o -name "eedata" -o -name "eedata.mth" \
         -o -name "gendata_ref.py" \) \
         -delete
 }

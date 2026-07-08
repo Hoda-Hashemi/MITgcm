@@ -233,13 +233,22 @@ def generate_tc2(base_dir: Path, alpha_rad: float) -> None:
     bathy = np.full_like(eta, -wf.H0_SOLID)
     u, v = velocity_faces_from_functions(grid, wf.tc2_u, wf.tc2_v, alpha_rad=alpha_rad)
 
-    mu_c = -np.cos(grid.lon_c) * np.cos(grid.lat_c) * np.sin(alpha_rad) + np.sin(grid.lat_c) * np.cos(alpha_rad)
-    mu_g = -np.cos(grid.lon_g) * np.cos(grid.lat_g) * np.sin(alpha_rad) + np.sin(grid.lat_g) * np.cos(alpha_rad)
-    write_compact(base_dir, "fCoriC.bin", 2.0 * wf.OMEGA * mu_c)
-    write_compact(base_dir, "fCorCs.bin", 2.0 * wf.OMEGA * np.sqrt(np.maximum(0.0, 1.0 - mu_c * mu_c)))
-    write_corner_faces(base_dir, "fCoriG", 2.0 * wf.OMEGA * mu_g)
-
     write_compact(base_dir, "bathymetry_flat4000.bin", bathy)
+    write_compact(base_dir, "eta_init.bin", eta)
+    write_compact(base_dir, "u_init.bin", u)
+    write_compact(base_dir, "v_init.bin", v)
+    print(f"Cube grid: CS{CS32_NC}; alpha={alpha_rad:.16g}; max speed={np.nanmax(np.hypot(u, v)):.6e} m/s")
+
+
+def generate_tc3(base_dir: Path, alpha_rad: float) -> None:
+    copy_cs32_grid_files(base_dir)
+    grid = CubeGrid(resolve_cs32_grid_dir(base_dir))
+
+    eta = wf.tc3_eta(grid.lon_c, grid.lat_c, alpha_rad)
+    bathy = np.full_like(eta, -wf.H0_SOLID)
+    u, v = velocity_faces_from_functions(grid, wf.tc3_u, wf.tc3_v, alpha_rad=alpha_rad)
+
+    write_compact(base_dir, "bathymetry_flat_tc3.bin", bathy)
     write_compact(base_dir, "eta_init.bin", eta)
     write_compact(base_dir, "u_init.bin", u)
     write_compact(base_dir, "v_init.bin", v)

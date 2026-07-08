@@ -22,7 +22,10 @@ RUN_DIRS = [
     Path(item).expanduser()
     for item in os.environ.get("TC3_RUN_DIRS", "").split(os.pathsep)
     if item
-] or [CASE_DIR / "run_alpha_0"]
+] or [
+    CASE_DIR / "run_alpha_0_cs32",
+    CASE_DIR / "run_alpha_1.0472_cs32",
+]
 MAKE_SNAPSHOTS = True
 MAKE_ERROR_ANALYSIS = True
 MAKE_POSTPROCESSING = True

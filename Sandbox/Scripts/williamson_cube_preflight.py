@@ -13,7 +13,8 @@ from williamson_cube import CS32_NC, GRID_FILES, CubeGrid, resolve_cs32_grid_dir
 
 
 FIELD_NAMES = {
-    "TC2": ("bathymetry_flat4000.bin", "eta_init.bin", "u_init.bin", "v_init.bin", "fCoriC.bin", "fCorCs.bin"),
+    "TC2": ("bathymetry_flat4000.bin", "eta_init.bin", "u_init.bin", "v_init.bin"),
+    "TC3": ("bathymetry_flat_tc3.bin", "eta_init.bin", "u_init.bin", "v_init.bin"),
     "TC5": ("bathymetry_mountain_tc5.bin", "eta_init.bin", "u_init.bin", "v_init.bin"),
     "TC7": ("bathymetry_tc7.bin", "eta_init.bin", "u_init.bin", "v_init.bin"),
 }
@@ -48,6 +49,11 @@ def require_contains(path: Path, needle: str, description: str) -> None:
         raise ValueError(f"{path} must contain {description}")
 
 
+def require_not_contains(path: Path, needle: str, description: str) -> None:
+    if needle in path.read_text():
+        raise ValueError(f"{path} must not contain {description}")
+
+
 def parse_size(path: Path) -> dict[str, int]:
     params: dict[str, int] = {}
     pattern = re.compile(r"PARAMETER\s*\(\s*(sNx|sNy|nSx|nSy|nPx|nPy)\s*=\s*(\d+)\s*\)", re.I)
@@ -73,6 +79,9 @@ def check_case(run_dir: Path, case: str) -> list[str]:
     require_contains(run_dir / "data", "usingCurvilinearGrid = .TRUE.", "usingCurvilinearGrid = .TRUE.")
     require_contains(run_dir / "eedata", "useCubedSphereExchange=.TRUE.", "useCubedSphereExchange=.TRUE.")
     require_contains(run_dir / "data.exch2", "W2_mapIO", "EXCH2 map-IO setting")
+    if case in {"TC2", "TC3"}:
+        require_contains(run_dir / "data", "useCoriolis            = .TRUE.", "useCoriolis = .TRUE.")
+        require_not_contains(run_dir / "data", "selectCoriMap", "selectCoriMap override")
 
     size_path = run_dir.parent / "code" / "SIZE.h"
     if not size_path.exists():
@@ -100,16 +109,6 @@ def check_case(run_dir: Path, case: str) -> list[str]:
     max_cfl = max(float(np.max(np.abs(u))) * dt / dx_min, float(np.max(np.abs(v))) * dt / dy_min)
     if max_cfl >= 0.5:
         raise ValueError(f"initial advective CFL too high for cube preflight: {max_cfl:.6g}")
-
-    if case == "TC2":
-        for face in range(1, 7):
-            path = run_dir / f"fCoriG.face{face:03d}.bin"
-            raw = np.fromfile(path, dtype=">f4")
-            expected = (CS32_NC + 1) * (CS32_NC + 1)
-            if raw.size != expected:
-                raise ValueError(f"{path.name} has {raw.size} values, expected {expected}")
-            if not np.isfinite(raw).all():
-                raise ValueError(f"{path.name} contains non-finite values")
 
     if case == "TC5":
         expected_bathy = wf.tc5_bathymetry(grid.lon_c, grid.lat_c)

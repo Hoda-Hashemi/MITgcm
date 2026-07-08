@@ -21,6 +21,7 @@ H0_SOLID = GH0_SOLID / G
 TC3_U0 = U0_SOLID
 TC3_LAT0 = -np.pi / 6.0
 TC3_LAT1 = np.pi / 2.0
+TC3_XE = 0.3
 TC3_LAT_GRID = np.linspace(-0.5 * np.pi, 0.5 * np.pi, 20001)
 
 TC5_U0 = 20.0
@@ -110,11 +111,9 @@ def _compact_raw(lat_rad: np.ndarray) -> np.ndarray:
     lat = np.asarray(lat_rad, dtype=np.float64)
     out = np.zeros_like(lat)
     inside = (lat > TC3_LAT0) & (lat < TC3_LAT1)
-    denom = (lat[inside] - TC3_LAT0) * (lat[inside] - TC3_LAT1)
-    out[inside] = np.exp(1.0 / denom)
-    midpoint = 0.5 * (TC3_LAT0 + TC3_LAT1)
-    norm = np.exp(1.0 / ((midpoint - TC3_LAT0) * (midpoint - TC3_LAT1)))
-    return out / norm
+    x = TC3_XE * (lat[inside] - TC3_LAT0) / (TC3_LAT1 - TC3_LAT0)
+    out[inside] = np.exp(-1.0 / x - 1.0 / (TC3_XE - x) + 4.0 / TC3_XE)
+    return out
 
 
 def tc3_speed_profile(lat_rad: np.ndarray) -> np.ndarray:
@@ -166,6 +165,40 @@ def tc3_eta(lon_rad: np.ndarray, lat_rad: np.ndarray, alpha_rad: float = 0.0) ->
     return _interp_lat(TC3_HEIGHT_GRID, lat_prime) - H0_SOLID
 
 
+def _tc3_rotated_velocity_factor(
+    lon_rad: np.ndarray,
+    lat_rad: np.ndarray,
+    alpha_rad: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    mu = (
+        -np.cos(lon_rad) * np.cos(lat_rad) * np.sin(alpha_rad)
+        + np.sin(lat_rad) * np.cos(alpha_rad)
+    )
+    lat_prime = np.arcsin(np.clip(mu, -1.0, 1.0))
+    cos_prime = np.cos(lat_prime)
+    speed = tc3_speed_profile(lat_prime)
+    return lat_prime, cos_prime, speed
+
+
+def tc3_u(lon_rad: np.ndarray, lat_rad: np.ndarray, alpha_rad: float = 0.0) -> np.ndarray:
+    _, cos_prime, speed = _tc3_rotated_velocity_factor(lon_rad, lat_rad, alpha_rad)
+    numerator = (
+        np.cos(lat_rad) * np.cos(alpha_rad)
+        + np.cos(lon_rad) * np.sin(lat_rad) * np.sin(alpha_rad)
+    )
+    out = np.zeros_like(speed, dtype=np.float64)
+    np.divide(speed * numerator, cos_prime, out=out, where=np.abs(cos_prime) > 1.0e-14)
+    return out
+
+
+def tc3_v(lon_rad: np.ndarray, lat_rad: np.ndarray, alpha_rad: float = 0.0) -> np.ndarray:
+    _, cos_prime, speed = _tc3_rotated_velocity_factor(lon_rad, lat_rad, alpha_rad)
+    numerator = -np.sin(lon_rad) * np.sin(alpha_rad)
+    out = np.zeros_like(speed, dtype=np.float64)
+    np.divide(speed * numerator, cos_prime, out=out, where=np.abs(cos_prime) > 1.0e-14)
+    return out
+
+
 def _tc3_streamfunction(lon_rad: np.ndarray, lat_rad: np.ndarray, alpha_rad: float) -> np.ndarray:
     lat_prime = rotated_latitude(lon_rad, lat_rad, alpha_rad)
     return _interp_lat(TC3_STREAMFUNCTION_GRID, lat_prime)
@@ -176,21 +209,12 @@ def tc3_velocity_fields(alpha_rad: float = 0.0, nx: int = NX, ny: int = NY) -> t
     dlat = np.pi / ny
 
     lon_u = np.arange(nx, dtype=np.float64) * dlon
-    lat_s = -0.5 * np.pi + np.arange(ny, dtype=np.float64) * dlat
-    lat_n = lat_s + dlat
-    psi_n = _tc3_streamfunction(lon_u[None, :], lat_n[:, None], alpha_rad)
-    psi_s = _tc3_streamfunction(lon_u[None, :], lat_s[:, None], alpha_rad)
-    u = (psi_n - psi_s) / (R_EARTH * dlat)
+    lat_u = -0.5 * np.pi + (np.arange(ny, dtype=np.float64) + 0.5) * dlat
+    u = tc3_u(lon_u[None, :], lat_u[:, None], alpha_rad)
 
-    lon_w = np.arange(nx, dtype=np.float64) * dlon
-    lon_e = lon_w + dlon
+    lon_v = (np.arange(nx, dtype=np.float64) + 0.5) * dlon
     lat_v = -0.5 * np.pi + np.arange(ny, dtype=np.float64) * dlat
-    psi_w = _tc3_streamfunction(lon_w[None, :], lat_v[:, None], alpha_rad)
-    psi_e = _tc3_streamfunction(lon_e[None, :], lat_v[:, None], alpha_rad)
-    dx = R_EARTH * np.cos(lat_v) * dlon
-    v = np.zeros((ny, nx), dtype=np.float64)
-    valid = np.abs(dx) > 1.0e-14
-    v[valid, :] = (psi_w[valid, :] - psi_e[valid, :]) / dx[valid, None]
+    v = tc3_v(lon_v[None, :], lat_v[:, None], alpha_rad)
     v[0, :] = 0.0
     v[-1, :] = 0.0
     return u, v
