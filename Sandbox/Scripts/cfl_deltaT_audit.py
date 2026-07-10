@@ -33,8 +33,8 @@ CANONICAL_AUDIT_RUNS = {
         "run_alpha_1.57_latlon_rotcori_12day_dt0p5": "alpha=1.57",
     },
     "TC3": {
-        "run_alpha_0_cs32": "alpha=0",
-        "run_alpha_1.0472_cs32": "alpha=1.0472",
+        "run_alpha_0_latlon_5day_45rank": "alpha=0",
+        "run_alpha_1.0472_latlon_rotcori_5day_45rank": "alpha=1.0472",
     },
 }
 

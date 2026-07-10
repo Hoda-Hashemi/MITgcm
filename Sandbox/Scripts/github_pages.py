@@ -145,6 +145,8 @@ SECTIONS = [
         "slug": "testcase3",
         "title": "Williamson TC3: Steady Geostrophic Flow with Compact Support",
         "case_dir": SANDBOX_DIR / "vortexSphere_Williamson_TC3",
+        "snapshot_folder": "Snapshots",
+        "key_days": (0.0, 1.0, 2.0, 3.0, 4.0, 5.0),
         "snapshot_fields": [
             ("eta", "Eta"),
             ("etan", "ETAN"),
@@ -346,6 +348,10 @@ CANONICAL_SETTING_RUNS = {
         ("0.05", "run_alpha_0.05_latlon_rotcori_12day"),
         ("1.52", "run_alpha_1.52_latlon_rotcori_12day"),
         ("1.57", "run_alpha_1.57_latlon_rotcori_12day_dt0p5"),
+    ),
+    "vortexSphere_Williamson_TC3": (
+        ("0", "run_alpha_0_latlon_5day_45rank"),
+        ("1.0472", "run_alpha_1.0472_latlon_rotcori_5day_45rank"),
     ),
     "vortexSphere_Williamson_TC6": (
         ("standard", "run_standard"),
@@ -626,6 +632,10 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
                 "<li>Compact support interval: <code>&theta;0=-&pi;/6</code> to "
                 "<code>&theta;1=&pi;/2</code>.</li>"
                 "<li>Runs can be rotated by <code>&alpha;</code> to move the jet away from grid lines.</li>"
+                "<li>Published c2 uses <code>&alpha;=&pi;/3</code>, <code>deltaT=0.5 s</code>, "
+                "<code>nTimeSteps=864000</code>, <code>selectCoriMap=3</code>, "
+                "<code>fCoriC/fCoriG/fCorCs</code>, and the 45-rank large-partition Slurm job "
+                "<code>job_tc3_c2_latlon_rotcori_5day_45rank.slurm</code>.</li>"
                 "</ul>"
             ),
         },
@@ -649,11 +659,11 @@ WILLIAMSON_DETAILS: Dict[str, List[Dict[str, str]]] = {
             "body": (
                 "<p>Validated with caveat. Both published TC3 setups pass preflight and saved fields "
                 "stay finite. Alpha <code>0</code> is clean through day 5 "
-                "(<code>L2_eta=8.14e-6</code>, <code>L2_u=1.39e-5</code>, "
-                "<code>L2_v=1.00e-4 m s^-1</code>). The rotated alpha <code>1.0472</code> run is "
+                "(<code>L2_eta=1.79e-5</code>, <code>L2_u=1.82e-5</code>, "
+                "<code>L2_v=1.06e-4 m s^-1</code>). The rotated alpha <code>1.0472</code> run is "
                 "finite and correctly staged, but it shows larger steady-state drift "
-                "(day-5 <code>L2_eta=2.65e-4</code>, <code>L2_u=3.38e-3</code>, "
-                "<code>L2_v=9.29e-2 m s^-1</code>) and nontrivial energy/PV drift, so it should "
+                "(day-5 <code>L2_eta=9.54e-4</code>, <code>L2_u=1.93e-2</code>, "
+                "<code>L2_v=1.63e-1 m s^-1</code>) and nontrivial energy/PV drift, so it should "
                 "not be described as a perfect verification pass.</p>"
             ),
         },
@@ -1292,7 +1302,7 @@ def section_case_configs(section: Dict[str, object]) -> List[Dict[str, object]]:
         return []
 
     case: dict[str, object] = {"case_dir": case_dir}
-    for key in ("label", "output_name", "snapshot_fields", "key_days"):
+    for key in ("label", "output_name", "snapshot_folder", "snapshot_fields", "key_days"):
         if key in section:
             case[key] = section[key]
     return [case]
@@ -1322,7 +1332,11 @@ def case_snapshot_root(case: Dict[str, object]) -> Optional[Path]:
     output_name = case.get("output_name") or infer_case_output_name(case_path)
     if output_name is None:
         return None
-    return preferred_snapshot_root(SANDBOX_OUTPUT_ROOT / str(output_name))
+    output_root = SANDBOX_OUTPUT_ROOT / str(output_name)
+    snapshot_folder = case.get("snapshot_folder")
+    if snapshot_folder:
+        return output_root / str(snapshot_folder)
+    return preferred_snapshot_root(output_root)
 
 def case_output_root(case: Dict[str, object]) -> Optional[Path]:
     case_dir = case.get("case_dir")
@@ -2022,7 +2036,7 @@ def render_table(
     )
 
 def parse_slurm_export(text: str, name: str) -> Optional[str]:
-    match = re.search(rf"^\s*export\s+{re.escape(name)}=(.+?)\s*$", text, re.M)
+    match = re.search(rf"^\s*(?:export\s+)?{re.escape(name)}=(.+?)\s*$", text, re.M)
     return match.group(1).strip().strip("'\"") if match else None
 
 def expand_job_path(raw: Optional[str], variables: Dict[str, str]) -> Optional[Path]:
@@ -2051,7 +2065,7 @@ def size_path_for_run(case_path: Path, run_dir: Path, fallback: Path) -> Path:
         job_run_dir = expand_job_path(parse_slurm_export(text, "RUN_DIR"), variables)
         if job_run_dir is None or job_run_dir.resolve() != run_dir.resolve():
             continue
-        for raw in (parse_slurm_export(text, "BUILD_MODS_DIR"), "$BUILD_DIR/code"):
+        for raw in (parse_slurm_export(text, "MODS_DIR"), parse_slurm_export(text, "BUILD_MODS_DIR"), "$BUILD_DIR/code"):
             candidate = expand_job_path(raw, variables)
             if candidate is not None and (candidate / "SIZE.h").exists():
                 return candidate / "SIZE.h"
