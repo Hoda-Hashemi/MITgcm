@@ -1,0 +1,21 @@
+# header of file: dynStDiag
+# frequency (s):     -86400.000000
+# phase (s)    :          0.000000
+# Regions      :   0
+# Fields       : ETAN     ETANSQ   momKE   
+# Nb of levels :    1   1   1
+# end of header ------------------------------------------------------------
+ 
+ field : ETAN     ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0 -6.3480121665569E+02  5.6778397582115E+02 -1.9043870849609E+03 -4.3142790673301E-08  5.1006447190979E+14
+ 
+ field : ETANSQ   ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  7.2535122786681E+05  9.6713557018516E+05  1.8613003870802E-15  3.6266901693660E+06  5.1006447190979E+14
+ 
+ field : momKE    ; Iter =         0 ; region #   0 ; nb.Lev =   1
+ k | --   Average    -- | --   Std.Dev    -- | --     min      -- | --     max      -- | --    Vol
+  0  4.9688883207662E+02  2.2221666345945E+02  7.0950415410037E-03  7.4534454849587E+02  1.5286335847784E+18
+ 
+# records End here.
