@@ -1,0 +1,14 @@
+ nDims = [   2 ];
+ dimList = [
+  1440,    1, 1440,
+   720,    1,  720
+ ];
+ dataprec = [ 'float64' ];
+ nrecords = [          5 ];
+ timeStepNumber = [      15840 ];
+ timeInterval = [  9.504000000000E+05 ];
+ missingValue = [ -9.99000000000000E+02 ];
+ nFlds = [    5 ];
+ fldList = {
+ 'UVEL    ' 'VVEL    ' 'ETAN    ' 'ETANSQ  ' 'momKE   '
+ };
