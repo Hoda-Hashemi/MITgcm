@@ -155,5 +155,10 @@ Sandbox/vortexSphere_Williamson_TC2/build
 
 Sandbox/*/logs
 Sandbox/*/run_*/STDOUT.combined
+Sandbox/*/run_*/STDOUT.[0-9]*
+STDOUT.[0-9]*
+
+# Local scratch/test checkout; not part of this repository.
+MITgcmTest/
 # Sandbox/vortexSphere_Williamson_TC2/run_*/
 # Sandbox/vortexSphere_Williamson_TC1/run_*/

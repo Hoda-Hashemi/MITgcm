@@ -1,0 +1,78 @@
+# ===============================================================
+# Williamson TC5 zonal flow over an isolated mountain.
+# One-layer, global lat-lon shallow-water solve with topography.
+# ===============================================================
+
+# Continuous equation parameters
+&PARM01
+# Planet / fluid
+ omega = 7.292E-5,
+ gravity = 9.81,
+ rhoConst = 1.,
+ buoyancyRelation = 'OCEANIC',
+ eosType = 'LINEAR',
+
+# Dynamics switches
+ rigidLid               = .FALSE.,
+ implicitFreeSurface    = .TRUE.,
+ exactConserv           = .TRUE.,
+ momStepping            = .TRUE.,
+ momAdvection           = .TRUE.,
+ vectorInvariantMomentum= .TRUE.,
+ useCoriolis            = .TRUE.,
+ selectCoriMap          = 2,
+ tempStepping           = .FALSE.,
+ saltStepping           = .FALSE.,
+
+# Viscosity / diffusion
+ viscAh = 1.E1,
+ viscA4 = 0.,
+ diffKhT = 0.,
+ no_slip_sides = .FALSE.,
+ no_slip_bottom = .FALSE.,
+ hFacMin = 1.E-5,
+ hFacMinDr = 0.5,
+
+# I/O precision
+ readBinaryPrec = 32,
+ writeBinaryPrec = 64,
+ useSingleCpuIO = .TRUE.,
+/
+
+# Elliptic solver parameters
+&PARM02
+ cg2dMaxIters = 5000,
+ cg2dTargetResidual = 1.E-10,
+ cg2dPreCondFreq = 1,
+ useSRCGSolver = .TRUE.,
+/
+
+# Time stepping parameters
+&PARM03
+ nIter0=0,
+ nTimeSteps=43200,
+ abEps=0.1,
+ deltaT=30.0,
+ cAdjFreq=0.,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ dumpFreq=86400.,
+ monitorSelect=1,
+ monitorFreq=300.,
+/
+
+# Grid parameters
+&PARM04
+ usingCurvilinearGrid = .TRUE.,
+ radius_fromHorizGrid = 6370.E3,
+ rSphere = 6371000.,
+ delR = 5960.,
+/
+
+# Input datasets
+&PARM05
+ bathyFile = 'bathymetry_mountain_tc5.bin',
+ pSurfInitFile = 'eta_init.bin',
+ uVelInitFile  = 'u_init.bin',
+ vVelInitFile  = 'v_init.bin',
+/

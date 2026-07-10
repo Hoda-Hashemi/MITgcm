@@ -1,6 +1,176 @@
 {
   "alpha": "1.57",
   "case": "TC2",
+  "field_results": {
+    "eta": {
+      "display": "eta",
+      "field": "Eta",
+      "iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800,
+        2073600
+      ],
+      "saved_iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800,
+        2073600
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "etan": {
+      "display": "ETAN",
+      "field": "ETAN",
+      "iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "saved_iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "phi": {
+      "display": "PhiVEL",
+      "field": "PhiVEL",
+      "iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "saved_iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "psi": {
+      "display": "PsiVEL",
+      "field": "PsiVEL",
+      "iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "saved_iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "velocity_magnitude": {
+      "display": "velocity magnitude",
+      "field": "velocity_magnitude",
+      "iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "saved_iterations": [
+        0,
+        172800,
+        345600,
+        518400,
+        691200,
+        864000,
+        1036800,
+        1209600,
+        1382400,
+        1555200,
+        1728000,
+        1900800
+      ],
+      "skipped_nonfinite_iterations": []
+    }
+  },
+  "plot_mode": "native",
   "product": "snapshots",
   "saved": [
     "eta",
@@ -9,5 +179,6 @@
     "phi",
     "velocity_magnitude"
   ],
-  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.57"
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC2/run_alpha_1.57_latlon_rotcori_12day_dt0p5",
+  "valid": true
 }

@@ -1,0 +1,14 @@
+ nDims = [   2 ];
+ dimList = [
+    32,    1,   32,
+   192,    1,  192
+ ];
+ dataprec = [ 'float64' ];
+ nrecords = [          3 ];
+ timeStepNumber = [       5760 ];
+ timeInterval = [  3.456000000000E+05 ];
+ missingValue = [ -9.99000000000000E+02 ];
+ nFlds = [    3 ];
+ fldList = {
+ 'WVELMASS' 'PhiVEL  ' 'PsiVEL  '
+ };

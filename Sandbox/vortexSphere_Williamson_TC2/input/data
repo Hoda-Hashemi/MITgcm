@@ -18,8 +18,8 @@
  exactConserv           = .TRUE.,
  momStepping            = .TRUE.,
  momAdvection           = .TRUE.,
+ vectorInvariantMomentum= .TRUE.,
  useCoriolis            = .TRUE.,
- selectCoriMap          = 3,
  tempStepping           = .FALSE.,
  saltStepping           = .FALSE.,
 

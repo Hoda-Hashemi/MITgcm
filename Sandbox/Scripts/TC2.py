@@ -27,12 +27,16 @@ TC2_U0 = 2.0 * math.pi * TC2_R_EARTH / (12.0 * DAY)
 TC2_GH0 = 2.94e4
 TC2_H0 = TC2_GH0 / TC2_G
 
-alpha_case = "run_alpha_0"
 RUN_DIRS = [
     Path(item).expanduser()
     for item in os.environ.get("TC2_RUN_DIRS", "").split(os.pathsep)
     if item
-] or [CASE_DIR / alpha_case]
+] or [
+    CASE_DIR / "run_alpha_0_cs32",
+    CASE_DIR / "run_alpha_0.05_cs32",
+    CASE_DIR / "run_alpha_1.52_cs32",
+    CASE_DIR / "run_alpha_1.57_cs32",
+]
 MAKE_SNAPSHOTS = True
 MAKE_ERROR_ANALYSIS = True
 MAKE_POSTPROCESSING = True

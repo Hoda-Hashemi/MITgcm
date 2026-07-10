@@ -1,0 +1,609 @@
+MITgcm run inventory
+generated_utc: 2026-07-04T21:09:24+00:00
+run_dir: Sandbox/vortexSphere_Williamson_TC7/run_c2_19790116_0000
+case_code: TC7
+alpha_label: 0
+log_file: run_inventory.log
+
+Summary
+  run_dir_files: 341
+  run_dir_bytes: 91009163 (86.8 MiB)
+  run_output_groups: 42
+  requested_diagnostic_streams: 3
+  generated_product_dirs: 3
+  generated_product_files: 84
+  plotted_files: 81
+  computed_files: 0
+  docs_indexed_assets: 27
+
+Diagnostics request
+  data_diagnostics: Sandbox/vortexSphere_Williamson_TC7/run_c2_19790116_0000/data.diagnostics
+  available_diagnostics: Sandbox/vortexSphere_Williamson_TC7/run_c2_19790116_0000/available_diagnostics.log
+  [diagnostics stream 2] fileName=dyn_Aux frequency=-86400. phase=0.
+    WVELMASS: units=m/s; levels=1; title=Vertical Mass-Weighted Comp of Velocity
+    PhiVEL: units=m^2/s; levels=1; title=Horizontal Velocity Potential (m^2/s)
+    PsiVEL: units=m.m^2/s; levels=1; title=Horizontal Velocity Stream-Function
+  [diagnostics stream 3] fileName=dynDiag frequency=-86400. phase=0.
+    UVEL: units=m/s; levels=1; title=Zonal Component of Velocity (m/s)
+    VVEL: units=m/s; levels=1; title=Meridional Component of Velocity (m/s)
+    ETAN: units=m; levels=1; title=Surface Height Anomaly
+    ETANSQ: units=m^2; levels=1; title=Square of Surface Height Anomaly
+    momKE: units=m^2/s^2; levels=1; title=Kinetic Energy (in momentum Eq.)
+  [statistics stream 1] fileName=dynStDiag frequency=-86400. phase=0.
+    ETAN: units=m; levels=1; title=Surface Height Anomaly
+    ETANSQ: units=m^2; levels=1; title=Square of Surface Height Anomaly
+    momKE: units=m^2/s^2; levels=1; title=Kinetic Energy (in momentum Eq.)
+
+Run directory outputs
+  AngleCS: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  AngleSN: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DRC: data=1 meta=1 iterations=none bytes=165 (165 B)
+  DRF: data=1 meta=1 iterations=none bytes=137 (137 B)
+  DXC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DXF: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DXG: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DXV: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DYC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DYF: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DYG: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  DYU: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  Depth: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  Eta: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  PH: data=5 meta=5 iterations=3456..17280 (5) bytes=246575 (240.8 KiB)
+  PHL: data=5 meta=5 iterations=3456..17280 (5) bytes=246575 (240.8 KiB)
+  PHrefC: data=1 meta=1 iterations=none bytes=137 (137 B)
+  PHrefF: data=1 meta=1 iterations=none bytes=165 (165 B)
+  RAC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  RAS: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  RAW: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  RAZ: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  RC: data=1 meta=1 iterations=none bytes=137 (137 B)
+  RF: data=1 meta=1 iterations=none bytes=165 (165 B)
+  RhoRef: data=1 meta=1 iterations=none bytes=137 (137 B)
+  S: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  T: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  U: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  U2zonDir: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  V: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  V2zonDir: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  W: data=6 meta=6 iterations=0..17280 (6) bytes=295890 (289.0 KiB)
+  XC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  XG: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  YC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  YG: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  dynDiag: data=5 meta=5 iterations=0..13824 (5) bytes=1230495 (1.2 MiB)
+  dyn_Aux: data=5 meta=5 iterations=0..13824 (5) bytes=738865 (721.5 KiB)
+  hFacC: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  hFacS: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  hFacW: data=1 meta=1 iterations=none bytes=49281 (48.1 KiB)
+  pickup.ckptA: data=1 meta=1 iterations=none bytes=442708 (432.3 KiB)
+
+Generated products
+  output_dir: Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000
+    case=TC7 product=snapshots alpha=c2_19790116_0000
+    saved: eta, etan, psi, phi, velocity_magnitude
+    plotted_files: 27
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/eta/tc7_eta_day_05.00_iter_0000017280.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/etan/tc7_etan_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/etan/tc7_etan_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/etan/tc7_etan_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/etan/tc7_etan_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/etan/tc7_etan_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/phi/tc7_phi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/phi/tc7_phi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/phi/tc7_phi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/phi/tc7_phi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/phi/tc7_phi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/psi/tc7_psi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/psi/tc7_psi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/psi/tc7_psi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/psi/tc7_psi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/psi/tc7_psi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_05.00_iter_0000017280.png
+    computed_files: 0
+    other_files: 1
+      Sandbox/output/TestCase7/Snapshots/alpha_c2_19790116_0000/manifest.json
+  output_dir: Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000
+    case=TC7 product=snapshots alpha=c2_19790116_0000
+    saved: eta, etan, psi, phi, velocity_magnitude
+    plotted_files: 27
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/eta/tc7_eta_day_05.00_iter_0000017280.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/etan/tc7_etan_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/etan/tc7_etan_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/etan/tc7_etan_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/etan/tc7_etan_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/etan/tc7_etan_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/phi/tc7_phi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/phi/tc7_phi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/phi/tc7_phi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/phi/tc7_phi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/phi/tc7_phi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/psi/tc7_psi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/psi/tc7_psi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/psi/tc7_psi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/psi/tc7_psi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/psi/tc7_psi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_05.00_iter_0000017280.png
+    computed_files: 0
+    other_files: 1
+      Sandbox/output/TestCase7/Snapshots_cube/alpha_c2_19790116_0000/manifest.json
+  output_dir: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000
+    case=TC7 product=snapshots alpha=c2_19790116_0000
+    saved: eta, etan, psi, phi, velocity_magnitude
+    plotted_files: 27
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_05.00_iter_0000017280.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_00.00_iter_0000000000.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_01.00_iter_0000003456.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_02.00_iter_0000006912.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_03.00_iter_0000010368.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_04.00_iter_0000013824.png
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_05.00_iter_0000017280.png
+    computed_files: 0
+    other_files: 1
+      Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/manifest.json
+
+Sent to docs index
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_01.00_iter_0000003456.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_01.00_iter_0000003456.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_02.00_iter_0000006912.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_02.00_iter_0000006912.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_03.00_iter_0000010368.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_03.00_iter_0000010368.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_04.00_iter_0000013824.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_04.00_iter_0000013824.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_05.00_iter_0000017280.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/eta/tc7_eta_day_05.00_iter_0000017280.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_01.00_iter_0000003456.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_01.00_iter_0000003456.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_02.00_iter_0000006912.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_02.00_iter_0000006912.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_03.00_iter_0000010368.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_03.00_iter_0000010368.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_04.00_iter_0000013824.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/etan/tc7_etan_day_04.00_iter_0000013824.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_01.00_iter_0000003456.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_01.00_iter_0000003456.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_02.00_iter_0000006912.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_02.00_iter_0000006912.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_03.00_iter_0000010368.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_03.00_iter_0000010368.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_04.00_iter_0000013824.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/phi/tc7_phi_day_04.00_iter_0000013824.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_01.00_iter_0000003456.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_01.00_iter_0000003456.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_02.00_iter_0000006912.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_02.00_iter_0000006912.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_03.00_iter_0000010368.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_03.00_iter_0000010368.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_04.00_iter_0000013824.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/psi/tc7_psi_day_04.00_iter_0000013824.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_00.00_iter_0000000000.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_00.00_iter_0000000000.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_01.00_iter_0000003456.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_01.00_iter_0000003456.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_02.00_iter_0000006912.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_02.00_iter_0000006912.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_03.00_iter_0000010368.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_03.00_iter_0000010368.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_04.00_iter_0000013824.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_04.00_iter_0000013824.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+  output: Sandbox/output/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_05.00_iter_0000017280.png
+    docs_asset: docs/assets/williamson/TestCase7/Snapshots_latlon/alpha_c2_19790116_0000/velocity_magnitude/tc7_velocity_magnitude_day_05.00_iter_0000017280.png
+    referenced_by: docs/fragments/testcase7.html, docs/index.html
+
+Run directory file manifest
+  AngleCS.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  AngleCS.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  AngleSN.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  AngleSN.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  DRC.data bytes=16 (16 B) mtime_utc=2026-07-04T21:01:00+00:00
+  DRC.meta bytes=149 (149 B) mtime_utc=2026-07-04T21:01:00+00:00
+  DRF.data bytes=8 (8 B) mtime_utc=2026-07-04T21:01:00+00:00
+  DRF.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  DXC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DXC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DXF.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DXF.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DXG.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DXG.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DXV.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DXV.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DYC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DYC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DYF.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DYF.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DYG.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DYG.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  DYU.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  DYU.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  Depth.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  Depth.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  Eta.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  Eta.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  Eta.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  Eta.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  Eta.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  Eta.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  Eta.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  Eta.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  Eta.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  Eta.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  Eta.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  Eta.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  PH.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  PH.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  PH.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  PH.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  PH.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  PH.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  PH.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  PH.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  PH.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  PH.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  PHL.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  PHL.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  PHL.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  PHL.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  PHL.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  PHL.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  PHL.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  PHL.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  PHL.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  PHL.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  PHrefC.data bytes=8 (8 B) mtime_utc=2026-07-04T21:01:00+00:00
+  PHrefC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  PHrefF.data bytes=16 (16 B) mtime_utc=2026-07-04T21:01:00+00:00
+  PHrefF.meta bytes=149 (149 B) mtime_utc=2026-07-04T21:01:00+00:00
+  RAC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  RAC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  RAS.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  RAS.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  RAW.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  RAW.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  RAZ.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  RAZ.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  RC.data bytes=8 (8 B) mtime_utc=2026-07-04T21:01:00+00:00
+  RC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  RF.data bytes=16 (16 B) mtime_utc=2026-07-04T21:01:00+00:00
+  RF.meta bytes=149 (149 B) mtime_utc=2026-07-04T21:01:00+00:00
+  RhoRef.data bytes=8 (8 B) mtime_utc=2026-07-04T21:00:59+00:00
+  RhoRef.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  S.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  S.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  S.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  S.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  S.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  S.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  S.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  S.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  S.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  S.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  S.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  S.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  STDERR.0000 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0001 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0002 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0003 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0004 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0005 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0006 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0007 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0008 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0009 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0010 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0011 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0012 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0013 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0014 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0015 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0016 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0017 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0018 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0019 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0020 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0021 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0022 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0023 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0024 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0025 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0026 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0027 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0028 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0029 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0030 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0031 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0032 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0033 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0034 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0035 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0036 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0037 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0038 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0039 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0040 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0041 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0042 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0043 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0044 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0045 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0046 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDERR.0047 bytes=0 (0 B) mtime_utc=2026-07-04T21:00:58+00:00
+  STDOUT.0000 bytes=6728381 (6.4 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0001 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0002 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0003 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0004 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0005 bytes=1594084 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0006 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0007 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0008 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0009 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0010 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0011 bytes=1594168 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0012 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0013 bytes=1594173 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0014 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0015 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0016 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0017 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0018 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0019 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0020 bytes=1594084 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0021 bytes=1594084 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0022 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0023 bytes=1594069 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0024 bytes=1594168 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0025 bytes=1594168 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0026 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0027 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0028 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0029 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0030 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0031 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0032 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0033 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0034 bytes=1594074 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0035 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0036 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0037 bytes=1594084 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0038 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0039 bytes=1594069 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0040 bytes=1594084 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0041 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0042 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0043 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0044 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0045 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0046 bytes=1594079 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  STDOUT.0047 bytes=1594069 (1.5 MiB) mtime_utc=2026-07-04T21:01:32+00:00
+  T.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  T.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  T.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  T.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  T.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  T.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  T.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  T.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  T.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  T.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  T.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  T.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  U2zonDir.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  U2zonDir.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  U.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  U.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  U.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  U.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  U.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  U.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  U.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  U.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  U.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  U.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  U.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  U.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  V2zonDir.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  V2zonDir.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  V.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  V.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  V.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  V.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  V.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  V.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  V.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  V.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  V.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  V.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  V.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  V.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  W.0000000000.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  W.0000000000.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:00+00:00
+  W.0000003456.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  W.0000003456.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:07+00:00
+  W.0000006912.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  W.0000006912.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:14+00:00
+  W.0000010368.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  W.0000010368.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:22+00:00
+  W.0000013824.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  W.0000013824.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:30+00:00
+  W.0000017280.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  W.0000017280.meta bytes=163 (163 B) mtime_utc=2026-07-04T21:01:42+00:00
+  XC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  XC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  XG.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  XG.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  YC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  YC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  YG.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  YG.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:00:59+00:00
+  available_diagnostics.log bytes=18604 (18.2 KiB) mtime_utc=2026-07-04T21:00:59+00:00
+  bathymetry_tc7.bin bytes=24576 (24.0 KiB) mtime_utc=2026-07-04T21:00:52+00:00
+  data bytes=1659 (1.6 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  data.diagnostics bytes=2878 (2.8 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  data.exch2 bytes=68 (68 B) mtime_utc=2026-07-04T21:00:50+00:00
+  data.pkg bytes=49 (49 B) mtime_utc=2026-07-04T21:00:50+00:00
+  diags_CScorners.0000000000.txt bytes=400 (400 B) mtime_utc=2026-07-04T21:01:32+00:00
+  dynDiag.0000000000.data bytes=245760 (240.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  dynDiag.0000000000.meta bytes=339 (339 B) mtime_utc=2026-07-04T21:01:00+00:00
+  dynDiag.0000003456.data bytes=245760 (240.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  dynDiag.0000003456.meta bytes=339 (339 B) mtime_utc=2026-07-04T21:01:07+00:00
+  dynDiag.0000006912.data bytes=245760 (240.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  dynDiag.0000006912.meta bytes=339 (339 B) mtime_utc=2026-07-04T21:01:14+00:00
+  dynDiag.0000010368.data bytes=245760 (240.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  dynDiag.0000010368.meta bytes=339 (339 B) mtime_utc=2026-07-04T21:01:22+00:00
+  dynDiag.0000013824.data bytes=245760 (240.0 KiB) mtime_utc=2026-07-04T21:01:31+00:00
+  dynDiag.0000013824.meta bytes=339 (339 B) mtime_utc=2026-07-04T21:01:31+00:00
+  dynStDiag.0000000000.txt bytes=4447 (4.3 KiB) mtime_utc=2026-07-04T21:01:32+00:00
+  dyn_Aux.0000000000.data bytes=147456 (144.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  dyn_Aux.0000000000.meta bytes=317 (317 B) mtime_utc=2026-07-04T21:01:00+00:00
+  dyn_Aux.0000003456.data bytes=147456 (144.0 KiB) mtime_utc=2026-07-04T21:01:07+00:00
+  dyn_Aux.0000003456.meta bytes=317 (317 B) mtime_utc=2026-07-04T21:01:07+00:00
+  dyn_Aux.0000006912.data bytes=147456 (144.0 KiB) mtime_utc=2026-07-04T21:01:14+00:00
+  dyn_Aux.0000006912.meta bytes=317 (317 B) mtime_utc=2026-07-04T21:01:14+00:00
+  dyn_Aux.0000010368.data bytes=147456 (144.0 KiB) mtime_utc=2026-07-04T21:01:22+00:00
+  dyn_Aux.0000010368.meta bytes=317 (317 B) mtime_utc=2026-07-04T21:01:22+00:00
+  dyn_Aux.0000013824.data bytes=147456 (144.0 KiB) mtime_utc=2026-07-04T21:01:30+00:00
+  dyn_Aux.0000013824.meta bytes=317 (317 B) mtime_utc=2026-07-04T21:01:30+00:00
+  eedata bytes=286 (286 B) mtime_utc=2026-07-04T21:00:50+00:00
+  eedata.mth bytes=275 (275 B) mtime_utc=2026-07-04T21:00:50+00:00
+  eta_init.bin bytes=24576 (24.0 KiB) mtime_utc=2026-07-04T21:00:52+00:00
+  gendata_ref.py bytes=3172 (3.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  hFacC.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  hFacC.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  hFacS.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  hFacS.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  hFacW.data bytes=49152 (48.0 KiB) mtime_utc=2026-07-04T21:01:00+00:00
+  hFacW.meta bytes=129 (129 B) mtime_utc=2026-07-04T21:01:00+00:00
+  mitgcmuv bytes=2350200 (2.2 MiB) mtime_utc=2026-07-04T21:00:50+00:00
+  pickup.ckptA.data bytes=442368 (432.0 KiB) mtime_utc=2026-07-04T21:01:42+00:00
+  pickup.ckptA.meta bytes=340 (340 B) mtime_utc=2026-07-04T21:01:42+00:00
+  tile001.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  tile002.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  tile003.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  tile004.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  tile005.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  tile006.mitgrid bytes=139392 (136.1 KiB) mtime_utc=2026-07-04T21:00:50+00:00
+  u_init.bin bytes=24576 (24.0 KiB) mtime_utc=2026-07-04T21:00:52+00:00
+  v_init.bin bytes=24576 (24.0 KiB) mtime_utc=2026-07-04T21:00:52+00:00
+  w2_tile_topology.0000.log bytes=26960 (26.3 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0001.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0002.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0003.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0004.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0005.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0006.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0007.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0008.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0009.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0010.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0011.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0012.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0013.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0014.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0015.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0016.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0017.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0018.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0019.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0020.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0021.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0022.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0023.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0024.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0025.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0026.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0027.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0028.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0029.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0030.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0031.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0032.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0033.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0034.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0035.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0036.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0037.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0038.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0039.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0040.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0041.log bytes=3457 (3.4 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0042.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0043.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0044.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0045.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0046.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00
+  w2_tile_topology.0047.log bytes=3122 (3.0 KiB) mtime_utc=2026-07-04T21:00:48+00:00

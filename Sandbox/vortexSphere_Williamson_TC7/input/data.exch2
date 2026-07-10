@@ -1,0 +1,4 @@
+# EXCH2 cubed-sphere topology.
+ &W2_EXCH2_PARM01
+  W2_mapIO = 1,
+ &

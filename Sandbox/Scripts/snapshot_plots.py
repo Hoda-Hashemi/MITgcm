@@ -568,8 +568,8 @@ def save_velocity_magnitude(
     output_root: Path,
     delta_t: float,
     *,
-    u_candidates: tuple[str, ...] = ("UVEL", "UVELMASS", "U"),
-    v_candidates: tuple[str, ...] = ("VVEL", "VVELMASS", "V"),
+    u_candidates: tuple[str, ...] = ("U", "UVEL", "UVELMASS"),
+    v_candidates: tuple[str, ...] = ("V", "VVEL", "VVELMASS"),
     dpi: int = 220,
     plot_mode: str = "auto",
 ) -> SnapshotResult:

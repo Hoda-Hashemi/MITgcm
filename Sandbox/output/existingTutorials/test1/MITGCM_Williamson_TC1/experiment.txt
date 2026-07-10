@@ -1,0 +1,62 @@
+experiment_name: MITGCM_Williamson_TC1
+setup_root: Sandbox/MITgcm_Williamson_TC1
+source_verification: verification/advect_cs
+williamson_case: TC1
+purpose: Williamson TC1 pure passive advection, advect_cs only
+logic:
+  advect_cs is kept because it is the MITgcm cubed-sphere pure-advection tutorial.
+  alpha is now read at runtime from tc1_alpha.txt.
+  velocity uses rotated TC1 solid-body streamfunction.
+  non-advect_cs tutorials were removed from this staged existingTutorials folder.
+settings:
+  momStepping: false
+  explicit_diffusion: zero
+  tempAdvScheme: 33
+  saltAdvScheme: 33
+  endTime_seconds: 1036800
+  mpi_tasks_per_run: 6
+prepared_jobs:
+  c1: Sandbox/MITgcm_Williamson_TC1/jobs/large/job_tc1_c1.slurm
+  c2: Sandbox/MITgcm_Williamson_TC1/jobs/large/job_tc1_c2.slurm
+  c3: Sandbox/MITgcm_Williamson_TC1/jobs/large/job_tc1_c3.slurm
+  c4: Sandbox/MITgcm_Williamson_TC1/jobs/large/job_tc1_c4.slurm
+  submission_helper: Sandbox/MITgcm_Williamson_TC1/jobs/submission_p_large.sh
+rotation_angles_completed:
+  alpha_0:
+    alpha: 0.0
+    job_id: 817473
+    node: onode13
+    status: completed
+    elapsed_seconds: 273
+  alpha_0.05:
+    alpha: 0.05
+    job_id: 817474
+    node: onode13
+    status: completed
+    elapsed_seconds: 258
+  alpha_1.52:
+    alpha: 1.52
+    job_id: 817475
+    node: onode13
+    status: completed
+    elapsed_seconds: 258
+  alpha_1.57:
+    alpha: 1.57
+    job_id: 817476
+    node: onode13
+    status: completed
+    elapsed_seconds: 258
+postprocessing:
+  script: Sandbox/MITgcm_Williamson_TC1/tools/postprocess_advect_cs.py
+  output_root: Sandbox/output/existingTutorials/test1/MITGCM_Williamson_TC1/advect_cs
+  plots:
+    png: 84
+    pdf: 84
+    csv: 8
+  layout: unfolded cubed-sphere net
+  colormap: seismic
+  snapshots_per_alpha: first, middle, final
+  diagnostics: all 13 output iterations per alpha
+  cleanup:
+    run_product_meta_files_remaining: 0
+    python_cache_removed: true

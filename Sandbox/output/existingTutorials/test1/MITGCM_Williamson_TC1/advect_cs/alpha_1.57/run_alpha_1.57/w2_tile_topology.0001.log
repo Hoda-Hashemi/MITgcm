@@ -1,0 +1,40 @@
+(PID.TID 0001.0001) W2_E2SETUP: number of Active Tiles =       6
+(PID.TID 0001.0001) W2_E2SETUP: number of Blank Tiles  =       0
+(PID.TID 0001.0001) W2_E2SETUP: Total number of Tiles  =       6
+(PID.TID 0001.0001) W2_SET_CS6_FACETS: preDefTopol=  3 selected
+(PID.TID 0001.0001) W2_SET_CS6_FACETS: facet-dims Unset; assume nRd=nGr=nBl=   32
+(PID.TID 0001.0001) W2_E2SETUP: Total number of Facets =       6
+(PID.TID 0001.0001) W2_SET_F2F_INDEX: index matrix for connected Facet-Edges:
+(PID.TID 0001.0001) W2_SET_MAP_TILES: tile mapping within facet and global Map:
+(PID.TID 0001.0001)  Global Map (IO): X-size=     192 , Y-size=      32
+(PID.TID 0001.0001) W2_SET_MAP_TILES: tile offset within facet and global Map:
+- facet  1 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+- facet  2 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+- facet  3 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+- facet  4 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+- facet  5 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+- facet  6 : X-size=    32 , Y-size=    32 ;       1 tiles (Tx,Ty=   1,   1)
+(PID.TID 0001.0001) W2_SET_MAP_CUMSUM: setting Facet Matrix for CUMUL-SUM
+(PID.TID 0001.0001) W2_SET_MAP_CUMSUM: set    5 /   6 active facets (pass,type=   1, 1)
+(PID.TID 0001.0001) W2_SET_MAP_CUMSUM: done (skip Tile Matrix setting)
+(PID.TID 0001.0001) W2_SET_TILE2TILES: tile neighbours and index connection:
+(PID.TID 0001.0001) current Max.Nb.Neighbours (e.g., on tile    1 ) =  4
+(PID.TID 0001.0001) ===== W2 TILE TOPOLOGY =====
+(PID.TID 0001.0001)  TILE:     3 (bi,bj=   1   1 ), Nb of Neighbours =  4
+(PID.TID 0001.0001)     NEIGHBOUR  1 = TILE       5 (n=  4) Comm = MSG (PROC=       3)
+(PID.TID 0001.0001)     NEIGHBOUR  2 = TILE       2 (n=  1) Comm = MSG (PROC=       4)
+(PID.TID 0001.0001)     NEIGHBOUR  3 = TILE       4 (n=  4) Comm = MSG (PROC=       5)
+(PID.TID 0001.0001)     NEIGHBOUR  4 = TILE       1 (n=  1) Comm = MSG (PROC=       1)
+Tile       3 (pr=       2) sends pts i=  36:  -3, j=  29:  32
+                              to pts i=  -3:   0, j=  -3:  36 in tile        5 (pr=       3)
+Tile       3 (pr=       2) sends pts i=  -3:  36, j=   1:   4
+                              to pts i=  -3:  36, j=  33:  36 in tile        2 (pr=       4)
+Tile       3 (pr=       2) sends pts i=  29:  32, j=  -3:  36
+                              to pts i=  -3:   0, j=  -3:  36 in tile        4 (pr=       5)
+Tile       3 (pr=       2) sends pts i=   1:   4, j=  36:  -3
+                              to pts i=  -3:  36, j=  33:  36 in tile        1 (pr=       1)
+Tile       3 (pr=       2) recv pts i=  -3:  36, j=  33:  36 from tile       5 (pr=       3)
+Tile       3 (pr=       2) recv pts i=  -3:  36, j=  -3:   0 from tile       2 (pr=       4)
+Tile       3 (pr=       2) recv pts i=  33:  36, j=  -3:  36 from tile       4 (pr=       5)
+Tile       3 (pr=       2) recv pts i=  -3:   0, j=  -3:  36 from tile       1 (pr=       1)
+(PID.TID 0001.0001) ===  End TOPOLOGY report ===

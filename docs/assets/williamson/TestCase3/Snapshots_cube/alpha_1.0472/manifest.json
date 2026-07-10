@@ -1,0 +1,114 @@
+{
+  "alpha": "1.0472",
+  "case": "TC3",
+  "field_results": {
+    "eta": {
+      "display": "eta",
+      "field": "Eta",
+      "iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800,
+        576000
+      ],
+      "saved_iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800,
+        576000
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "etan": {
+      "display": "ETAN",
+      "field": "ETAN",
+      "iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "saved_iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "phi": {
+      "display": "PhiVEL",
+      "field": "PhiVEL",
+      "iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "saved_iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "psi": {
+      "display": "PsiVEL",
+      "field": "PsiVEL",
+      "iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "saved_iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "skipped_nonfinite_iterations": []
+    },
+    "velocity_magnitude": {
+      "display": "velocity magnitude",
+      "field": "velocity_magnitude",
+      "iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "saved_iterations": [
+        0,
+        115200,
+        230400,
+        345600,
+        460800
+      ],
+      "skipped_nonfinite_iterations": []
+    }
+  },
+  "plot_mode": "cube",
+  "product": "snapshots",
+  "saved": [
+    "eta",
+    "etan",
+    "psi",
+    "phi",
+    "velocity_magnitude"
+  ],
+  "source_run": "/scratch/p8190783-hmh85/MITgcm/Sandbox/vortexSphere_Williamson_TC3/run_alpha_1.0472_cs32",
+  "valid": true
+}

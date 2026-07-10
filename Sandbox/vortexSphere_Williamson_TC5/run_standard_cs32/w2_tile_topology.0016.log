@@ -1,0 +1,41 @@
+(PID.TID 0016.0001) W2_E2SETUP: number of Active Tiles =      48
+(PID.TID 0016.0001) W2_E2SETUP: number of Blank Tiles  =       0
+(PID.TID 0016.0001) W2_E2SETUP: Total number of Tiles  =      48
+(PID.TID 0016.0001) W2_SET_CS6_FACETS: preDefTopol=  3 selected
+(PID.TID 0016.0001) W2_SET_CS6_FACETS: facet-dims Unset; assume nRd=nGr=nBl=   32
+(PID.TID 0016.0001) W2_E2SETUP: Total number of Facets =       6
+(PID.TID 0016.0001) W2_SET_F2F_INDEX: index matrix for connected Facet-Edges:
+(PID.TID 0016.0001) W2_SET_MAP_TILES: tile mapping within facet and global Map:
+(PID.TID 0016.0001)  W2_mapIO =   32 (=    2*sNx)
+(PID.TID 0016.0001)  Global Map (IO): X-size=      32 , Y-size=     192
+(PID.TID 0016.0001) W2_SET_MAP_TILES: tile offset within facet and global Map:
+- facet  1 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+- facet  2 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+- facet  3 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+- facet  4 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+- facet  5 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+- facet  6 : X-size=    32 , Y-size=    32 ;       8 tiles (Tx,Ty=   2,   4)
+(PID.TID 0016.0001) W2_SET_MAP_CUMSUM: setting Facet Matrix for CUMUL-SUM
+(PID.TID 0016.0001) W2_SET_MAP_CUMSUM: set    5 /   6 active facets (pass,type=   1, 1)
+(PID.TID 0016.0001) W2_SET_MAP_CUMSUM: done (skip Tile Matrix setting)
+(PID.TID 0016.0001) W2_SET_TILE2TILES: tile neighbours and index connection:
+(PID.TID 0016.0001) current Max.Nb.Neighbours (e.g., on tile    7 ) =  5
+(PID.TID 0016.0001) ===== W2 TILE TOPOLOGY =====
+(PID.TID 0016.0001)  TILE:    17 (bi,bj=   1   1 ), Nb of Neighbours =  4
+(PID.TID 0016.0001)     NEIGHBOUR  1 = TILE      19 (n=  2) Comm = MSG (PROC=      19)
+(PID.TID 0016.0001)     NEIGHBOUR  2 = TILE      15 (n=  1) Comm = MSG (PROC=      15)
+(PID.TID 0016.0001)     NEIGHBOUR  3 = TILE      18 (n=  4) Comm = MSG (PROC=      18)
+(PID.TID 0016.0001)     NEIGHBOUR  4 = TILE       8 (n=  1) Comm = MSG (PROC=       8)
+Tile      17 (pr=      17) sends pts i=  -1:  18, j=   7:   8
+                              to pts i=  -1:  18, j=  -1:   0 in tile       19 (pr=      19)
+Tile      17 (pr=      17) sends pts i=  -1:  18, j=   1:   2
+                              to pts i=  -1:  18, j=   9:  10 in tile       15 (pr=      15)
+Tile      17 (pr=      17) sends pts i=  15:  16, j=  -1:  10
+                              to pts i=  -1:   0, j=  -1:  10 in tile       18 (pr=      18)
+Tile      17 (pr=      17) sends pts i=   1:   2, j=  10:  -1
+                              to pts i=   7:  18, j=   9:  10 in tile        8 (pr=       8)
+Tile      17 (pr=      17) recv pts i=  -1:  18, j=   9:  10 from tile      19 (pr=      19)
+Tile      17 (pr=      17) recv pts i=  -1:  18, j=  -1:   0 from tile      15 (pr=      15)
+Tile      17 (pr=      17) recv pts i=  17:  18, j=  -1:  10 from tile      18 (pr=      18)
+Tile      17 (pr=      17) recv pts i=  -1:   0, j=  -1:  10 from tile       8 (pr=       8)
+(PID.TID 0016.0001) ===  End TOPOLOGY report ===

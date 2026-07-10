@@ -1,0 +1,13 @@
+ nDims = [   2 ];
+ dimList = [
+   192,  161,  192,
+    32,    1,   32
+ ];
+ dataprec = [ 'float64' ];
+ nrecords = [          7 ];
+ timeStepNumber = [        384 ];
+ timeInterval = [  1.036800000000E+06 ];
+ nFlds = [    7 ];
+ fldList = {
+ 'Uvel    ' 'Vvel    ' 'Theta   ' 'Salt    ' 'EtaN    ' 'dEtaHdt ' 'EtaH    '
+ };

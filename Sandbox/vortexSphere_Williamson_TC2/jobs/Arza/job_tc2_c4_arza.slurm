@@ -89,21 +89,8 @@ stage_case_inputs() {
             (cd "$RUN_DIR" && python3 gendata_ref.py)
             ;;
         */vortexSphere_Williamson_TC2)
-            case "$CASE_NAME" in
-                c1) suffix="" ;;
-                c2) suffix="_c2" ;;
-                c3) suffix="_c3" ;;
-                c4) suffix="_c4" ;;
-                *)
-                    echo "ERROR: unsupported CASE_NAME=$CASE_NAME" >&2
-                    exit 1
-                    ;;
-            esac
-            if [ -n "$suffix" ]; then
-                cp "$RUN_DIR/eta_init${suffix}.bin" "$RUN_DIR/eta_init.bin"
-                cp "$RUN_DIR/u_init${suffix}.bin" "$RUN_DIR/u_init.bin"
-                cp "$RUN_DIR/v_init${suffix}.bin" "$RUN_DIR/v_init.bin"
-            fi
+            sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
+            (cd "$RUN_DIR" && python3 gendata_ref.py)
             ;;
         *)
             echo "ERROR: unsupported CASE_DIR=$CASE_DIR" >&2

@@ -1,8 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=TC2_c3_large48
+#SBATCH --job-name=TC2_c3_latlon_48
 #SBATCH --account=hmh85
 #SBATCH --partition=large
-#SBATCH --nodelist=onode16
 #SBATCH --nodes=1
 #SBATCH --ntasks=48
 #SBATCH --ntasks-per-node=48
@@ -27,10 +26,10 @@ export CASE_DIR=$MITGCM_DIR/Sandbox/vortexSphere_Williamson_TC2
 export CASE_NAME=c3
 export PREPARE_MODE=tc2
 export ALPHA_VALUE=1.5207963267948966
-export DELTA_T=0.75
+export DELTA_T=1.5
 export TOTAL_SECONDS=1036800
-export BUILD_DIR=$CASE_DIR/build/c3_large48
-export RUN_DIR=$CASE_DIR/run_alpha_1.52
+export BUILD_DIR=$CASE_DIR/build/c3_latlon_large48
+export RUN_DIR=$CASE_DIR/run_alpha_1.52_latlon
 export LOG_DIR=$CASE_DIR/logs
 export MPI_TASKS=${SLURM_NTASKS:-48}
 export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-48}
@@ -52,7 +51,6 @@ TOOLS_DIR=$MITGCM_DIR/tools
 BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
 MODS_DIR=$CASE_DIR/code
 PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC2.py
-SETUP_CHECK=$CASE_DIR/tools/check_setup_tc2.py
 
 finish() {
     local status=$1
@@ -68,28 +66,44 @@ finish() {
 
 stage_case_inputs() {
     find "$CASE_DIR/input" -maxdepth 1 -type f \
+        ! -name "data.exch2" \
         ! -name "gendata_c*.py" \
         ! -name "eta_init*.bin" \
         ! -name "u_init*.bin" \
         ! -name "v_init*.bin" \
         ! -name "bathymetry_flat4000.bin" \
         -exec cp {} "$RUN_DIR/" \;
+    touch "$RUN_DIR/.use_latlon_grid"
     sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
     sed -i "s/^ nTimeSteps=.*/ nTimeSteps=${N_TIME_STEPS},/" "$RUN_DIR/data"
     sed -i "s/^ deltaT=.*/ deltaT=${DELTA_T},/" "$RUN_DIR/data"
     (cd "$RUN_DIR" && python3 gendata_ref.py)
-    python3 "$SETUP_CHECK" --run-dir "$RUN_DIR" --alpha "$ALPHA_VALUE"
+    grep -q "usingSphericalPolarGrid = .TRUE." "$RUN_DIR/data"
+    if grep -q "usingCurvilinearGrid" "$RUN_DIR/data"; then
+        echo "ERROR: lat-lon run contains usingCurvilinearGrid" >&2
+        exit 1
+    fi
+    if grep -q "useCubedSphereExchange" "$RUN_DIR/eedata"; then
+        echo "ERROR: lat-lon run contains useCubedSphereExchange" >&2
+        exit 1
+    fi
+    if [ -e "$RUN_DIR/data.exch2" ]; then
+        echo "ERROR: lat-lon run contains data.exch2" >&2
+        exit 1
+    fi
 }
 
 clean_run_dir() {
     find "$RUN_DIR" -maxdepth 1 -type f \
         \( -name "*.data" -o -name "*.meta" -o -name "*.bin" \
         -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" \
+        -o -name "tile*.mitgrid" -o -name "fCoriG.face*.bin" \
         -o -name "pickup*" -o -name "available_diagnostics.log" \
         -o -name "run.log" -o -name "run_inventory.log" \
         -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg" \
-        -o -name "data.diagnostics" -o -name "eedata" -o -name "eedata.mth" \
-        -o -name "gendata_ref.py" \) \
+        -o -name "data.diagnostics" -o -name "data.exch2" \
+        -o -name "eedata" -o -name "eedata.mth" \
+        -o -name "gendata_ref.py" -o -name ".use_latlon_grid" \) \
         -delete
 }
 

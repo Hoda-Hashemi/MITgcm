@@ -1,0 +1,133 @@
+#!/bin/bash
+#SBATCH --job-name=TC3_c1_smoke_30r
+#SBATCH --account=hmh85
+#SBATCH --partition=large
+#SBATCH --nodes=1
+#SBATCH --ntasks=30
+#SBATCH --ntasks-per-node=30
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=1-00:00:00
+#SBATCH --output=/home/hmh85/scratch/MITgcm/Sandbox/vortexSphere_Williamson_TC3/logs/slurm-%j.out
+#SBATCH --error=/home/hmh85/scratch/MITgcm/Sandbox/vortexSphere_Williamson_TC3/logs/slurm-%j.err
+#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT
+#SBATCH --mail-user=hmh85@aub.edu.lb
+
+set -euo pipefail
+module purge
+module load gcc/10.1.0
+module load mpi/openmpi/4.1.4-slurm-18.08.6
+module load python/3.12
+source /home/hmh85/scratch/MITgcm/.venv/bin/activate
+
+export MITGCM_DIR=/home/hmh85/scratch/MITgcm
+export CASE_DIR=$MITGCM_DIR/Sandbox/vortexSphere_Williamson_TC3
+export CASE_NAME=c1
+export ALPHA_VALUE=0.0
+export DELTA_T=60.0
+export TOTAL_SECONDS=21600
+export DUMP_SECONDS=21600
+export BUILD_DIR=$CASE_DIR/build/c1_latlon_large30
+export RUN_DIR=$CASE_DIR/run_alpha_0_latlon_smoke_30rank
+export LOG_DIR=$CASE_DIR/logs
+export MPI_TASKS=${SLURM_NTASKS:-30}
+export MAKE_JOBS=${SLURM_CPUS_ON_NODE:-30}
+export N_TIME_STEPS=$(python3 -c "print(int(round(${TOTAL_SECONDS}/${DELTA_T})))")
+
+START_TIME=$(date +%s)
+TOOLS_DIR=$MITGCM_DIR/tools
+BUILD_OPTIONS=$TOOLS_DIR/build_options/linux_amd64_gfortran
+MODS_DIR=$CASE_DIR/code_smoke30
+PLOT_SCRIPT=$MITGCM_DIR/Sandbox/Scripts/TC3.py
+
+finish() {
+    local status=$1 end_time elapsed
+    end_time=$(date +%s)
+    elapsed=$((end_time-START_TIME))
+    echo "======================================"
+    echo "End: $(date)"
+    echo "Status: $status"
+    echo "Elapsed: $((elapsed/3600))h $(((elapsed%3600)/60))m $((elapsed%60))s"
+    echo "======================================"
+}
+
+stage_case_inputs() {
+    find "$CASE_DIR/input" -maxdepth 1 -type f \
+        ! -name "data.exch2" \
+        ! -name "eta_init*.bin" \
+        ! -name "u_init*.bin" \
+        ! -name "v_init*.bin" \
+        ! -name "bathymetry*.bin" \
+        -exec cp {} "$RUN_DIR/" \;
+    touch "$RUN_DIR/.use_latlon_grid"
+    sed -i "s/^ALPHA_RAD = .*/ALPHA_RAD = ${ALPHA_VALUE}/" "$RUN_DIR/gendata_ref.py"
+    sed -i "s/^ nTimeSteps=.*/ nTimeSteps=${N_TIME_STEPS},/" "$RUN_DIR/data"
+    sed -i "s/^ deltaT=.*/ deltaT=${DELTA_T},/" "$RUN_DIR/data"
+    sed -i "s/^ dumpFreq=.*/ dumpFreq=${DUMP_SECONDS}.,/" "$RUN_DIR/data"
+    sed -i "s/^ monitorFreq=.*/ monitorFreq=${DUMP_SECONDS}.,/" "$RUN_DIR/data"
+    sed -i "s/^  frequency(3) = -.*/  frequency(3) = -${DUMP_SECONDS}.,/" "$RUN_DIR/data.diagnostics"
+    sed -i "s/^  frequency(2) = -.*/  frequency(2) = -${DUMP_SECONDS}.,/" "$RUN_DIR/data.diagnostics"
+    sed -i "s/^[[:space:]]*usingCurvilinearGrid[[:space:]]*=.*/ usingSphericalPolarGrid = .TRUE.,/" "$RUN_DIR/data"
+    sed -i "/^[[:space:]]*radius_fromHorizGrid[[:space:]]*=/d" "$RUN_DIR/data"
+    sed -i "/^[[:space:]]*usingSphericalPolarGrid[[:space:]]*=/a\\ delX = 1440*0.25,\\n delY = 720*0.25,\\n xgOrigin = 0.,\\n ygOrigin = -90.," "$RUN_DIR/data"
+    cat > "$RUN_DIR/eedata" <<'EOF'
+# Example "eedata" file
+ &EEPARMS
+ &
+EOF
+    rm -f "$RUN_DIR/data.exch2"
+    (cd "$RUN_DIR" && python3 gendata_ref.py)
+    grep -q "usingSphericalPolarGrid = .TRUE." "$RUN_DIR/data"
+    if grep -q "usingCurvilinearGrid" "$RUN_DIR/data"; then
+        echo "ERROR: lat-lon run contains usingCurvilinearGrid" >&2
+        exit 1
+    fi
+    if grep -q "useCubedSphereExchange" "$RUN_DIR/eedata"; then
+        echo "ERROR: lat-lon run contains useCubedSphereExchange" >&2
+        exit 1
+    fi
+    if [ -e "$RUN_DIR/data.exch2" ]; then
+        echo "ERROR: lat-lon run contains data.exch2" >&2
+        exit 1
+    fi
+}
+
+clean_run_dir() {
+    find "$RUN_DIR" -maxdepth 1 -type f \
+        \( -name "*.data" -o -name "*.meta" -o -name "*.bin" \
+        -o -name "STDOUT*" -o -name "STDERR*" -o -name "dyn*" \
+        -o -name "tile*.mitgrid" -o -name "fCoriG.face*.bin" \
+        -o -name "pickup*" -o -name "available_diagnostics.log" \
+        -o -name "run.log" -o -name "run_inventory.log" \
+        -o -name "mitgcmuv" -o -name "data" -o -name "data.pkg" \
+        -o -name "data.diagnostics" -o -name "data.exch2" \
+        -o -name "eedata" -o -name "eedata.mth" \
+        -o -name "gendata_ref.py" -o -name ".use_latlon_grid" \) \
+        -delete
+}
+
+mkdir -p "$LOG_DIR" "$BUILD_DIR" "$RUN_DIR"
+cd "$BUILD_DIR" || exit 1
+"$TOOLS_DIR/genmake2" -mpi -mods="$MODS_DIR" -of="$BUILD_OPTIONS"
+make depend
+make -j "${MAKE_JOBS:-8}"
+clean_run_dir
+cp mitgcmuv "$RUN_DIR/"
+stage_case_inputs
+cd "$RUN_DIR" || exit 1
+
+set +e
+mpirun -np "${MPI_TASKS:-$SLURM_NTASKS}" ./mitgcmuv
+STATUS=$?
+set -e
+if [ "$STATUS" -ne 0 ]; then
+    finish "$STATUS"
+    exit "$STATUS"
+fi
+
+set +e
+TC3_RUN_DIRS="$RUN_DIR" python3 "$PLOT_SCRIPT"
+STATUS=$?
+set -e
+finish "$STATUS"
+exit "$STATUS"

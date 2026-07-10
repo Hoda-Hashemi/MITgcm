@@ -1,6 +1,13 @@
 #%%
 from pathlib import Path
+import sys
 import numpy as np
+
+SCRIPTS_DIR = Path(__file__).resolve().parent.parent.parent / "Scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+import williamson_cube as wc
 
 # ============================================================
 # Williamson TC2: Global steady-state nonlinear zonal geostrophic flow
@@ -153,10 +160,19 @@ def make_tc2_v(alpha_rad: float = ALPHA_RAD):
 
 def main():
     base_dir = Path(__file__).resolve().parent
+    if not (base_dir / ".use_latlon_grid").exists():
+        wc.generate_tc2(base_dir, alpha_rad=ALPHA_RAD)
+        print("")
+        print("Done.")
+        print(f"ALPHA_RAD = {ALPHA_RAD:.16g}")
+        print(f"ALPHA_DEG = {np.rad2deg(ALPHA_RAD):.16g}")
+        print(f"U0        = {U0:.12f} m/s")
+        print(f"H0        = {H0:.12f} m")
+        print(f"GH0       = {GH0:.12f} m^2/s^2")
+        return
 
     write_flat_bathymetry(base_dir)
     write_rotated_coriolis(base_dir, alpha_rad=ALPHA_RAD)
-
     eta = make_tc2_eta(alpha_rad=ALPHA_RAD)
     u = make_tc2_u(alpha_rad=ALPHA_RAD)
     v = make_tc2_v(alpha_rad=ALPHA_RAD)

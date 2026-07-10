@@ -11,8 +11,8 @@ C    !===  GRID SPACING & DOMAIN SIZE =====================================
       INTEGER Ny
       INTEGER Nr
 
-      PARAMETER ( sNx =  180 )        ! grid points in x-dir per tile
-      PARAMETER ( sNy =  120 )        ! grid points in y-dir per tile
+      PARAMETER ( sNx =  180 )        ! lat-lon tile width
+      PARAMETER ( sNy =  120 )        ! lat-lon tile height
       PARAMETER ( OLx =    2 )        ! overlap in x-dir
       PARAMETER ( OLy =    2 )        ! overlap in y-dir
       PARAMETER ( nSx =    1 )
