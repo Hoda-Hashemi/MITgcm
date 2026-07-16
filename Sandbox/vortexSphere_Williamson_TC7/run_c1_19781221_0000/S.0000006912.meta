@@ -1,8 +1,0 @@
- nDims = [   2 ];
- dimList = [
-    32,    1,   32,
-   192,    1,  192
- ];
- dataprec = [ 'float64' ];
- nrecords = [          1 ];
- timeStepNumber = [       6912 ];
